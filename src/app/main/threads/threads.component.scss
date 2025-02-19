@@ -1,0 +1,22 @@
+.container {
+    background-color: #FFFFFF;
+    border-radius: 30px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.shadow {
+    flex: 1;
+    height: 5px;
+    box-shadow: 0 6px 6px -3px #00000014;
+}
