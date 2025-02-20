@@ -1,0 +1,152 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 34px 20px 50px;
+}
+
+.header-input {
+  flex: 1;
+  margin-left: 114px;
+  margin-right: 150px;
+
+  input {
+    font-family: "Nunito";
+    font-weight: 400;
+    font-size: 24px;
+    background-image: url("../../../../public/img/header-img/search-icon.png");
+    background-repeat: no-repeat;
+    background-position: right 45px top 18px;
+    border: none;
+    width: 100%;
+    border-radius: 42px;
+    padding-top: 17.5px;
+    padding-right: 45px;
+    padding-bottom: 17.5px;
+    padding-left: 45px;
+
+    &:hover {
+      box-shadow: 0 0 0 1px v.$purple_2;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px v.$purple_1;
+    }
+  }
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+
+  .profile-pic {
+    height: 70px;
+    width: 70px;
+  }
+
+  span {
+    font-family: "Nunito";
+    font-weight: 700;
+    font-size: 32px;
+    transition: color 0.1s ease-in-out;
+  }
+
+  .arrow-wrapper {
+    position: relative;
+    display: inline-block;
+
+    img {
+      display: block;
+      transition: opacity 0.1s ease-in-out;
+    }
+
+    .arrow-hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+  }
+
+  &:hover {
+    .arrow-wrapper {
+      .arrow-default {
+        opacity: 0;
+      }
+      .arrow-hover {
+        opacity: 1;
+      }
+    }
+    span {
+      color: #797ef3;
+    }
+  }
+}
+
+.menu {
+  width: 220px;
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+
+  p {
+    cursor: pointer;
+    font-family: Nunito;
+    font-weight: 600;
+    font-size: 24px;
+    border-radius: 100px;
+    margin: 0;
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out,
+      font-weight 0.1s ease-in-out;
+  }
+
+  .log-out {
+    padding: 10px 0px;
+
+    &:hover {
+      background-color: #eceefe;
+      color: #535af1;
+      font-weight: 700;
+    }
+  }
+
+  .profile {
+    padding: 10px 0px;
+
+    &:hover {
+      background-color: #eceefe;
+      color: #535af1;
+      font-weight: 700;
+    }
+  }
+}
+
+.overlayer {
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+}
