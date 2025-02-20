@@ -1,1 +1,27 @@
-<p>header works!</p>
+<header>
+  <div class="header-img">
+    <img src="/img/header-img/da-bubble-header-logo.png" alt="" />
+  </div>
+  <div class="header-input">
+    <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
+  </div>
+  <div class="header-profile" (click)="toggleMenu()">
+    <span *ngIf="userName | async as users">{{ users[0]?.name }}</span>
+    <img class="profile-pic" src="/img/header-img/avatar.png" alt="" />
+    <div class="arrow-wrapper">
+      <img class="arrow-default" src="/img/header-img/arrow-down.png" alt="" />
+      <img
+        class="arrow-hover"
+        src="/img/header-img/arrow-down-hover.png"
+        alt=""
+      />
+    </div>
+  </div>
+</header>
+
+<div class="overlayer" *ngIf="menuOpen" (click)="menuOpen = false">
+  <div class="menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
+    <p class="profile">Profil</p>
+    <p class="log-out">Log out</p>
+  </div>
+</div>

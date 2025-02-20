@@ -1,0 +1,39 @@
+@use "../src/variables.scss" as v;
+
+@mixin flexBox(
+  $flexDirection: row,
+  $justifyContent: center,
+  $alignItems: center,
+  $gap: null
+) {
+  display: flex;
+  flex-direction: $flexDirection;
+  justify-content: $justifyContent;
+  align-items: $alignItems;
+
+  @if $gap != null {
+    gap: $gap;
+  }
+}
+
+@mixin styleFont(
+  $fontFamily: "Nunito",
+  $fontSize: 16px,
+  $fontWeight: 400,
+  $lineHeight: null,
+  $fontColor: black
+) {
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  font-weight: $fontWeight;
+
+  @if $lineHeight != null {
+    line-height: $lineHeight;
+  }
+
+  color: $fontColor;
+}
+
+@mixin dNone {
+  display: none;
+}
