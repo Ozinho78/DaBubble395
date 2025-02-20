@@ -37,6 +37,11 @@ header {
   gap: 20px;
   cursor: pointer;
 
+  .profile-pic {
+    height: 70px;
+    width: 70px;
+  }
+
   span {
     font-family: "Nunito";
     font-weight: 700;

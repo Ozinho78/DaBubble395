@@ -7,7 +7,7 @@
   </div>
   <div class="header-profile" (click)="toggleMenu()">
     <span *ngIf="userName | async as users">{{ users[0]?.name }}</span>
-    <img src="/img/header-img/avatar.png" alt="" />
+    <img class="profile-pic" src="/img/header-img/avatar.png" alt="" />
     <div class="arrow-wrapper">
       <img class="arrow-default" src="/img/header-img/arrow-down.png" alt="" />
       <img
