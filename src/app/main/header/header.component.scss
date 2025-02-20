@@ -79,7 +79,7 @@ header {
 .menu {
   width: 220px;
   position: absolute;
-  top: auto;
+  top: 120px;
   right: 20px;
   display: flex;
   flex-direction: column;
@@ -128,4 +128,12 @@ header {
       font-weight: 700;
     }
   }
+}
+
+.overlayer {
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0px;
 }

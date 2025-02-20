@@ -19,7 +19,9 @@
   </div>
 </header>
 
-<div class="menu" *ngIf="menuOpen">
-  <p class="profile">Profil</p>
-  <p class="log-out">Log out</p>
+<div class="overlayer" *ngIf="menuOpen" (click)="menuOpen = false">
+  <div class="menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
+    <p class="profile">Profil</p>
+    <p class="log-out">Log out</p>
+  </div>
 </div>
