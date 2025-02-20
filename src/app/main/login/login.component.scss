@@ -13,14 +13,14 @@
 
         img {
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             animation: moveLeft 1s ease-in-out forwards;
         }
 
         span {
             position: absolute;
-            left: 290px;
-            z-index: 0;
+            left: 50px;
+            z-index: 1;
             opacity: 0;
             animation: flyOut 1s ease-in-out 1s forwards;
         }
@@ -33,7 +33,7 @@
         opacity: 0;
     }
     100% {
-        transform: translateX(100%);
+        transform: translateX(120%);
         opacity: 1;
     }
 }
@@ -43,6 +43,6 @@
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-100%); // Move left by 100% of its width
+        transform: translateX(-100%);
     }
 }
