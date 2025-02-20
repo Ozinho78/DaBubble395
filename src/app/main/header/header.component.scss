@@ -101,6 +101,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: color 0.1s ease-in-out, background-color 0.1s ease-in-out,
+      font-weight 0.1s ease-in-out;
   }
 
   .log-out {
