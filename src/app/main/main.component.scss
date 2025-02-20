@@ -1,0 +1,10 @@
+@use "../../mixins.scss" as m;
+@use "../../variables.scss" as v;
+
+.content {
+    @include m.flexBox(column, normal, normal);
+}
+
+.main-content {
+    @include m.flexBox(row, normal, normal);
+}

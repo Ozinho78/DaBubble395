@@ -1,1 +1,50 @@
-<p>threads works!</p>
+<div class="container">
+
+    <div class="header">
+        <div class="header-label">
+            <h2>Thread</h2>
+            <div>#Entwicklerteam</div>
+        </div>
+        <div>X</div>
+    </div>
+    <div class="shadow"></div>
+
+    <div class="thread-header">
+        <div>BILD</div>
+        <div>
+            <div>
+                <div>Noah Braun</div>
+                <div>14:25 Uhr</div>
+            </div>
+            <div>
+                Welche Version ist aktuell von Angular?
+            </div>
+        </div>
+    </div>
+
+    <div class="replies-spacer">
+        <div>2 Antworten</div>
+    </div>
+
+    <div *ngIf="messages$ | async as messages" class="replies">
+
+        <div *ngFor="let message of messages" class="reply">
+            <div>BILD</div>
+            <div>
+                <div>{{ getUserName(message.userId) | async }}</div>
+                <div>{{ message.creationDate | date:'dd.MM.yyyy HH:mm' }} Uhr</div>
+            </div>
+            <div>{{ message.text }}</div>
+            <div *ngIf="message.reactions.length">
+                <div>{{ message.reactions.join(', ') }}</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="message-input">
+        <input type="text" [(ngModel)]="newMessageText" placeholder="Nachricht schreiben..." />
+        <button (click)="sendMessage()">Senden</button>
+    </div>
+
+</div>
