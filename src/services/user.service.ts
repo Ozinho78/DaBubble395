@@ -1,17 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, docData } from '@angular/fire/firestore';
+import { inject, Injectable } from '@angular/core';
+import { Firestore, doc, docData } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
-
-export interface User {
-    id: string;
-    name: string;
-}
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
-    constructor(private firestore: Firestore) { }
+    private firestore = inject(Firestore); // ✅ Korrekte Dependency Injection
 
     getUserById(userId: string): Observable<string> {
         const userRef = doc(this.firestore, `users/${userId}`);
