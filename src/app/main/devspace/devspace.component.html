@@ -1,1 +1,9 @@
-<p>devspace works!</p>
+
+
+<div class="devspace-wrapper">
+  <div class="devspace-content">
+    @for (user of users; track $index) {
+      <p class="avatar-user"><img src="img/avatar/{{ user.avatar }}" alt="">{{ user.name }}</p>
+    }
+  </div>
+</div>

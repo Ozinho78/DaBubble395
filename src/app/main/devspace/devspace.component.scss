@@ -1,0 +1,23 @@
+.devspace-wrapper {
+  height: 80vh;
+  background-color: white;
+  border-radius: 20px;
+  margin: 20px;
+}
+
+.devspace-content {
+  padding: 20px;
+}
+
+
+.avatar-user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  img {
+    width: 50px;
+    height: auto;
+    border-radius: 50%;
+  }
+}
