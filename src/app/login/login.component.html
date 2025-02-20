@@ -1,0 +1,27 @@
+<section class="login-main">
+    <div class="login-intro">
+        <img src="/img/logo.svg" alt="DaBubble Logo">
+        <span>DABubble</span>
+    </div>
+    <div class="login">
+        <div class="login-dialog">
+            <h2>Anmeldung</h2>
+            <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
+            <input type="email" placeholder="beispielname@email.com">
+            <input type="password" placeholder="Passwort">
+            <a href="">
+                <span>Passwort vergessen?</span>
+            </a>
+            <div class="login-border"></div>
+            <div class="login-border-word">ODER</div>
+            <button class="login-google">
+                <img src="/img/google.png" alt="Google Logo">
+                <span>Anmelden mit Google</span>
+            </button>
+            <div class="login-btn">
+                <button class="login-btn-register">Anmelden</button>
+                <button class="login-btn-guest" (click)="login()">Gäste-Login</button>
+            </div>
+        </div> 
+    </div>
+</section>
