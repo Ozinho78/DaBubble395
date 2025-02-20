@@ -24,6 +24,10 @@ header {
     padding-right: 45px;
     padding-bottom: 17.5px;
     padding-left: 45px;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
