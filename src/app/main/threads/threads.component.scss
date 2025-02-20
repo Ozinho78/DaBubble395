@@ -3,26 +3,131 @@
 
 h2 {
     margin: 0;
+    @include m.styleFont("Nunito", 24px, 700, 37.74px);
 }
 
 .container {
+    height: 100%;
+    max-width: 485px;
     background-color: #FFFFFF;
     border-radius: 30px;
-}
+    @include m.flexBox(column, normal, normal);
+    @include m.styleFont();
 
-.header {
-    margin: 16px;
-    @include m.flexBox(row, space-between, center);
-}
+    .header {
+        height: 96px;
+        margin: 0 40px;
+        @include m.flexBox(row, space-between, center);
 
-.header-label {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+        .header-label {
+            display: flex;
+            align-items: center;
+            gap: 16px;
 
-.shadow {
-    flex: 1;
-    height: 5px;
-    box-shadow: 0 6px 6px -3px #00000014;
+            .channel {
+                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$purple_2);
+            }
+        }
+
+        .close-btn {
+            height: 13.5px;
+            width: 13.5px;
+            padding: 6.5px;
+            border-radius: 50%;
+            transition: all 0.100s ease-in;
+            cursor: pointer;
+
+            &:hover {
+                background-color: v.$purple_bg;
+                transform: scale(1.2);
+
+                path {
+                    fill: v.$purple_3;
+                }
+            }
+        }
+    }
+
+    .shadow {
+        height: 5px;
+        background: linear-gradient(to bottom, #00000014, #00000000);
+    }
+
+    .replies {
+        @include m.flexBox(column, normal, normal, 10px);
+
+        .reply-container {
+            margin: 10px 0;
+
+            .reply {
+                margin: 10px 40px;
+                @include m.flexBox(row, normal, normal, 20px);
+
+                .avatar {
+                    height: 70px;
+                    width: 70px;
+                    border-radius: 50%;
+                }
+
+                .message {
+                    width: 100%;
+                    @include m.flexBox(column, normal, normal, 8px);
+
+                    .message-info {
+                        @include m.flexBox(row, normal, flex-end, 20px);
+
+                        .message-info-name {
+                            @include m.styleFont("Nunito", 18px, 700, 24.55px);
+                        }
+
+                        .message-info-time {
+                            @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+                        }
+                    }
+
+                    .message-text {
+                        @include m.styleFont("Nunito", 18px, 400, 24.55px);
+                        padding: 15px;
+                        gap: 8px;
+                        border-top-right-radius: 20px;
+                        border-bottom-right-radius: 20px;
+                        border-bottom-left-radius: 20px;
+                        background-color: #ECEEFE;
+                    }
+
+                    .message-reactions {
+
+                        /* fix it */
+
+                        @include m.flexBox(row, normal, normal, 20px);
+
+                        .reaction-btn {
+                            width: 22px;
+                            height: 22px;
+                            padding: 6.5px;
+                            transition: all 0.100s ease-in;
+
+                            &:hover {
+                                path {
+                                    transform: scale(1.1);
+                                    fill: v.$purple_3;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+            }
+
+            &:hover {
+                background-color: #ECEEFE;
+
+                .message-text {
+                    background-color: #FFFFFF;
+                }
+            }
+        }
+    }
 }
