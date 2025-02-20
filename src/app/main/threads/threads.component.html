@@ -42,4 +42,9 @@
 
     </div>
 
+    <div class="message-input">
+        <input type="text" [(ngModel)]="newMessageText" placeholder="Nachricht schreiben..." />
+        <button (click)="sendMessage()">Senden</button>
+    </div>
+
 </div>

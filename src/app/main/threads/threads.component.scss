@@ -1,12 +1,18 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+h2 {
+    margin: 0;
+}
+
 .container {
     background-color: #FFFFFF;
     border-radius: 30px;
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    margin: 16px;
+    @include m.flexBox(row, space-between, center);
 }
 
 .header-label {

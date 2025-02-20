@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, query, where, orderBy, collectionData } from '@angular/fire/firestore';
+import { Observable, map } from 'rxjs';
 import { Message } from '../models/message.class';
 
 @Injectable({
@@ -11,6 +11,14 @@ export class ThreadService {
 
     getMessages(threadId: string): Observable<Message[]> {
         const messagesRef = collection(this.firestore, 'messages');
-        return collectionData(messagesRef) as Observable<Message[]>;
+        const q = query(
+            messagesRef,
+            where('threadId', '==', threadId),
+            orderBy('creationDate', 'asc')
+        );
+
+        return collectionData(q, { idField: 'id' }).pipe(
+            map(messages => messages.map(data => new Message(data)))
+        );
     }
 }
