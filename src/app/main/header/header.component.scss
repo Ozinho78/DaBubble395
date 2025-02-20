@@ -19,10 +19,6 @@ header {
     background-position: right 45px top 18px;
     border: none;
     width: 100%;
-    height: 70px;
-    top: 25px;
-    left: 406px;
-    justify-content: space-between;
     border-radius: 42px;
     padding-top: 17.5px;
     padding-right: 45px;
@@ -77,8 +73,7 @@ header {
 }
 
 .menu {
-  width: 282px;
-  height: 181px;
+  width: 220px;
   position: absolute;
   top: auto;
   right: 20px;
@@ -91,7 +86,7 @@ header {
   border-bottom-right-radius: 30px;
   border-bottom-left-radius: 30px;
   padding: 30px;
-  background-color: #fff; /* Hintergrundfarbe festlegen */
+  background-color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 100;
 
@@ -100,11 +95,31 @@ header {
     font-family: Nunito;
     font-weight: 600;
     font-size: 24px;
-    line-height: 32.74px;
-    letter-spacing: 0%;
+    border-radius: 100px;
+    margin: 0;
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .log-out:hover {
-    background-color: #797ef3;
+  .log-out {
+    padding: 10px 0px;
+
+    &:hover {
+      background-color: #eceefe;
+      color: #535af1;
+      font-weight: 700;
+    }
+  }
+
+  .profile {
+    padding: 10px 0px;
+
+    &:hover {
+      background-color: #eceefe;
+      color: #535af1;
+      font-weight: 700;
+    }
   }
 }
