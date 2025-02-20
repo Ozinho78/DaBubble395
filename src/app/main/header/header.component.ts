@@ -16,7 +16,6 @@ export class HeaderComponent {
   constructor(private firestore: Firestore) {}
 
   ngOnInit(): void {
-    // Ersetze 'deineCollectionName' mit dem tatsächlichen Namen deiner Collection in Firestore
     const itemsRef = collection(this.firestore, 'users');
     this.userName = collectionData(itemsRef);
   }
