@@ -5,7 +5,7 @@
   <div class="header-input">
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
   </div>
-  <div class="header-profile">
+  <div class="header-profile" (click)="toggleMenu()">
     <span>Frederick Beck</span>
     <img src="/img/header-img/avatar.png" alt="" />
     <div class="arrow-wrapper">
@@ -18,3 +18,8 @@
     </div>
   </div>
 </header>
+
+<div class="menu" *ngIf="menuOpen">
+  <p>Profil</p>
+  <p class="log-out">Log out</p>
+</div>
