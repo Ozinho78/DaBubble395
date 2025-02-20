@@ -27,7 +27,7 @@ export class DevspaceComponent {
         // this.users[element.id] = element.data();
         this.users.push(element.data());
         // console.log(element.data());
-        console.log(element.data());
+        // console.log(element.data());
         
       });
     });
