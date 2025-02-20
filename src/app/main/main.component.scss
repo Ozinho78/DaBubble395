@@ -1,8 +1,10 @@
+@use "../../mixins.scss" as m;
+@use "../../variables.scss" as v;
+
 .content {
-    display: flex;
-    flex-direction: column;
+    @include m.flexBox(column, normal, normal);
 }
 
 .main-content {
-    display: flex;
+    @include m.flexBox(row, normal, normal);
 }
