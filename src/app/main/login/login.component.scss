@@ -40,7 +40,7 @@
       box-sizing: border-box;
       padding: 50px 60px;
 
-      span {
+      h2 {
         @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
       }
 
@@ -55,7 +55,86 @@
         background-color: v.$purple_bg;
         border: none;
         border-radius: 100px;
+        box-sizing: border-box;
+        padding: 30px;
         margin: 18px 0;
+
+        &::placeholder {
+          @include m.styleFont("Nunito", 18px, 500, 21.6px, v.$grey);
+        }
+
+        &:hover {
+          box-shadow: 0 0 0 1px black;
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 1px v.$purple_1;
+        }
+      }
+
+      a {
+        @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
+        text-decoration: none;
+        margin-top: 21px;
+      }
+
+      .login-border {
+        width: 100%;
+        margin-top: 40px;
+        border: 1px solid v.$purple_4;
+      }
+
+      .login-google {
+        @include m.flexBox(row, center, center);
+        @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_1);
+        width: 100%;
+        height: 60px;
+        background-color: v.$purple_bg;
+        border: none;
+        border-radius: 100px;
+        box-sizing: border-box;
+        padding: 30px;
+        margin: 48px 0;
+        transition: 75ms;
+
+        img {
+          margin-right: 20px;
+        }
+
+        &:hover {
+          @include m.styleFont("Nunito", 18px, 700, 21.6px, v.$purple_1);
+          box-shadow: 0 0 0 1px v.$purple_1;
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 1px v.$purple_1;
+        }
+      }
+
+      .login-btn {
+        @include m.flexBox(row, center, center);
+        width: 100%;
+
+        .login-btn-register,
+        .login-btn-guest {
+          padding: 12px 20px;
+          border-radius: 100px;
+          border: none;
+        }
+
+        .login-btn-register {
+          @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
+          background-color: v.$purple_1;
+          margin-right: 32px;
+        }
+
+        .login-btn-guest {
+          @include m.styleFont("Nunito", 18px, 700, 24.55px, v.$purple_1);
+          box-shadow: 0 0 0 1px v.$purple_1;
+          background-color: white;
+        }
       }
     }
   }
