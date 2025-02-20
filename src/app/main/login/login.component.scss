@@ -1,0 +1,48 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+.login-main {
+    height: 100vh;
+    background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
+
+    .login-intro {
+        @include m.flexBox(row, center, center);
+        @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+        height: 100%;
+        position: relative;
+
+        img {
+            position: absolute;
+            z-index: 1;
+            animation: moveLeft 1s ease-in-out forwards;
+        }
+
+        span {
+            position: absolute;
+            left: 290px;
+            z-index: 0;
+            opacity: 0;
+            animation: flyOut 1s ease-in-out 1s forwards;
+        }
+    }
+}
+
+@keyframes flyOut {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 1;
+    }
+}
+
+@keyframes moveLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%); // Move left by 100% of its width
+    }
+}
