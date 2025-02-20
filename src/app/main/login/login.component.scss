@@ -96,6 +96,16 @@
         border: 1px solid v.$purple_4;
       }
 
+      .login-border-word {
+        @include m.styleFont("Nunito", 18px, 400, 24.55px);
+        width: 80px;
+        height: 35px;
+        background-color: white;
+        position: relative;
+        bottom: 15px;
+        text-align: center;
+      }
+
       .login-google {
         @include m.flexBox(row, center, center);
         @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_1);
@@ -107,7 +117,7 @@
         box-sizing: border-box;
         cursor: pointer;
         padding: 30px;
-        margin: 48px 0;
+        margin: 40px 0;
         transition: 75ms;
 
         img {
@@ -128,6 +138,7 @@
       .login-btn {
         @include m.flexBox(row, center, center);
         width: 100%;
+        margin-bottom: 32px;
 
         .login-btn-register,
         .login-btn-guest {
