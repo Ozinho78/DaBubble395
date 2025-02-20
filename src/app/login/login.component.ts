@@ -11,7 +11,7 @@ export class LoginComponent {
   constructor(private router: Router) {}
 
   login() {
-    localStorage.setItem('token', 'dummy-token');
-    this.router.navigate(['/main']);
+    localStorage.setItem('token', 'dummy-token'); // Simuliertes Login
+    this.router.navigate(['/main']); // Weiterleitung nach Login
   }
 }
