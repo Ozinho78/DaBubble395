@@ -77,6 +77,17 @@
         @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
         text-decoration: none;
         margin-top: 21px;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 6px 12px;
+        border-radius: 100px;
+        transition: 125ms;
+
+        &:hover {
+          font-weight: 600;
+          background-color: v.$purple_bg;
+          color: v.$purple_1;
+        }
       }
 
       .login-border {
@@ -94,6 +105,7 @@
         border: none;
         border-radius: 100px;
         box-sizing: border-box;
+        cursor: pointer;
         padding: 30px;
         margin: 48px 0;
         transition: 75ms;
@@ -122,18 +134,29 @@
           padding: 12px 20px;
           border-radius: 100px;
           border: none;
+          cursor: pointer;
+          transition: 75ms;
         }
 
         .login-btn-register {
           @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
           background-color: v.$purple_1;
           margin-right: 32px;
+
+          &:hover {
+            background-color: v.$purple_2;
+          }
         }
 
         .login-btn-guest {
           @include m.styleFont("Nunito", 18px, 700, 24.55px, v.$purple_1);
           box-shadow: 0 0 0 1px v.$purple_1;
           background-color: white;
+
+          &:hover {
+            background-color: v.$purple_1;
+            color: white;
+          }
         }
       }
     }
