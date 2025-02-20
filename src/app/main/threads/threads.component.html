@@ -26,36 +26,20 @@
         <div>2 Antworten</div>
     </div>
 
-    <div class="replies">
+    <div *ngIf="messages$ | async as messages" class="replies">
 
-        <div class="reply">
+        <div *ngFor="let message of messages" class="reply">
             <div>BILD</div>
             <div>
-                <div>Sofia Müller</div>
-                <div>14:30 Uhr</div>
+                <div>{{ getUserName(message.userId) | async }}</div>
+                <div>{{ message.creationDate | date:'dd.MM.yyyy HH:mm' }} Uhr</div>
             </div>
-            <div>
-                Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13
-                ist. Vielleicht weiß Frederik, ob es wahr ist.
-            </div>
-            <div>
-                <div>EMOJIS</div>
+            <div>{{ message.text }}</div>
+            <div *ngIf="message.reactions.length">
+                <div>{{ message.reactions.join(', ') }}</div>
             </div>
         </div>
 
-        <div class="my-reply">
-            <div>BILD</div>
-            <div>
-                <div>Frederik Beck</div>
-                <div>15:06 Uhr</div>
-            </div>
-            <div>
-                Ja das ist es.
-            </div>
-            <div>
-                <div>EMOJIS</div>
-            </div>
-        </div>
     </div>
 
 </div>
