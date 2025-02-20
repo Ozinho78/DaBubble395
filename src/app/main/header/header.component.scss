@@ -4,3 +4,74 @@ header {
   align-items: center;
   padding: 25px 34px 20px 50px;
 }
+
+.header-input {
+  flex: 1;
+  margin-left: 114px;
+  margin-right: 150px;
+
+  input {
+    font-family: "Nunito";
+    font-weight: 400;
+    font-size: 24px;
+    background-image: url("../../../../public/img/header-img/search-icon.png");
+    background-repeat: no-repeat;
+    background-position: right 45px top 18px;
+    border: none;
+    width: 100%;
+    height: 70px;
+    top: 25px;
+    left: 406px;
+    justify-content: space-between;
+    border-radius: 42px;
+    padding-top: 17.5px;
+    padding-right: 45px;
+    padding-bottom: 17.5px;
+    padding-left: 45px;
+  }
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+
+  span {
+    font-family: "Nunito";
+    font-weight: 700;
+    font-size: 32px;
+    transition: color 0.1s ease-in-out;
+  }
+
+  .arrow-wrapper {
+    position: relative;
+    display: inline-block;
+
+    img {
+      display: block;
+      transition: opacity 0.1s ease-in-out;
+    }
+
+    .arrow-hover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+  }
+
+  &:hover {
+    .arrow-wrapper {
+      .arrow-default {
+        opacity: 0;
+      }
+      .arrow-hover {
+        opacity: 1;
+      }
+    }
+    span {
+      color: #797ef3;
+    }
+  }
+}
