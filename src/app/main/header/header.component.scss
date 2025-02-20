@@ -1,3 +1,6 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
 header {
   display: flex;
   justify-content: space-between;
@@ -25,8 +28,13 @@ header {
     padding-bottom: 17.5px;
     padding-left: 45px;
 
+    &:hover {
+      box-shadow: 0 0 0 1px v.$purple_2;
+    }
+
     &:focus {
       outline: none;
+      box-shadow: 0 0 0 1px v.$purple_1;
     }
   }
 }
