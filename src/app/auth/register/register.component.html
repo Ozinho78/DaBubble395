@@ -1,0 +1,26 @@
+<section class="reg-main">
+  <div class="reg-dialog">
+    <div class="reg-back-arrow">
+      <img src="/img/arrow_back.png" alt="Zurück zur Anmeldung" (click)="navigateToLogin()"/>
+    </div>
+    <h2>Konto erstellen</h2>
+    <p>
+      Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+      DABubble-Konto.
+    </p>
+    <input type="text" name="name" id="name" placeholder="Name und Nachname" />
+    <input type="email" placeholder="beispielname@email.com" />
+    <input type="password" placeholder="Passwort" />
+    <div class="privacy">
+      <input type="checkbox" name="privacy" id="privacy" [(ngModel)]="isPrivacyAccepted"/>
+      <span
+        >Ich stimme der
+        <a href="">Datenschutzerklärung</a>
+        zu.
+      </span>
+    </div>
+    <div class="register">
+      <button class="reg-btn" (click)="register()" [disabled]="!isPrivacyAccepted">Weiter</button>
+    </div>
+  </div>
+</section>
