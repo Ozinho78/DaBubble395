@@ -1,0 +1,111 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+.reg-main {
+  @include m.flexBox(row, center, center);
+  height: 100vh;
+
+  .reg-dialog {
+    @include m.flexBox(column, center, center);
+    height: 769px;
+    width: 606px;
+    background-color: white;
+    border-radius: 30px;
+    box-sizing: border-box;
+    padding: 50px 60px;
+
+    h2 {
+      @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
+    }
+
+    p {
+      @include m.styleFont("Nunito", 20px, 400, 24px, black);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      height: 60px;
+      background-color: v.$purple_bg;
+      border: none;
+      border-radius: 100px;
+      box-sizing: border-box;
+      padding: 30px;
+      margin: 18px 0;
+
+      &::placeholder {
+        @include m.styleFont("Nunito", 18px, 500, 21.6px, v.$grey);
+      }
+
+      &:hover {
+        box-shadow: 0 0 0 1px black;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px v.$purple_1;
+      }
+    }
+
+    a {
+      @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
+      text-decoration: none;
+      margin-top: 21px;
+      text-align: center;
+      box-sizing: border-box;
+      padding: 6px;
+      border-radius: 100px;
+      transition: 125ms;
+
+      &:hover {
+        font-weight: 600;
+        background-color: v.$purple_bg;
+        color: v.$purple_1;
+      }
+    }
+
+    .privacy {
+        @include m.flexBox(row, flex-start, center);
+        width: 100%;
+        margin-top: 21px;
+    
+        input {
+            height: 18px;
+            width: 18px;
+            border-color: v.$purple_1;
+            margin-right: 12px;
+        }
+    
+        span {
+            @include m.styleFont("Nunito", 16px, 400, 19.2px, black);
+        }
+    }
+
+    .register {
+      @include m.flexBox(row, flex-end, flex-end);
+      width: 100%;
+      margin-top: 32px;
+
+      .reg-btn {
+        padding: 12px 20px;
+        border-radius: 100px;
+        border: none;
+        cursor: pointer;
+        transition: 75ms;
+      }
+
+      .reg-btn {
+        @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
+        box-shadow: 0 0 0 1px v.$purple_1;
+        background-color: v.$purple_1;
+        transition: 125ms;
+
+        &:hover {
+          background-color: v.$purple_2;
+          box-shadow: 0 0 0 1px v.$purple_2;
+          color: white;
+        }
+      }
+    }
+  }
+}

@@ -8,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class RegisterComponent {
 
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+  register() {
+    console.log('Register');
+  }
 }
