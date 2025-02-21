@@ -99,7 +99,6 @@
     .register {
       @include m.flexBox(row, flex-end, flex-end);
       width: 100%;
-      margin-top: 32px;
 
       .reg-btn {
         @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
@@ -107,7 +106,7 @@
         border-radius: 100px;
         border: none;
         cursor: pointer;
-        margin-bottom: 60px;
+        margin-bottom: 45px;
         box-shadow: 0 0 0 1px v.$purple_1;
         background-color: v.$purple_1;
         transition: 125ms;

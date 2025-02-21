@@ -35,6 +35,7 @@
   }
 
   .selected-avatar {
+    max-height: 168px;
     border-radius: 50%;
   }
 
@@ -52,6 +53,7 @@
 
   .avatar-list {
     @include m.flexBox(row, center, center);
+    margin-top: 20px;
 
     img {
       width: 64px;
@@ -70,6 +72,7 @@
     .avatar-btn {
       @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
       padding: 12px 20px;
+      margin-top: 35px;
       border-radius: 100px;
       border: none;
       cursor: pointer;
