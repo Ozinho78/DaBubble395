@@ -7,12 +7,13 @@ h2 {
 }
 
 .container {
-    height: 100%;
-    max-width: 485px;
+    height: calc(100% - 20px);
+    width: 485px;
     background-color: #FFFFFF;
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
     @include m.styleFont();
+    position: relative;
 
     .header {
         height: 96px;
@@ -29,20 +30,24 @@ h2 {
             }
         }
 
-        .close-btn {
-            height: 13.5px;
-            width: 13.5px;
-            padding: 6.5px;
-            border-radius: 50%;
-            transition: all 0.100s ease-in;
-            cursor: pointer;
+        .close-btn-container {
+            @include m.flexBox(row, center, center);
 
-            &:hover {
-                background-color: v.$purple_bg;
-                transform: scale(1.2);
+            .close-btn {
+                height: 13.5px;
+                width: 13.5px;
+                padding: 6.5px;
+                border-radius: 50%;
+                transition: all 0.100s ease-in;
+                cursor: pointer;
 
-                path {
-                    fill: v.$purple_3;
+                &:hover {
+                    transform: scale(1.1);
+                    background-color: v.$purple_bg;
+
+                    path {
+                        fill: v.$purple_3;
+                    }
                 }
             }
         }
@@ -53,81 +58,158 @@ h2 {
         background: linear-gradient(to bottom, #00000014, #00000000);
     }
 
-    .replies {
-        @include m.flexBox(column, normal, normal, 10px);
+    .chat-container {
+        overflow-y: auto;
 
-        .reply-container {
-            margin: 10px 0;
+        .replies {
+            @include m.flexBox(column, normal, normal);
 
-            .reply {
-                margin: 10px 40px;
-                @include m.flexBox(row, normal, normal, 20px);
+            .reply-container {
+                margin: 10px 0;
 
-                .avatar {
-                    height: 70px;
-                    width: 70px;
-                    border-radius: 50%;
-                }
+                .reply {
+                    margin: 10px 40px;
+                    @include m.flexBox(row, normal, normal, 20px);
 
-                .message {
-                    width: 100%;
-                    @include m.flexBox(column, normal, normal, 8px);
-
-                    .message-info {
-                        @include m.flexBox(row, normal, flex-end, 20px);
-
-                        .message-info-name {
-                            @include m.styleFont("Nunito", 18px, 700, 24.55px);
-                        }
-
-                        .message-info-time {
-                            @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
-                        }
+                    .avatar {
+                        height: 70px;
+                        width: 70px;
+                        border-radius: 50%;
                     }
 
-                    .message-text {
-                        @include m.styleFont("Nunito", 18px, 400, 24.55px);
-                        padding: 15px;
-                        gap: 8px;
-                        border-top-right-radius: 20px;
-                        border-bottom-right-radius: 20px;
-                        border-bottom-left-radius: 20px;
-                        background-color: #ECEEFE;
-                    }
+                    .message {
+                        width: 100%;
+                        @include m.flexBox(column, normal, normal, 8px);
 
-                    .message-reactions {
+                        .message-info {
+                            @include m.flexBox(row, normal, flex-end, 20px);
 
-                        /* fix it */
+                            .message-info-name {
+                                @include m.styleFont("Nunito", 18px, 700, 24.55px);
+                                cursor: pointer;
 
-                        @include m.flexBox(row, normal, normal, 20px);
-
-                        .reaction-btn {
-                            width: 22px;
-                            height: 22px;
-                            padding: 6.5px;
-                            transition: all 0.100s ease-in;
-
-                            &:hover {
-                                path {
-                                    transform: scale(1.1);
-                                    fill: v.$purple_3;
+                                &:hover {
+                                    color: v.$purple_1;
                                 }
                             }
 
+                            .message-info-time {
+                                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+                            }
+                        }
+
+                        .message-text {
+                            @include m.styleFont("Nunito", 18px, 400, 24.55px);
+                            padding: 15px;
+                            gap: 8px;
+                            border-top-right-radius: 20px;
+                            border-bottom-right-radius: 20px;
+                            border-bottom-left-radius: 20px;
+                            background-color: #ECEEFE;
+                        }
+
+                        .message-reactions {
+                            @include m.flexBox(row, normal, normal, 20px);
+
+                            .reaction-btn-container {
+                                height: 34px;
+                                width: 34px;
+                                @include m.flexBox(row, center, center);
+                                background: #FFFFFF;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                transition: all 0.100s ease;
+
+                                .reaction-btn {
+                                    .default-img {
+                                        display: block;
+                                    }
+
+                                    .hover-img {
+                                        display: none;
+                                    }
+                                }
+
+                                &:hover {
+                                    background-color: v.$purple_bg;
+
+                                    .default-img {
+                                        display: none !important;
+                                    }
+
+                                    .hover-img {
+                                        display: block !important;
+                                        transform: scale(1.05);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
+                &:hover {
+                    background-color: #ECEEFE;
 
-            }
-
-            &:hover {
-                background-color: #ECEEFE;
-
-                .message-text {
-                    background-color: #FFFFFF;
+                    .message-text {
+                        background-color: #FFFFFF !important;
+                    }
                 }
             }
         }
     }
+
+    .input-area-container {
+        height: 145px;
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid v.$purple_4;
+        border-radius: 20px;
+
+        input {
+            height: 50px;
+            border: none;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        .input-area-btns {
+            @include m.flexBox(row, space-between, center);
+
+            .left-btn-container {
+                @include m.flexBox(row, normal, center);
+
+                .emojis-btn img,
+                .mention-btn img {
+                    display: none;
+                }
+
+                .emojis-btn .emoji-inactive-img,
+                .mention-btn .mention-inactive-img {
+                    display: inline;
+                }
+
+                .emojis-btn:hover .emoji-inactive-img,
+                .mention-btn:hover .mention-inactive-img {
+                    display: none;
+                }
+
+                .emojis-btn:hover .emoji-hover-img,
+                .mention-btn:hover .mention-hover-img {
+                    display: inline;
+                }
+            }
+        }
+
+        &:hover {
+            border: 1px solid v.$purple_2;
+        }
+
+        &:focus-within {
+            border: 1px solid v.$purple_3;
+        }
+
+    }
+
 }
