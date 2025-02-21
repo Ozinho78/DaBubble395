@@ -8,7 +8,7 @@
       />
     </div>
     <h2>Wähle deinen Avatar</h2>
-    <img src="/img/avatar_dummy.png" alt="Avatar Dummy" />
+    <img class="selected-avatar" [src]="selectedAvatar.src" alt="Avatar Dummy">
     <span class="user-name" id="user-name">Frederik Beck</span>
     <span class="avatar-choose">Aus der Liste wählen</span>
     <div class="avatar-list">
@@ -17,7 +17,7 @@
         *ngFor="let avatar of avatars"
         (click)="selectAvatar(avatar)"
       >
-        <img [src]="avatar.src" alt="Avatar" />
+        <img [src]="avatar.src" [alt]="avatar.name" />
       </div>
     </div>
     <div class="register">

@@ -19,6 +19,8 @@ export class AvatarSelectionComponent {
     { name: 'avatar6', src: '/img/avatar/avatar6.png' }
   ];
 
+  selectedAvatar: any = { name: 'avatar_dummy', src: '/img/avatar_dummy.png' };
+
   constructor(private router: Router) {}
 
   ngOnInit() {}
@@ -28,7 +30,7 @@ export class AvatarSelectionComponent {
   }
 
   selectAvatar(avatar: any) {
-    console.log(avatar);
+    this.selectedAvatar = avatar;
   }
 
   accept() {

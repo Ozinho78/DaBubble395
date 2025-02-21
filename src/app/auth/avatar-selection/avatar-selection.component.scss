@@ -34,6 +34,10 @@
     margin-top: 0;
   }
 
+  .selected-avatar {
+    border-radius: 50%;
+  }
+
   .user-name {
     @include m.styleFont("Nunito", 32px, 700, 43.56px, black);
     margin-top: 20px;
