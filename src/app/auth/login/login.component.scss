@@ -1,5 +1,5 @@
-@use "../../mixins.scss" as m;
-@use "../../variables.scss" as v;
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
 
 .login-main {
   height: 100vh;
@@ -31,6 +31,29 @@
     height: 100%;
     background-color: v.$purple_bg;
 
+    .register-route {
+      @include m.flexBox(column, center, flex-end);
+      @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
+      position: absolute;
+      top: 50px;
+      right: 50px;
+
+      a {
+        margin-top: 12px;
+        text-decoration: none;
+        color: v.$purple_2;
+        box-sizing: border-box;
+        padding: 6px 12px;
+        border-radius: 100px;
+        transition: 125ms;
+
+        &:hover {
+          font-weight: 600;
+          box-shadow: 0 0 0 1px v.$purple_2;
+        }
+      }
+    }
+
     .login-dialog {
       @include m.flexBox(column, center, center);
       height: 769px;
@@ -38,6 +61,7 @@
       background-color: white;
       border-radius: 30px;
       box-sizing: border-box;
+      box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
       padding: 50px 60px;
 
       h2 {

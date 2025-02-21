@@ -1,0 +1,27 @@
+<section class="avatar-main">
+  <div class="avatar-dialog">
+    <div class="avatar-back-arrow">
+      <img
+        src="/img/arrow_back.png"
+        alt="Zurück zur Anmeldung"
+        (click)="navigateToReg()"
+      />
+    </div>
+    <h2>Wähle deinen Avatar</h2>
+    <img class="selected-avatar" [src]="selectedAvatar.src" alt="Avatar Dummy">
+    <span class="user-name" id="user-name">Frederik Beck</span>
+    <span class="avatar-choose">Aus der Liste wählen</span>
+    <div class="avatar-list">
+      <div
+        class="avatar"
+        *ngFor="let avatar of avatars"
+        (click)="selectAvatar(avatar)"
+      >
+        <img [src]="avatar.src" [alt]="avatar.name" />
+      </div>
+    </div>
+    <div class="register">
+        <button class="avatar-btn" (click)="accept()">Weiter</button>
+      </div>
+  </div>
+</section>
