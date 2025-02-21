@@ -1,4 +1,4 @@
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.model';
@@ -12,7 +12,7 @@ import { User } from '../../models/user.model';
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
 })
-export class DevspaceComponent {
+export class DevspaceComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
 
   userDatabase = collection(this.firestore, 'users');
@@ -73,10 +73,6 @@ export class DevspaceComponent {
         // console.log(element.data());
       });
     });
-    this.users.sort(
-      (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
-    );
-    console.log(this.users);
   }
 
   ngOnInit() {
@@ -84,7 +80,15 @@ export class DevspaceComponent {
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
-    // console.log(this.users);
+    
+    // this.users.sort((a, b) => a.avatar.localeCompare(b.avatar));
+
+    this.users.sort(
+      (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
+    );
+
+    console.log(this.users);
+
   }
 
   sortUsersByAvatar() {
