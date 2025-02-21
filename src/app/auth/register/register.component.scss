@@ -7,15 +7,29 @@
 
   .reg-dialog {
     @include m.flexBox(column, center, center);
-    height: 769px;
+    height: 700px;
     width: 606px;
     background-color: white;
     border-radius: 30px;
     box-sizing: border-box;
     padding: 50px 60px;
 
+    .reg-back-arrow {
+      position: relative;
+      width: 100%;
+      top: 90px;
+      left: 0;
+      cursor: pointer;
+
+      img {
+        width: 17px;
+        height: 17px;
+      }
+    }
+
     h2 {
       @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
+      margin-top: 50px;
     }
 
     p {
@@ -96,6 +110,7 @@
 
       .reg-btn {
         @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
+        margin-bottom: 60px;
         box-shadow: 0 0 0 1px v.$purple_1;
         background-color: v.$purple_1;
         transition: 125ms;
@@ -104,6 +119,12 @@
           background-color: v.$purple_2;
           box-shadow: 0 0 0 1px v.$purple_2;
           color: white;
+        }
+
+        &:disabled {
+          background-color: v.$grey;
+          box-shadow: 0 0 0 1px v.$grey;
+          cursor: not-allowed;
         }
       }
     }

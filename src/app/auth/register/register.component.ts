@@ -1,19 +1,30 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  name: string = '';
+  email: string = '';
+  password: string = '';
+  isPrivacyAccepted: boolean = false;
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   register() {
-    console.log('Register');
+    if (this.isPrivacyAccepted) {
+      this.router.navigate(['/avatar-selection']);
+    }
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
 }
