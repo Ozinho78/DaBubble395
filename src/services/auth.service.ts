@@ -19,6 +19,10 @@ export class AuthService {
     return this.userData;
   }
 
+  hasUserData(): boolean {
+    return !!(this.userData.email && this.userData.password);
+  }
+
   async registerUser(avatar: string) {
     if (!this.userData.email || !this.userData.password) {
       console.error("Keine gespeicherten Benutzerdaten gefunden!");
@@ -38,6 +42,7 @@ export class AuthService {
       });
 
       console.log("Benutzer erfolgreich registriert!");
+      localStorage.setItem('token', userCredential.user.uid);
       this.router.navigate(['/main']);
     } catch (error) {
       console.error("Fehler bei der Registrierung:", error);
