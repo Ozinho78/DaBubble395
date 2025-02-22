@@ -20,6 +20,7 @@ export class DevspaceComponent implements OnInit {
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
   users: User[] = [];
+  userJson: [{}] = [{}];
   channels: Channel[] = [];
 
   testData = [
@@ -70,11 +71,13 @@ export class DevspaceComponent implements OnInit {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       list.forEach((element) => {
         // this.users[element.id] = element.data();
-        const singleUser = element.data() as User;
-        const str = singleUser.avatar;
+        let singleUser = element.data() as User;
+        let str = singleUser.avatar;
         singleUser.id = parseInt(str.match(/\d+/)?.[0] || '0', 10);
         singleUser.docId = element.id;
         this.users.push(singleUser);
+        
+        // this.userJson.push(singleUser.toJson());
         // console.log(element.data());
       });
     });
@@ -95,7 +98,7 @@ export class DevspaceComponent implements OnInit {
     // this.users.sort((a, b) => a.avatar.localeCompare(b.avatar));
 
     this.users.sort(
-      (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
+      (start: User, end: User) => (start?.id || 0) - (end?.id || 0)
     );
 
     console.log(this.users);
