@@ -2,6 +2,7 @@ import { Component, inject, Injectable, OnInit } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.model';
+import { Channel } from '../../models/channel.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,9 @@ export class DevspaceComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
 
   userDatabase = collection(this.firestore, 'users');
+  channelDatabase = collection(this.firestore, 'channels');
   users: User[] = [];
+  channels: Channel[] = [];
 
   testData = [
     {
@@ -58,6 +61,7 @@ export class DevspaceComponent implements OnInit {
   ];
 
   unsubUserNames;
+  unsubChannelNames;
 
   constructor() {
     let singleUser;
@@ -71,6 +75,12 @@ export class DevspaceComponent implements OnInit {
         singleUser.docId = element.id;
         this.users.push(singleUser);
         // console.log(element.data());
+      });
+    });
+    this.unsubChannelNames = onSnapshot(this.channelDatabase, (list) => {
+      list.forEach((element) => {
+        const singleChannel = element.data() as Channel;
+        this.channels.push(singleChannel);
       });
     });
   }
@@ -93,9 +103,9 @@ export class DevspaceComponent implements OnInit {
 
   sortUsersByAvatar() {
     this.users.sort((a, b) => {
-      const numA = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
-      const numB = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
-      return numA - numB; // Absteigende Sortierung
+      const start = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
+      const end = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
+      return end - start; // Absteigende Sortierung
     });
   }
 
@@ -103,5 +113,6 @@ export class DevspaceComponent implements OnInit {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
     this.unsubUserNames();
+    this.unsubChannelNames();
   }
 }

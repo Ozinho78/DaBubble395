@@ -7,6 +7,7 @@ import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { routes } from "./app.routes";
 
 import env from "../environments/env.json";
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -23,6 +24,6 @@ export const appConfig: ApplicationConfig = {
 			}),
 		),
 		provideAuth(() => getAuth()),
-		provideFirestore(() => getFirestore()),
+		provideFirestore(() => getFirestore()), provideAnimationsAsync(),
 	],
 };

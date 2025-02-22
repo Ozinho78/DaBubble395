@@ -1,6 +1,14 @@
 <div class="devspace-wrapper">
   <div class="devspace-content">
     <div class="header"><img src="" alt=""></div>
+
+    @for (channel of channels; track $index){
+      <p>#{{ channel.name }}</p>
+    }
+
+    <br><br>
+
+    
     @for (user of users; track $index) {
       <p class="avatar-user"><img src="img/avatar/{{ user.avatar }}" alt="">{{ user.name }}</p>
     }
