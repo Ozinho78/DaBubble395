@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class ThreadsComponent implements OnInit {
   messages$!: Observable<Message[]>;
-  userCache: Map<string, Observable<string>> = new Map(); // Speichert Usernamen
+  userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   newMessageText: string = '';
 
   constructor(
@@ -30,15 +30,10 @@ export class ThreadsComponent implements OnInit {
     this.messages$ = this.threadService.getMessages(threadId);
   }
 
-  getUserName(userId: string): Observable<string> {
+  getUserData(userId: string): Observable<{ name: string, avatar: string }> {
     if (!this.userCache.has(userId)) {
-      this.userCache.set(
-        userId,
-        this.userService.getUserById(userId).pipe(
-          map(name => name || 'Unbekannter Nutzer'),
-          shareReplay(1)
-        )
-      );
+      const userData$ = this.userService.getUserById(userId);
+      this.userCache.set(userId, userData$);
     }
     return this.userCache.get(userId)!;
   }

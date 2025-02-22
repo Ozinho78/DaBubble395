@@ -1,50 +1,88 @@
 <div class="container">
-
-    <div class="header">
-        <div class="header-label">
-            <h2>Thread</h2>
-            <div>#Entwicklerteam</div>
-        </div>
-        <div>X</div>
-    </div>
-    <div class="shadow"></div>
-
-    <div class="thread-header">
-        <div>BILD</div>
-        <div>
-            <div>
-                <div>Noah Braun</div>
-                <div>14:25 Uhr</div>
+    <div>
+        <div class="header">
+            <div class="header-label">
+                <h2>Thread</h2>
+                <div class="channel"># Entwicklerteam</div>
             </div>
-            <div>
-                Welche Version ist aktuell von Angular?
+            <div class="close-btn-container">
+                <svg class="close-btn" width="14" height="14" viewBox="0 0 14 14" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path class="close-btn-path"
+                        d="M7.00005 8.39999L2.10005 13.3C1.91672 13.4833 1.68338 13.575 1.40005 13.575C1.11672 13.575 0.883382 13.4833 0.700049 13.3C0.516715 13.1167 0.425049 12.8833 0.425049 12.6C0.425049 12.3167 0.516715 12.0833 0.700049 11.9L5.60005 6.99999L0.700049 2.09999C0.516715 1.91665 0.425049 1.68332 0.425049 1.39999C0.425049 1.11665 0.516715 0.883321 0.700049 0.699988C0.883382 0.516654 1.11672 0.424988 1.40005 0.424988C1.68338 0.424988 1.91672 0.516654 2.10005 0.699988L7.00005 5.59999L11.9 0.699988C12.0834 0.516654 12.3167 0.424988 12.6 0.424988C12.8834 0.424988 13.1167 0.516654 13.3 0.699988C13.4834 0.883321 13.575 1.11665 13.575 1.39999C13.575 1.68332 13.4834 1.91665 13.3 2.09999L8.40005 6.99999L13.3 11.9C13.4834 12.0833 13.575 12.3167 13.575 12.6C13.575 12.8833 13.4834 13.1167 13.3 13.3C13.1167 13.4833 12.8834 13.575 12.6 13.575C12.3167 13.575 12.0834 13.4833 11.9 13.3L7.00005 8.39999Z"
+                        fill="black" />
+                </svg>
             </div>
         </div>
-    </div>
+        <div class="shadow"></div>
 
-    <div class="replies-spacer">
-        <div>2 Antworten</div>
-    </div>
-
-    <div *ngIf="messages$ | async as messages" class="replies">
-
-        <div *ngFor="let message of messages" class="reply">
-            <div>BILD</div>
-            <div>
-                <div>{{ getUserName(message.userId) | async }}</div>
-                <div>{{ message.creationDate | date:'dd.MM.yyyy HH:mm' }} Uhr</div>
+        <div class="chat-container">
+            <div class="thread-header">
+                <div>BILD</div>
+                <div>
+                    <div>
+                        <div>Noah Braun</div>
+                        <div>14:25 Uhr</div>
+                    </div>
+                    <div>
+                        Welche Version ist aktuell von Angular?
+                    </div>
+                </div>
             </div>
-            <div>{{ message.text }}</div>
-            <div *ngIf="message.reactions.length">
-                <div>{{ message.reactions.join(', ') }}</div>
+
+            <div class="replies-spacer">
+                <div>2 Antworten</div>
+            </div>
+
+            <div *ngIf="messages$ | async as messages" class="replies">
+                <div *ngFor="let message of messages" class="reply-container">
+                    <div class="reply">
+                        <img [src]="(getUserData(message.userId) | async)?.avatar" alt="Avatar" class="avatar">
+                        <div class="message">
+                            <div class="message-info">
+                                <div class="message-info-name">{{ (getUserData(message.userId) | async)?.name }}</div>
+                                <div class="message-info-time">{{ message.creationDate | date:'HH:mm' }} Uhr</div>
+                            </div>
+                            <div class="message-text">{{ message.text }}</div>
+                            <div class="message-reactions">
+                                <div *ngIf="message.reactions.length">
+                                    <div>{{ message.reactions.join(', ') }}</div>
+                                </div>
+                                <div class="reaction-btn-container">
+                                    <div class="reaction-btn">
+                                        <img class="default-img" src="img/threads-img/add_reaction.svg" alt="Reaktion">
+                                        <img class="hover-img" src="img/threads-img/add_reaction_hover.svg"
+                                            alt="Reaktion">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
-    <div class="message-input">
-        <input type="text" [(ngModel)]="newMessageText" placeholder="Nachricht schreiben..." />
-        <button (click)="sendMessage()">Senden</button>
+    <div class="input-area-container">
+        <textarea type="text" [(ngModel)]="newMessageText" placeholder="Antworten..."></textarea>
+        <div class="input-area-btns">
+            <div class="left-btn-container">
+                <div class="emojis-btn">
+                    <img class="emoji-inactive-img" src="img/threads-img/emojis_inactive.svg" alt="Emojis">
+                    <img class="emoji-default-img" src="img/threads-img/emojis.svg" alt="Emojis">
+                    <img class="emoji-hover-img" src="img/threads-img/emojis_hover.svg" alt="Emojis">
+                </div>
+                <div class="mention-btn">
+                    <img class="mention-inactive-img" src="img/threads-img/mention_inactive.svg" alt="Erwähnen">
+                    <img class="mention-default-img" src="img/threads-img/mention.svg" alt="Erwähnen">
+                    <img class="mention-hover-img" src="img/threads-img/mention_hover.svg" alt="Erwähnen">
+                </div>
+            </div>
+            <div class="send-btn">
+                <img class="default-img" src="img/threads-img/send.svg" alt="Absenden">
+                <img (click)="sendMessage()" class="hover-img" src="img/threads-img/send_hover.svg" alt="Absenden">
+            </div>
+        </div>
     </div>
 
 </div>

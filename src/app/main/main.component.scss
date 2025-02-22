@@ -2,9 +2,12 @@
 @use "../../variables.scss" as v;
 
 .content {
+    max-height: 100dvh;
     @include m.flexBox(column, normal, normal);
 }
 
 .main-content {
-    @include m.flexBox(row, normal, normal);
+    max-height: calc(100dvh - 119px);
+    margin: 0 20px 20px 20px;
+    @include m.flexBox(row, space-between, normal);
 }
