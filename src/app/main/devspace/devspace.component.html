@@ -1,7 +1,17 @@
-
-
 <div class="devspace-wrapper">
   <div class="devspace-content">
+    <div class="header"><img src="" alt=""></div>
+
+    @for (channel of channels; track $index){
+      <p>#{{ channel.name }}</p>
+    }
+
+    <button (click)="openChannelDialog()">Neuen Channel hinzufügen</button>
+    <app-add-channel (onSave)="saveChannelToFirestore($event)"></app-add-channel>
+
+    <br><br>
+
+
     @for (user of users; track $index) {
       <p class="avatar-user"><img src="img/avatar/{{ user.avatar }}" alt="">{{ user.name }}</p>
     }

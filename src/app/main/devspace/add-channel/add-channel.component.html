@@ -1,0 +1,11 @@
+<div class="overlay" *ngIf="isOpen">
+  <div class="dialog">
+    <h2>Add new channel</h2>
+    <input type="text" [(ngModel)]="nameInput" placeholder="Please enter channel name" />
+    <input type="text" [(ngModel)]="descriptionInput" placeholder="Please enter channel description" />
+    <div class="actions">
+      <button (click)="close()">Close</button>
+      <button (click)="save()">Save</button>
+    </div>
+  </div>
+</div>
