@@ -6,9 +6,12 @@
       <p>#{{ channel.name }}</p>
     }
 
+    <button (click)="openChannelDialog()">Neuen Channel hinzufügen</button>
+    <app-add-channel (onSave)="saveChannelToFirestore($event, $event)"></app-add-channel>
+
     <br><br>
 
-    
+
     @for (user of users; track $index) {
       <p class="avatar-user"><img src="img/avatar/{{ user.avatar }}" alt="">{{ user.name }}</p>
     }

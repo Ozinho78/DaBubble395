@@ -1,15 +1,16 @@
-import { Component, inject, Injectable, OnInit } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { Component, inject, Injectable, OnInit, ViewChild } from '@angular/core';
+import { addDoc, Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.model';
 import { Channel } from '../../models/channel.model';
+import { AddChannelComponent } from './add-channel/add-channel.component';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [],
+  imports: [AddChannelComponent],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
 })
@@ -60,17 +61,17 @@ export class DevspaceComponent implements OnInit {
     },
   ];
 
+  @ViewChild(AddChannelComponent) channelDialog!: AddChannelComponent;
+
   unsubUserNames;
   unsubChannelNames;
 
   constructor() {
-    let singleUser;
-    let str = '';
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       list.forEach((element) => {
         // this.users[element.id] = element.data();
-        singleUser = element.data() as User;
-        str = singleUser.avatar;
+        const singleUser = element.data() as User;
+        const str = singleUser.avatar;
         singleUser.id = parseInt(str.match(/\d+/)?.[0] || '0', 10);
         singleUser.docId = element.id;
         this.users.push(singleUser);
@@ -114,5 +115,18 @@ export class DevspaceComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     this.unsubUserNames();
     this.unsubChannelNames();
+  }
+
+  openChannelDialog() {
+    this.channelDialog.open();
+  }
+
+  async saveChannelToFirestore(channelName: string, description: string) {
+    let newChannel = new Channel;
+    newChannel.name = channelName;
+    newChannel.description = description;
+    newChannel.creationDate = new Date();
+    await addDoc(this.channelDatabase, { name: newChannel.name, creationDate: newChannel.creationDate, description: newChannel.description });
+    console.log('Channel saved:', channelName);
   }
 }
