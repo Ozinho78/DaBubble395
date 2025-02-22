@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Channel } from '../../../models/channel.model';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class AddChannelComponent {
   nameInput = '';
   descriptionInput = '';
 
-  @Output() onSave = new EventEmitter<string>();
+  @Output() onSave = new EventEmitter<Channel>();
 
   open(){
     this.isOpen = true;
@@ -26,8 +27,13 @@ export class AddChannelComponent {
 
   save() {
     if (this.nameInput.trim()) {
-      this.onSave.emit(this.nameInput);
-      this.onSave.emit(this.descriptionInput);
+      let newChannel = new Channel;
+      newChannel.name = this.nameInput;
+      newChannel.description = this.descriptionInput;
+      newChannel.creationDate = new Date();
+      // this.onSave.emit(this.nameInput);
+      // this.onSave.emit(this.descriptionInput);
+      this.onSave.emit(newChannel);
       this.close();
     }
   }

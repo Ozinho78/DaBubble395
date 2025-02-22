@@ -121,12 +121,14 @@ export class DevspaceComponent implements OnInit {
     this.channelDialog.open();
   }
 
-  async saveChannelToFirestore(channelName: string, description: string) {
-    let newChannel = new Channel;
-    newChannel.name = channelName;
-    newChannel.description = description;
-    newChannel.creationDate = new Date();
-    await addDoc(this.channelDatabase, { name: newChannel.name, creationDate: newChannel.creationDate, description: newChannel.description });
-    console.log('Channel saved:', channelName);
+  async saveChannelToFirestore(channel: Channel) {
+    // let newChannel = new Channel;
+    // newChannel.name = channelName;
+    // newChannel.description = description;
+    // newChannel.creationDate = new Date();
+    // await addDoc(this.channelDatabase, { name: newChannel.name, creationDate: newChannel.creationDate, description: newChannel.description });
+    // await addDoc(this.channelDatabase, newChannel.toJson());
+    await addDoc(this.channelDatabase, channel.toJson());
+    // console.log('Channel saved:', channelName);
   }
 }

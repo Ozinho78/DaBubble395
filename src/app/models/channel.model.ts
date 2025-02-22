@@ -10,7 +10,8 @@ export class Channel {
   public toJson(){
     return {
       docId: this.docId,
-      creationDate: this.creationDate.toISOString(),
+      // creationDate: this.creationDate.toISOString(),
+      creationDate: this.creationDate,
       name: this.name,
       description: this.description,
       member: this.member,
