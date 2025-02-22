@@ -20,9 +20,14 @@ export class RegisterComponent {
   ) {}
 
   ngOnInit() {}
+  
+  setToken() {
+    localStorage.setItem('token', 'dummy-token');
+  }
 
-  register() {
+  async register() {
     if (this.isPrivacyAccepted) {
+      await this.setToken();
       this.authService.storeUserData(this.name, this.email, this.password);
       this.router.navigate(['/avatar-selection']);
     }
