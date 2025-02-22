@@ -11,8 +11,8 @@
         <div class="login-dialog">
             <h2>Anmeldung</h2>
             <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-            <input type="email" placeholder="beispielname@email.com">
-            <input type="password" placeholder="Passwort">
+            <input type="email" placeholder="beispielname@email.com" [(ngModel)]="email">
+            <input type="password" placeholder="Passwort" [(ngModel)]="password">
             <a href="">
                 <span>Passwort vergessen?</span>
             </a>
@@ -23,9 +23,10 @@
                 <span>Anmelden mit Google</span>
             </button>
             <div class="login-btn">
-                <button class="login-btn-register">Anmelden</button>
-                <button class="login-btn-guest" (click)="login()">Gäste-Login</button>
+                <button class="login-btn-register" (click)="login()">Anmelden</button>
+                <button class="login-btn-guest" (click)="guestLogin()">Gäste-Login</button>
             </div>
+            <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
         </div> 
     </div>
 </section>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-avatar-selection',
@@ -20,10 +21,16 @@ export class AvatarSelectionComponent {
   ];
 
   selectedAvatar: any = { name: 'avatar_dummy', src: '/img/avatar_dummy.png' };
+  userData: any = {};
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userData = this.authService.getUserData();
+  }
 
   navigateToReg() {
     this.router.navigate(['/register']);
@@ -34,6 +41,10 @@ export class AvatarSelectionComponent {
   }
 
   accept() {
-    console.log('accept');
+    if (this.selectedAvatar.src) {
+      this.authService.registerUser(this.selectedAvatar.src);
+    } else {
+      console.error("Kein Avatar ausgewählt!");
+    }
   }
 }
