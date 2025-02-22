@@ -6,12 +6,20 @@ import { Observable, map } from 'rxjs';
     providedIn: 'root'
 })
 export class UserService {
-    private firestore = inject(Firestore); // ✅ Korrekte Dependency Injection
+    private firestore = inject(Firestore);
 
-    getUserById(userId: string): Observable<string> {
+    getUserById(userId: string): Observable<{ name: string, avatar: string }> {
         const userRef = doc(this.firestore, `users/${userId}`);
         return docData(userRef).pipe(
-            map((user: any) => user?.name || 'Unbekannt')
+            map((user: any) => {
+                const result = {
+                    name: user?.name || 'Unbekannt',
+                    avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                };
+                console.log('User data for', userId, ':', result);
+                return result;
+            })
         );
     }
+
 }

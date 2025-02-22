@@ -3,26 +3,241 @@
 
 h2 {
     margin: 0;
+    @include m.styleFont("Nunito", 24px, 700, 37.74px);
 }
 
 .container {
+    height: calc(100% - 20px);
+    width: 485px;
     background-color: #FFFFFF;
     border-radius: 30px;
-}
+    @include m.flexBox(column, normal, normal);
+    @include m.styleFont();
 
-.header {
-    margin: 16px;
-    @include m.flexBox(row, space-between, center);
-}
+    .header {
+        height: 96px;
+        margin: 0 40px;
+        @include m.flexBox(row, space-between, center);
 
-.header-label {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
+        .header-label {
+            display: flex;
+            align-items: center;
+            gap: 16px;
 
-.shadow {
-    flex: 1;
-    height: 5px;
-    box-shadow: 0 6px 6px -3px #00000014;
+            .channel {
+                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$purple_2);
+            }
+        }
+
+        .close-btn-container {
+            @include m.flexBox(row, center, center);
+
+            .close-btn {
+                height: 13.5px;
+                width: 13.5px;
+                padding: 6.5px;
+                border-radius: 50%;
+                transition: all 0.100s ease-in;
+                cursor: pointer;
+
+                &:hover {
+                    transform: scale(1.1);
+                    background-color: v.$purple_bg;
+
+                    path {
+                        fill: v.$purple_3;
+                    }
+                }
+            }
+        }
+    }
+
+    .shadow {
+        height: 5px;
+        background: linear-gradient(to bottom, #00000014, #00000000);
+    }
+
+    .chat-container {
+        overflow-y: auto;
+
+        .replies {
+            @include m.flexBox(column, normal, normal);
+
+            .reply-container {
+                margin: 10px 0;
+
+                .reply {
+                    margin: 10px 40px;
+                    @include m.flexBox(row, normal, normal, 20px);
+
+                    .avatar {
+                        height: 70px;
+                        width: 70px;
+                        border-radius: 50%;
+                    }
+
+                    .message {
+                        width: 100%;
+                        @include m.flexBox(column, normal, normal, 8px);
+
+                        .message-info {
+                            @include m.flexBox(row, normal, flex-end, 20px);
+
+                            .message-info-name {
+                                @include m.styleFont("Nunito", 18px, 700, 24.55px);
+                                cursor: pointer;
+
+                                &:hover {
+                                    color: v.$purple_1;
+                                }
+                            }
+
+                            .message-info-time {
+                                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+                            }
+                        }
+
+                        .message-text {
+                            @include m.styleFont("Nunito", 18px, 400, 24.55px);
+                            padding: 15px;
+                            gap: 8px;
+                            border-top-right-radius: 20px;
+                            border-bottom-right-radius: 20px;
+                            border-bottom-left-radius: 20px;
+                            background-color: #ECEEFE;
+                        }
+
+                        .message-reactions {
+                            @include m.flexBox(row, normal, normal, 20px);
+
+                            .reaction-btn-container {
+                                height: 34px;
+                                width: 34px;
+                                @include m.flexBox(row, center, center);
+                                background: #FFFFFF;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                transition: all 0.100s ease;
+
+                                .reaction-btn {
+                                    .default-img {
+                                        display: block;
+                                    }
+
+                                    .hover-img {
+                                        display: none;
+                                    }
+                                }
+
+                                &:hover {
+                                    background-color: v.$purple_bg;
+
+                                    .default-img {
+                                        display: none !important;
+                                    }
+
+                                    .hover-img {
+                                        display: block !important;
+                                        transform: scale(1.05);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &:hover {
+                    background-color: #ECEEFE;
+
+                    .message-text {
+                        background-color: #FFFFFF !important;
+                    }
+                }
+            }
+        }
+    }
+
+    .input-area-container {
+        height: 145px;
+        margin: 0px 20px 20px 20px;
+        padding: 20px;
+        @include m.flexBox(column, space-between, normal);
+        border: 1px solid v.$purple_4;
+        border-radius: 20px;
+
+        textarea {
+            height: 50px;
+            @include m.styleFont("Nunito", 18px, 400, 24.55px);
+            border: none;
+            resize: none;
+            overflow-y: auto;
+
+            &:focus {
+                outline: none;
+            }
+
+            &::placeholder {
+                color: v.$grey;
+            }
+        }
+
+        .input-area-btns {
+            @include m.flexBox(row, space-between, center);
+
+            .left-btn-container {
+                @include m.flexBox(row, normal, center, 5px);
+
+                .emojis-btn img,
+                .mention-btn img {
+                    display: none;
+                }
+
+                .emojis-btn .emoji-inactive-img,
+                .mention-btn .mention-inactive-img {
+                    display: inline;
+                }
+
+                .emojis-btn:hover .emoji-inactive-img,
+                .mention-btn:hover .mention-inactive-img {
+                    display: none;
+                }
+
+                .emojis-btn:hover .emoji-hover-img,
+                .mention-btn:hover .mention-hover-img {
+                    display: inline;
+                    cursor: pointer;
+                }
+            }
+
+            .send-btn {
+                cursor: pointer;
+
+                .default-img {
+                    display: block;
+                }
+
+                .hover-img {
+                    display: none;
+                }
+
+                &:hover {
+                    .default-img {
+                        display: none !important;
+                    }
+
+                    .hover-img {
+                        display: block !important;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            border: 1px solid v.$purple_2;
+        }
+
+        &:focus-within {
+            border: 1px solid v.$purple_3;
+        }
+    }
 }
