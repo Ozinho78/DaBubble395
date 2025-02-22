@@ -1,17 +1,42 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  constructor(private router: Router) {}
+  email: string = '';
+  password: string = '';
+  errorMessage: string = '';
 
-  login() {
+  constructor(private router: Router,
+    private authService: AuthService
+  ) {}
+
+  guestLogin() {
     localStorage.setItem('token', 'dummy-token');
     this.router.navigate(['/main']);
+  }
+
+  async login() {
+    this.errorMessage = '';
+
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Bitte fülle alle Felder aus.';
+      return;
+    }
+
+    try {
+      await this.authService.loginUser(this.email, this.password);
+      this.router.navigate(['/main']);
+    } catch (error: any) {
+      this.errorMessage = 'Fehler bei der Anmeldung: ' + (error.message || 'Unbekannter Fehler');
+    }
   }
 }

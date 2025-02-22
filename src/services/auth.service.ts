@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
@@ -57,6 +58,20 @@ export class AuthService {
       localStorage.setItem('token', idToken);
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
+    }
+  }
+
+  async loginUser(email: string, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      
+      const idToken = await userCredential.user.getIdToken();
+      localStorage.setItem('token', idToken);
+  
+      console.log('Erfolgreich angemeldet:', userCredential.user);
+    } catch (error) {
+      console.error('Fehler beim Login:', error);
+      throw error;
     }
   }
 }
