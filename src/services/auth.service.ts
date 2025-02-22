@@ -1,9 +1,13 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private userData: any = {};
@@ -23,9 +27,14 @@ export class AuthService {
     return !!(this.userData.email && this.userData.password);
   }
 
+  deleteDummyToken() {
+    localStorage.removeItem('token');
+
+  }
+
   async registerUser(avatar: string) {
     if (!this.userData.email || !this.userData.password) {
-      console.error("Keine gespeicherten Benutzerdaten gefunden!");
+      console.error('Keine gespeicherten Benutzerdaten gefunden!');
       return;
     }
 
@@ -38,13 +47,16 @@ export class AuthService {
 
       await updateProfile(userCredential.user, {
         displayName: this.userData.name,
-        photoURL: avatar
+        photoURL: avatar,
       });
 
-      console.log("Benutzer erfolgreich registriert!");
+      console.log('Benutzer erfolgreich registriert!');
       this.router.navigate(['/main']);
+      this.deleteDummyToken();
+      const idToken = await userCredential.user.getIdToken();
+      localStorage.setItem('token', idToken);
     } catch (error) {
-      console.error("Fehler bei der Registrierung:", error);
+      console.error('Fehler bei der Registrierung:', error);
     }
   }
 }
