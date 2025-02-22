@@ -34,40 +34,44 @@ export class AuthService {
   }
 
   async registerUser(avatar: string) {
-    if (!this.userData.email || !this.userData.password) {
+    if (!this.hasUserData()) {
       console.error('Keine gespeicherten Benutzerdaten gefunden!');
       return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        this.auth,
-        this.userData.email,
-        this.userData.password
-      );
-
-      await updateProfile(userCredential.user, {
-        displayName: this.userData.name,
-        photoURL: avatar,
-      });
-
-      console.log('Benutzer erfolgreich registriert!');
+      const userCredential = await this.createUser();
+      await this.updateUserProfile(userCredential.user, avatar);
+      await this.setAuthToken(userCredential.user);
       this.router.navigate(['/main']);
       this.deleteDummyToken();
-      const idToken = await userCredential.user.getIdToken();
-      localStorage.setItem('token', idToken);
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
     }
   }
 
+  async createUser() {
+    const { email, password } = this.userData;
+    return createUserWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async updateUserProfile(user: any, avatar: string) {
+    await updateProfile(user, {
+      displayName: this.userData.name,
+      photoURL: avatar,
+    });
+    console.log('Benutzerprofil aktualisiert!');
+  }
+
+  async setAuthToken(user: any) {
+    const idToken = await user.getIdToken();
+    localStorage.setItem('token', idToken);
+  }
+
   async loginUser(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-      
-      const idToken = await userCredential.user.getIdToken();
-      localStorage.setItem('token', idToken);
-  
+      await this.setAuthToken(userCredential.user);
       console.log('Erfolgreich angemeldet:', userCredential.user);
     } catch (error) {
       console.error('Fehler beim Login:', error);
