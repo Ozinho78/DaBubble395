@@ -1,6 +1,7 @@
-<div class="overlay" *ngIf="isOpen">
-  <div class="dialog">
-    <h2>Add new channel</h2>
+<div class="overlay-wrapper" *ngIf="isOpen">
+  <div class="dialog-content">
+    <h2>Channel erstellen</h2>
+    <p>Channels dienen deinem Team zur Kommunikation</p>
     <input type="text" [(ngModel)]="nameInput" placeholder="Please enter channel name" />
     <input type="text" [(ngModel)]="descriptionInput" placeholder="Please enter channel description" />
     <div class="actions">

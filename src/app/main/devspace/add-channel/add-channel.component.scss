@@ -1,4 +1,7 @@
-.overlay {
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.overlay-wrapper {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,15 +11,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  @include m.styleFont("Nunito");
+  // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
 }
 
-.dialog {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 300px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
+.dialog-content {
+  width: 872px;
+  height: 539px;
+  background: #FFFFFF;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
 }
 
 .actions {
