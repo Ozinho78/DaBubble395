@@ -29,19 +29,29 @@
         </g>
       </svg>
     </div>
-    <p>Channels dienen deinem Team zur Kommunikation</p>
-    <input
-      type="text"
-      [(ngModel)]="nameInput"
-      placeholder="Please enter channel name"
-    />
-    <input
-      type="text"
-      [(ngModel)]="descriptionInput"
-      placeholder="Please enter channel description"
-    />
-    <div class="actions">
-      <button (click)="save()">Save</button>
+    <p class="channel-description">Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
+
+    <div class="input-ctn">
+      <label for="nameInput">Channel-Name</label><br><br>
+      <input
+        id="nameInput"
+        name="nameInput"
+        type="text"
+        [(ngModel)]="nameInput"
+        placeholder="#  z.B. Kooperationsprojekte"
+      /><br>
+      <label class="description" for="descriptionInput">Beschreibung <span>(optional)</span></label><br><br>
+      <input
+        id="descriptionInput"
+        name="descriptionInput"
+        type="text"
+        [(ngModel)]="descriptionInput"
+        placeholder="Dein Text hier"
+      /><br>
+    </div>
+    
+    <div class="save-btn">
+      <button (click)="save()">Erstellen</button>
     </div>
   </div>
 </div>
