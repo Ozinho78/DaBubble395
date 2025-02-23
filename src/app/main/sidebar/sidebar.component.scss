@@ -52,6 +52,21 @@ svg {
     flex-grow: 0;
     svg {
       transform: rotate(90deg);
+      cursor: pointer;
+    }
+    &:hover {
+      span {
+        color: v.$purple_3;
+        cursor: pointer;
+        transform: rotate(-90deg), scale(1.3);
+      }
+      svg {
+        fill: v.$purple_3;
+      }
     }
   }
+}
+
+.rotate-svg {
+  transform: rotate(-90deg) !important;
 }

@@ -8,9 +8,11 @@ import { VisibleService } from '../../../services/visible.service';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  devSpaceHidden = false;
   constructor(private visibleService: VisibleService) {}
 
   toggleDevspace() {
     this.visibleService.toggleVisibility();
+    this.devSpaceHidden = !this.devSpaceHidden;
   }
 }

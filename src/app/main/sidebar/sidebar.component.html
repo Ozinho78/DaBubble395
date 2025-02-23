@@ -1,8 +1,8 @@
 <div class="navbar">
-  <div class="navbar-content">
+  <div (click)="toggleDevspace()" class="navbar-content">
     <span>Workspace-Menü schließen</span>
     <svg
-      (click)="toggleDevspace()"
+      [class.rotate-svg]="devSpaceHidden"
       width="32"
       height="32"
       viewBox="0 0 32 32"
