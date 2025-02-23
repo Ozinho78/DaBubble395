@@ -49,8 +49,18 @@ a {
 
 .logo {
   position: absolute;
+  width: 306px;
+  height: 70px;
   top: 25px;
   left: 50px;
+  @include m.flexBox(row, center, center, 29px);
+  img {
+    width: 70px;
+    height: 70px;
+  }
+  span {
+    @include m.styleFont("Nunito", 50px, 700, 1.5, #000000);
+  }
   // img {
   //   width: 306px;    // Figma-Vorgabe
   //   height: 70px;
