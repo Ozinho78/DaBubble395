@@ -4,13 +4,14 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.model';
 import { Channel } from '../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
+import { RouterLink } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent],
+  imports: [AddChannelComponent, RouterLink],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
 })
