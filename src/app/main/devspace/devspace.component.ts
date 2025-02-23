@@ -5,13 +5,14 @@ import { User } from '../../models/user.model';
 import { Channel } from '../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, RouterLink],
+  imports: [AddChannelComponent, RouterLink, CommonModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
 })
@@ -23,6 +24,13 @@ export class DevspaceComponent implements OnInit {
   users: User[] = [];
   userJson: [{}] = [{}];
   channels: Channel[] = [];
+
+  isDevspaceVisible = true; // Standardmäßig sichtbar
+
+  toggleDevspace() {
+    this.isDevspaceVisible = !this.isDevspaceVisible;
+    // console.log(this.isSidebarVisible);
+  }
 
   testData = [
     {
