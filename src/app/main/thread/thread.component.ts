@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Firestore, addDoc, collection } from '@angular/fire/firestore';
 import { ThreadService } from '../../../services/thread.service';
-import { Observable, map } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
 import { Message } from '../../../models/message.class';
+import { Thread } from '../../../models/thread.class';
 import { UserService } from '../../../services/user.service';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-threads',
+  selector: 'app-thread',
   imports: [CommonModule, FormsModule],
-  templateUrl: './threads.component.html',
-  styleUrl: './threads.component.scss'
+  templateUrl: './thread.component.html',
+  styleUrl: './thread.component.scss'
 })
-export class ThreadsComponent implements OnInit {
+export class ThreadComponent implements OnInit {
   messages$!: Observable<Message[]>;
+  thread: Thread | null = null;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   newMessageText: string = '';
 
@@ -27,6 +28,13 @@ export class ThreadsComponent implements OnInit {
 
   ngOnInit() {
     const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
+
+    // Thread laden
+    this.threadService.getThreadById(threadId).subscribe(threadData => {
+      this.thread = new Thread(threadData);
+    });
+
+    // Nachrichten (Replies) laden
     this.messages$ = this.threadService.getMessages(threadId);
   }
 
@@ -58,5 +66,4 @@ export class ThreadsComponent implements OnInit {
       })
       .catch(error => console.error('Fehler beim Senden:', error));
   }
-
 }
