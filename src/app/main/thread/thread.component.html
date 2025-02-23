@@ -16,26 +16,33 @@
     <div class="shadow"></div>
 
     <div class="chat-container">
-        <div class="thread-header">
-            <div>BILD</div>
-            <div>
-                <div>
-                    <div>Noah Braun</div>
-                    <div>14:25 Uhr</div>
-                </div>
-                <div>
-                    Welche Version ist aktuell von Angular?
+
+        <!-- Thread -->
+        <div class="replies">
+            <div *ngIf="thread" class="reply-container"
+                [ngClass]="{'own-message': thread.userId === 'qdWWqOADh6O1FkGpHlTr'}">
+                <div class="reply">
+                    <img [src]="(getUserData(thread.userId) | async)?.avatar" alt="Avatar" class="avatar">
+                    <div class="message">
+                        <div class="message-info">
+                            <div class="message-info-name">{{ (getUserData(thread.userId) | async)?.name }}</div>
+                            <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
+                        </div>
+                        <div class="message-text">{{ thread.thread }}</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-
+        <!-- Antworten -->
         <div *ngIf="messages$ | async as messages">
+
+            <!-- Zähler -->
             <div class="replies-spacer">
                 <div>{{ messages.length }} Antworten</div>
             </div>
 
+            <!-- Einzelne Antworten -->
             <div class="replies">
                 <div *ngFor="let message of messages" class="reply-container"
                     [ngClass]="{'own-message': message.userId === 'qdWWqOADh6O1FkGpHlTr'}">
@@ -62,14 +69,10 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
+
         </div>
 
-
-        
     </div>
 
     <div class="input-area-container">

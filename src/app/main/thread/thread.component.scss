@@ -15,7 +15,8 @@ h2 {
     @include m.styleFont();
 
     .header {
-        height: 96px;
+        min-height: 96px;
+        max-height: 96px;
         margin: 0 40px;
         @include m.flexBox(row, space-between, center);
 
@@ -83,12 +84,6 @@ h2 {
                 .reply {
                     margin: 10px 40px;
                     @include m.flexBox(row, normal, normal, 20px);
-
-                    .avatar {
-                        height: 70px;
-                        width: 70px;
-                        border-radius: 50%;
-                    }
 
                     .message {
                         width: 100%;
@@ -275,4 +270,10 @@ h2 {
             border: 1px solid v.$purple_3;
         }
     }
+}
+
+.avatar {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
 }
