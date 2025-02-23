@@ -29,42 +29,47 @@
             </div>
         </div>
 
-        <div class="replies-spacer">
-            <div>2 Antworten</div>
-        </div>
-
-        <div *ngIf="messages$ | async as messages" class="replies">
 
 
+        <div *ngIf="messages$ | async as messages">
+            <div class="replies-spacer">
+                <div>{{ messages.length }} Antworten</div>
+            </div>
 
-            <div *ngFor="let message of messages" class="reply-container"
-                [ngClass]="{'own-message': message.userId === 'qdWWqOADh6O1FkGpHlTr'}">
-                <div class="reply">
-                    <img [src]="(getUserData(message.userId) | async)?.avatar" alt="Avatar" class="avatar">
-                    <div class="message">
-                        <div class="message-info">
-                            <div class="message-info-name">{{ (getUserData(message.userId) | async)?.name }}</div>
-                            <div class="message-info-time">{{ message.creationDate | date:'HH:mm' }} Uhr</div>
-                        </div>
-                        <div class="message-text">{{ message.text }}</div>
-                        <div class="message-reactions">
-                            <div *ngIf="message.reactions.length">
-                                <div>{{ message.reactions.join(', ') }}</div>
+            <div class="replies">
+                <div *ngFor="let message of messages" class="reply-container"
+                    [ngClass]="{'own-message': message.userId === 'qdWWqOADh6O1FkGpHlTr'}">
+                    <div class="reply">
+                        <img [src]="(getUserData(message.userId) | async)?.avatar" alt="Avatar" class="avatar">
+                        <div class="message">
+                            <div class="message-info">
+                                <div class="message-info-name">{{ (getUserData(message.userId) | async)?.name }}</div>
+                                <div class="message-info-time">{{ message.creationDate | date:'HH:mm' }} Uhr</div>
                             </div>
-                            <div class="reaction-btn-container">
-                                <div class="reaction-btn">
-                                    <img class="default-img" src="img/threads-img/add_reaction.svg" alt="Reaktion">
-                                    <img class="hover-img" src="img/threads-img/add_reaction_hover.svg" alt="Reaktion">
+                            <div class="message-text">{{ message.text }}</div>
+                            <div class="message-reactions">
+                                <div *ngIf="message.reactions.length">
+                                    <div>{{ message.reactions.join(', ') }}</div>
+                                </div>
+                                <div class="reaction-btn-container">
+                                    <div class="reaction-btn">
+                                        <img class="default-img" src="img/threads-img/add_reaction.svg" alt="Reaktion">
+                                        <img class="hover-img" src="img/threads-img/add_reaction_hover.svg"
+                                            alt="Reaktion">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+
             </div>
-
-
-
         </div>
+
+
+        
     </div>
 
     <div class="input-area-container">
