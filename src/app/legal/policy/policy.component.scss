@@ -37,7 +37,7 @@ a {
   height: 469px;
   border-radius: 30px;
   /* Auto layout */
-  @include m.flexBox(column, center, flex-start, 32px);
+  // @include m.flexBox(column, center, flex-start, 32px);
   padding: 48px 56px;
   // position: absolute;
   left: calc(50% - 676.27px/2);
