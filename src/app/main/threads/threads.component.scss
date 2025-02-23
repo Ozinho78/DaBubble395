@@ -81,7 +81,7 @@ h2 {
                         @include m.flexBox(column, normal, normal, 8px);
 
                         .message-info {
-                            @include m.flexBox(row, normal, flex-end, 20px);
+                            @include m.flexBox(row, normal, center, 20px);
 
                             .message-info-name {
                                 @include m.styleFont("Nunito", 18px, 700, 24.55px);
@@ -151,6 +151,27 @@ h2 {
 
                     .message-text {
                         background-color: #FFFFFF !important;
+                    }
+                }
+            }
+        }
+
+        .own-message {
+            .reply {
+                @include m.flexBox(row-reverse !important, normal, normal);
+
+                .message {
+                    @include m.flexBox(column, normal, flex-end !important);
+
+                    .message-info {
+                        @include m.flexBox(row-reverse !important, normal, center);
+                    }
+
+                    .message-text {
+                        border-top-right-radius: 0 !important;
+                        border-top-left-radius: 20px;
+                        background-color: v.$purple_2 !important;
+                        color: #FFFFFF !important;
                     }
                 }
             }
