@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData, updateDoc, doc, arrayUnion } from '@angular/fire/firestore';
 import { ThreadService } from '../../../services/thread.service';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
@@ -19,6 +19,7 @@ export class ThreadComponent implements OnInit {
   thread: Thread | null = null;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   newMessageText: string = '';
+  showEmojiCard: boolean = false;
 
   constructor(
     private firestore: Firestore,
@@ -28,6 +29,7 @@ export class ThreadComponent implements OnInit {
 
   ngOnInit() {
     const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
+    const messagesRef = collection(this.firestore, 'messages'); // Passe evtl. den Pfad an
 
     // Thread laden
     this.threadService.getThreadById(threadId).subscribe(threadData => {
@@ -35,7 +37,8 @@ export class ThreadComponent implements OnInit {
     });
 
     // Nachrichten (Replies) laden
-    this.messages$ = this.threadService.getMessages(threadId);
+    this.messages$ = collectionData(messagesRef, { idField: 'id' }) as Observable<Message[]>;
+
   }
 
   getUserData(userId: string): Observable<{ name: string, avatar: string }> {
@@ -65,5 +68,20 @@ export class ThreadComponent implements OnInit {
         this.newMessageText = ''; // Eingabefeld leeren
       })
       .catch(error => console.error('Fehler beim Senden:', error));
+  }
+
+  // Beispiel: Methode zum Hinzufügen einer Reaction
+  addReaction(messageId: string, reaction: string) {
+    debugger;
+    const messageDocRef = doc(this.firestore, `messages/${messageId}`);
+    updateDoc(messageDocRef, {
+      reactions: arrayUnion(reaction)
+    })
+      .then(() => console.log('Reaction hinzugefügt!'))
+      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+  }
+
+  toggleEmojiCard() {
+    this.showEmojiCard = !this.showEmojiCard;
   }
 }

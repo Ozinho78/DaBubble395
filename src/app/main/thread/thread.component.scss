@@ -60,6 +60,7 @@ h2 {
 
     .chat-container {
         overflow-y: auto;
+        overflow-x: hidden;
 
         .replies-spacer {
             margin: 10px 33px;
@@ -276,4 +277,54 @@ h2 {
     height: 70px;
     width: 70px;
     border-radius: 50%;
+}
+
+.add-reactions-container {
+    position: relative;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+
+    .add-reactions {
+        width: 66px;
+        height: 46px;
+        @include m.flexBox(row, center, center);
+        position: absolute;
+        right: 40px;
+        top: -20px;
+        background-color: #FFFFFF;
+        border-width: 1px;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        border-bottom-left-radius: 25px;
+        border: 1px solid #ADB0D9;
+
+        svg {
+            padding: 8px;
+        }
+
+        .svg-container {
+            display: flex;
+        }
+
+        &:hover {
+            .svg-container {
+                border-radius: 50%;
+                background-color: v.$purple_bg;
+            }
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+}
+
+.reply-container {
+    &:hover {
+        .add-reactions-container {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 }

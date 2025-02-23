@@ -1,4 +1,5 @@
 export class Message {
+    id?: string;
     creationDate: number | null = null;
     reactions: string[] = [];
     text: string = '';
