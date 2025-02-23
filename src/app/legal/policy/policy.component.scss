@@ -8,6 +8,31 @@
   @include m.styleFont("Nunito");
 }
 
+/* Die gesamte Scrollbar */
+::-webkit-scrollbar {
+  width: 20px; /* Breite der vertikalen Scrollbar */
+  height: 20px; /* Höhe der horizontalen Scrollbar */
+}
+
+/* Die Spur (Hintergrund der Scrollbar) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+
+/* Der Scrollbalken (Schiebeelement) */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  background: purple;
+  border-radius: 10px;
+}
+
+/* Wenn man mit der Maus über die Scrollbar fährt */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
 a {
   text-decoration: none;
 }
@@ -34,6 +59,7 @@ a {
 
 .policy-content {
   overflow-y: scroll;
+  
   width: 676px;
   height: 469px;
   border-radius: 30px;
@@ -46,10 +72,15 @@ a {
   background: #FFFFFF;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
   border-radius: 30px;
-
 }
 
-
+.policy-text {
+  h1, h2, h3, h4, h5, h6 {
+    color: v.$purple_1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
 
 
 
