@@ -7,6 +7,7 @@ export class Message {
     userId: string = '';
 
     constructor(obj?: any) {
+        this.id = obj?.id;
         this.creationDate = obj?.creationDate ?? null;
         this.reactions = obj?.reactions ?? [];
         this.text = obj?.text ?? '';

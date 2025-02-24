@@ -1,33 +1,37 @@
 // message.component.ts
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Firestore, addDoc, collection, collectionData, updateDoc, doc, arrayUnion } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { ReactionsComponent } from '../../reactions/reactions.component';
 
-import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
+import { Reaction } from '../../../../models/reaction.class';
 
-import { ThreadService } from '../../../../services/thread.service';
 import { UserService } from '../../../../services/user.service';
+import { ReactionService } from '../../../../services/reaction.service';
 
 @Component({
   selector: 'app-message',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactionsComponent],
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
   @Input() message!: Message;
-  @Output() reactionAdded = new EventEmitter<{ messageId: string, reaction: string }>();
 
   // Eigenschaft für den aktuellen Benutzer
   currentUserId!: string;
   userData$!: Observable<{ name: string, avatar: string }>;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
+  reactions$!: Observable<Reaction[]>;
+  groupedReactions: { [type: string]: number } = {};
+  showReactionsOverlay: boolean = false;
 
   constructor(
     private firestore: Firestore,
-    private userService: UserService
+    private userService: UserService,
+    private reactionService: ReactionService
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +40,17 @@ export class MessageComponent implements OnInit {
 
     // Lade die Benutzerdaten des Autors der Nachricht
     this.userData$ = this.userService.getUserById(this.message.userId);
+
+    // Lade die Reaktionen der Nachricht aus der Subcollection
+    if (this.message.id) {
+      this.reactions$ = this.reactionService.getReactions(this.message.id);
+      this.reactions$.subscribe(reactions => {
+        this.groupedReactions = reactions.reduce((acc, reaction) => {
+          acc[reaction.type] = (acc[reaction.type] || 0) + 1;
+          return acc;
+        }, {} as { [type: string]: number });
+      });
+    }
   }
 
   getUserData(userId: string): Observable<{ name: string, avatar: string }> {
@@ -46,28 +61,37 @@ export class MessageComponent implements OnInit {
     return this.userCache.get(userId)!;
   }
 
-  onAddReaction(reaction: string): void {
-    this.reactionAdded.emit({ messageId: this.message.id!, reaction });
-  }
-
-  // Methode zum Hinzufügen einer Reaction
-  addReaction(messageId: string, reaction: string) {
-    debugger;
-    const messageDocRef = doc(this.firestore, `messages/${messageId}`);
-    updateDoc(messageDocRef, {
-      reactions: arrayUnion(reaction)
-    })
+  onAddReaction(reactionType: string): void {
+    const reaction = new Reaction({
+      userId: this.currentUserId,
+      type: reactionType,
+      timestamp: Date.now()
+    });
+    this.reactionService.addReaction(this.message.id!, reaction)
       .then(() => console.log('Reaction hinzugefügt!'))
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
   }
 
-  // Neue Methode zum Behandeln der Reaktionen aus der Message-Komponente
-  handleReactionAdded(event: { messageId: string, reaction: string }): void {
-    const messageDocRef = doc(this.firestore, `messages/${event.messageId}`);
-    updateDoc(messageDocRef, {
-      reactions: arrayUnion(event.reaction)
-    })
-      .then(() => console.log('Reaction hinzugefügt!'))
+
+  toggleReactionsOverlay(): void {
+    this.showReactionsOverlay = !this.showReactionsOverlay;
+  }
+
+  onEmojiSelected(emojiType: string): void {
+    const reaction = new Reaction({
+      userId: this.currentUserId,
+      type: emojiType,
+      timestamp: Date.now()
+    });
+    this.reactionService.addReaction(this.message.id!, reaction)
+      .then(() => {
+        console.log('Reaction hinzugefügt!');
+        this.showReactionsOverlay = false;
+      })
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+  }
+
+  onOverlayClosed(): void {
+    this.showReactionsOverlay = false;
   }
 }

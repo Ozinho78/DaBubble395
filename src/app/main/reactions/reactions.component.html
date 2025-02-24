@@ -1,10 +1,7 @@
-<!-- Overlay wird nur angezeigt, wenn showEmojiOverlay true ist -->
-<div class="overlay" *ngIf="showEmojiOverlay" (click)="closeOverlay()">
-    <div class="emoji-card visible" (click)="$event.stopPropagation()">
-        <!-- Emoji-Buttons -->
-        <button (click)="selectEmoji('👍')">👍</button>
-        <button (click)="selectEmoji('❤️')">❤️</button>
-        <button (click)="selectEmoji('😮')">😮</button>
-        <!-- Weitere Emoji-Buttons -->
+<div class="reaction-overlay" (click)="closeOverlay()">
+    <div class="reaction-card" (click)="$event.stopPropagation()">
+        <div class="reaction-item" *ngFor="let emoji of emojis" (click)="selectEmoji(emoji)">
+            <img [src]="'img/emojis/' + emoji + '.svg'" [alt]="emoji" />
+        </div>
     </div>
 </div>

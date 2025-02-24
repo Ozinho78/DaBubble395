@@ -19,14 +19,11 @@ export class ThreadComponent implements OnInit {
   messages$!: Observable<Message[]>;
   thread: Thread | null = null;
   newMessageText: string = '';
-  private messagesRef: any;
 
   constructor(
     private firestore: Firestore,
     private threadService: ThreadService
-  ) {
-    this.messagesRef = collection(this.firestore, 'messages');
-  }
+  ) { }
 
   ngOnInit() {
     const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
@@ -34,7 +31,7 @@ export class ThreadComponent implements OnInit {
       this.thread = new Thread(threadData);
     });
 
-    this.messages$ = collectionData(this.messagesRef, { idField: 'id' }) as Observable<Message[]>;
+    this.messages$ = this.threadService.getMessages(threadId);
   }
 
   sendMessage() {
@@ -48,7 +45,10 @@ export class ThreadComponent implements OnInit {
       reactions: []
     });
 
-    addDoc(this.messagesRef, newMessage.toJSON())
+    // Initialisiere messagesRef lokal
+    const messagesRef = collection(this.firestore, 'messages');
+
+    addDoc(messagesRef, newMessage.toJSON())
       .then(() => {
         console.log('Nachricht gesendet!');
         this.newMessageText = '';

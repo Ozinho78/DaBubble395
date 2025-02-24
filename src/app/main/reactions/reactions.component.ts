@@ -1,26 +1,28 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-reactions',
   imports: [CommonModule],
   templateUrl: './reactions.component.html',
-  styleUrl: './reactions.component.scss'
+  styleUrls: ['./reactions.component.scss']
 })
 export class ReactionsComponent {
-  showEmojiOverlay: boolean = false;
+  @Output() emojiSelected = new EventEmitter<string>();
+  @Output() closed = new EventEmitter<void>();
 
-  openOverlay() {
-    this.showEmojiOverlay = true;
+  emojis: string[] = [
+    'thumbs-up-sign', 'thumbs-down-sign', 'ok-hand-sign', 'clapping-hands-sign',
+    'slightly-smiling-face', 'smiling-face-with-heart-shaped-eyes', 'smiling-face-with-open-mouth-and-smiling-eyes', 'smiling-face-with-smiling-eyes',
+    'smiling-face-with-sunglasses', 'thinking-face', 'flexed-biceps', 'waving-hand-sign',
+    'fire', 'party-popper', 'rocket', 'white-heavy-check-mark'
+  ];
+
+  selectEmoji(emoji: string): void {
+    this.emojiSelected.emit(emoji);
   }
 
-  closeOverlay() {
-    this.showEmojiOverlay = false;
-  }
-
-  selectEmoji(emoji: string) {
-    console.log('Gewähltes Emoji:', emoji);
-    // Hier kannst du den ausgewählten Emoji zurückgeben oder an den Parent senden
-    this.closeOverlay();
+  closeOverlay(): void {
+    this.closed.emit();
   }
 }
