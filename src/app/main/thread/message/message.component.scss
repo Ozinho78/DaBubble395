@@ -1,0 +1,222 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.reply-container {
+    padding: 1px 0;
+    margin: 5px 0;
+
+    &:hover {
+        background-color: v.$purple_bg;
+
+        .message-text {
+            background-color: #FFFFFF;
+        }
+
+        .add-reactions-container {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+}
+
+.reply {
+    margin: 10px 40px;
+    @include m.flexBox(row, normal, normal, 20px);
+}
+
+.avatar {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+.message {
+    width: 100%;
+    @include m.flexBox(column, normal, normal, 8px);
+}
+
+.message-info {
+    @include m.flexBox(row, normal, center, 20px);
+}
+
+.message-info-name {
+    @include m.styleFont("Nunito", 18px, 700, 24.55px);
+    cursor: pointer;
+
+    &:hover {
+        color: v.$purple_1;
+    }
+}
+
+.message-info-time {
+    @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+}
+
+.message-text {
+    @include m.styleFont("Nunito", 18px, 400, 24.55px);
+    padding: 15px;
+    gap: 8px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: #ECEEFE;
+}
+
+.message-reactions {
+    @include m.flexBox(row, normal, center, 8px);
+}
+
+.reaction-btn {
+    height: 34px;
+    width: 34px;
+    @include m.flexBox(row, center, center);
+    background: #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.100s ease;
+
+    &:hover {
+        background: v.$purple_bg;
+
+        svg path {
+            fill: v.$purple_3;
+        }
+    }
+}
+
+.own-message {
+    .reply {
+        @include m.flexBox(row-reverse, normal, normal);
+
+        .message {
+            @include m.flexBox(column, normal, flex-end);
+
+            .message-info {
+                @include m.flexBox(row-reverse, normal, center);
+            }
+
+            .message-text {
+                border-top-right-radius: 0;
+                border-top-left-radius: 20px;
+                background-color: v.$purple_2;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
+.svg-container {
+    display: flex;
+}
+
+.add-reactions-container {
+    position: relative;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+}
+
+.add-reactions {
+    width: 66px;
+    height: 46px;
+    @include m.flexBox(row, center, center);
+    position: absolute;
+    right: 40px;
+    top: -20px;
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border: 1px solid #ADB0D9;
+
+    svg {
+        padding: 8px;
+    }
+}
+
+.svg-container {
+    cursor: pointer;
+
+    &:hover {
+        border-radius: 50%;
+        background-color: v.$purple_bg;
+
+        path {
+            fill: v.$purple_3;
+        }
+    }
+}
+
+.reaction-icon {
+    height: 24px;
+}
+
+.reaction {
+    @include m.flexBox(row, center, center);
+    width: 64px;
+    height: 34px;
+    gap: 5px;
+    background-color: #FFFFFF;
+    border: 1px solid v.$purple_4;
+    border-radius: 20px;
+    cursor: pointer;
+
+    .counter {
+        @include m.styleFont("Nunito", 16px, 400, 21.82px);
+    }
+
+    &:hover {
+        border: 1px solid v.$purple_1;
+    }
+}
+
+.own-message {
+    .add-reactions {
+        right: unset;
+        left: 40px;
+    }
+}
+
+.reaction.liked {
+    border: 1px solid v.$purple_1;
+}
+
+.reaction {
+    position: relative;
+}
+
+.reaction-tooltip {
+    position: absolute;
+    @include m.flexBox(row, center, center);
+    min-height: 112px;
+    width: 158px;
+    left: 32px;
+    bottom: 35px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background: v.$purple_1;
+    pointer-events: none;
+}
+
+.reaction:hover .reaction-tooltip {
+    opacity: 1;
+}
+
+.tooltip-content {
+    @include m.flexBox(column, center, center);
+    gap: 5px;
+    text-align: center;
+}
+
+.tooltip-emoji {
+    width: 30px;
+    height: 30px;
+    padding: 8px 8px 0 8px;
+}
+
+.tooltip-names {
+    padding: 0px 8px 8px 8px;
+    @include m.styleFont("Nunito", 16px, 400, 21.82px, #FFFFFF);
+}

@@ -1,4 +1,5 @@
 export class Message {
+    id?: string;
     creationDate: number | null = null;
     reactions: string[] = [];
     text: string = '';
@@ -6,6 +7,7 @@ export class Message {
     userId: string = '';
 
     constructor(obj?: any) {
+        this.id = obj?.id;
         this.creationDate = obj?.creationDate ?? null;
         this.reactions = obj?.reactions ?? [];
         this.text = obj?.text ?? '';

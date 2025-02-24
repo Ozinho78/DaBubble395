@@ -59,7 +59,9 @@ h2 {
     }
 
     .chat-container {
-        overflow-y: auto;
+        overflow-y: visible;
+        overflow-x: hidden;
+        padding: 15px 0 0 0;
 
         .replies-spacer {
             margin: 10px 33px;
@@ -77,119 +79,12 @@ h2 {
 
         .replies {
             @include m.flexBox(column, normal, normal);
-
-            .reply-container {
-                margin: 10px 0;
-
-                .reply {
-                    margin: 10px 40px;
-                    @include m.flexBox(row, normal, normal, 20px);
-
-                    .message {
-                        width: 100%;
-                        @include m.flexBox(column, normal, normal, 8px);
-
-                        .message-info {
-                            @include m.flexBox(row, normal, center, 20px);
-
-                            .message-info-name {
-                                @include m.styleFont("Nunito", 18px, 700, 24.55px);
-                                cursor: pointer;
-
-                                &:hover {
-                                    color: v.$purple_1;
-                                }
-                            }
-
-                            .message-info-time {
-                                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
-                            }
-                        }
-
-                        .message-text {
-                            @include m.styleFont("Nunito", 18px, 400, 24.55px);
-                            padding: 15px;
-                            gap: 8px;
-                            border-top-right-radius: 20px;
-                            border-bottom-right-radius: 20px;
-                            border-bottom-left-radius: 20px;
-                            background-color: #ECEEFE;
-                        }
-
-                        .message-reactions {
-                            @include m.flexBox(row, normal, normal, 20px);
-
-                            .reaction-btn-container {
-                                height: 34px;
-                                width: 34px;
-                                @include m.flexBox(row, center, center);
-                                background: #FFFFFF;
-                                border-radius: 50%;
-                                cursor: pointer;
-                                transition: all 0.100s ease;
-
-                                .reaction-btn {
-                                    .default-img {
-                                        display: block;
-                                    }
-
-                                    .hover-img {
-                                        display: none;
-                                    }
-                                }
-
-                                &:hover {
-                                    background-color: v.$purple_bg;
-
-                                    .default-img {
-                                        display: none !important;
-                                    }
-
-                                    .hover-img {
-                                        display: block !important;
-                                        transform: scale(1.05);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                &:hover {
-                    background-color: #ECEEFE;
-
-                    .message-text {
-                        background-color: #FFFFFF !important;
-                    }
-                }
-            }
-        }
-
-        .own-message {
-            .reply {
-                @include m.flexBox(row-reverse !important, normal, normal);
-
-                .message {
-                    @include m.flexBox(column, normal, flex-end !important);
-
-                    .message-info {
-                        @include m.flexBox(row-reverse !important, normal, center);
-                    }
-
-                    .message-text {
-                        border-top-right-radius: 0 !important;
-                        border-top-left-radius: 20px;
-                        background-color: v.$purple_2 !important;
-                        color: #FFFFFF !important;
-                    }
-                }
-            }
         }
     }
 
     .input-area-container {
         height: 145px;
-        margin: 0px 20px 20px 20px;
+        margin: 5px 20px 20px 20px;
         padding: 20px;
         @include m.flexBox(column, space-between, normal);
         border: 1px solid v.$purple_4;
@@ -270,10 +165,4 @@ h2 {
             border: 1px solid v.$purple_3;
         }
     }
-}
-
-.avatar {
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
 }
