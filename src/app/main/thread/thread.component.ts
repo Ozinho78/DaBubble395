@@ -7,10 +7,11 @@ import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReactionsComponent } from "../reactions/reactions.component";
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactionsComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -19,7 +20,6 @@ export class ThreadComponent implements OnInit {
   thread: Thread | null = null;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   newMessageText: string = '';
-  showEmojiCard: boolean = false;
 
   constructor(
     private firestore: Firestore,
@@ -79,9 +79,5 @@ export class ThreadComponent implements OnInit {
     })
       .then(() => console.log('Reaction hinzugefügt!'))
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
-  }
-
-  toggleEmojiCard() {
-    this.showEmojiCard = !this.showEmojiCard;
   }
 }

@@ -50,7 +50,7 @@
                     <!-- add reactions -->
                     <div class="add-reactions-container">
                         <div class="add-reactions">
-                            <div class="svg-container" (click)="toggleEmojiCard()">
+                            <div class="svg-container">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <mask id="mask0_1823_21494" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
@@ -63,17 +63,11 @@
                                             fill="black" />
                                     </g>
                                 </svg>
-
                             </div>
                         </div>
-                        <!-- Emoji-Card, die nur angezeigt wird, wenn showEmojiCard true ist -->
-                        <div *ngIf="showEmojiCard" class="emoji-card">
-                            <button (click)="addReaction(message.id!, 'like')">👍</button>
-                            <button (click)="addReaction(message.id!, 'love')">❤️</button>
-                            <button (click)="addReaction(message.id!, 'wow')">😮</button>
-                            <!-- Weitere Emoji-Buttons -->
-                        </div>
                     </div>
+
+                    <app-reactions></app-reactions>
 
                     <div class="reply">
                         <img [src]="(getUserData(message.userId) | async)?.avatar" alt="Avatar" class="avatar">
