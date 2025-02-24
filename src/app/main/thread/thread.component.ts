@@ -29,6 +29,7 @@ export class ThreadComponent implements OnInit {
     const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
     this.threadService.getThreadById(threadId).subscribe(threadData => {
       this.thread = new Thread(threadData);
+      this.thread.id = threadId;
     });
 
     this.messages$ = this.threadService.getMessages(threadId);

@@ -1,4 +1,3 @@
-// message.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -25,7 +24,7 @@ export class MessageComponent implements OnInit {
   userData$!: Observable<{ name: string, avatar: string }>;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   reactions$!: Observable<Reaction[]>;
-  groupedReactions: { [type: string]: number } = {};
+  groupedReactions: { [type: string]: { count: number, likedByMe: boolean } } = {};
   showReactionsOverlay: boolean = false;
 
   constructor(
@@ -43,12 +42,20 @@ export class MessageComponent implements OnInit {
 
     // Lade die Reaktionen der Nachricht aus der Subcollection
     if (this.message.id) {
-      this.reactions$ = this.reactionService.getReactions(this.message.id);
+      this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
+
+
       this.reactions$.subscribe(reactions => {
         this.groupedReactions = reactions.reduce((acc, reaction) => {
-          acc[reaction.type] = (acc[reaction.type] || 0) + 1;
+          if (!acc[reaction.type]) {
+            acc[reaction.type] = { count: 0, likedByMe: false };
+          }
+          acc[reaction.type].count++;
+          if (reaction.userId === this.currentUserId) {
+            acc[reaction.type].likedByMe = true;
+          }
           return acc;
-        }, {} as { [type: string]: number });
+        }, {} as { [type: string]: { count: number, likedByMe: boolean } });
       });
     }
   }
@@ -61,18 +68,6 @@ export class MessageComponent implements OnInit {
     return this.userCache.get(userId)!;
   }
 
-  onAddReaction(reactionType: string): void {
-    const reaction = new Reaction({
-      userId: this.currentUserId,
-      type: reactionType,
-      timestamp: Date.now()
-    });
-    this.reactionService.addReaction(this.message.id!, reaction)
-      .then(() => console.log('Reaction hinzugefügt!'))
-      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
-  }
-
-
   toggleReactionsOverlay(): void {
     this.showReactionsOverlay = !this.showReactionsOverlay;
   }
@@ -83,7 +78,7 @@ export class MessageComponent implements OnInit {
       type: emojiType,
       timestamp: Date.now()
     });
-    this.reactionService.addReaction(this.message.id!, reaction)
+    this.reactionService.addReaction('messages', this.message.id!, reaction)
       .then(() => {
         console.log('Reaction hinzugefügt!');
         this.showReactionsOverlay = false;

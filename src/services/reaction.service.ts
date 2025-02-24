@@ -8,17 +8,16 @@ import { Observable } from 'rxjs';
 })
 export class ReactionService {
     constructor(private firestore: Firestore) { }
-
-    // Fügt (oder aktualisiert) eine Reaction in der Subcollection 'reactions' unter der Message
-    addReaction(messageId: string, reaction: Reaction): Promise<void> {
-        // Verwende die userId als Dokument-ID
-        const reactionDocRef = doc(this.firestore, 'messages', messageId, 'reactions', reaction.userId);
+    
+    // Fügt (oder aktualisiert) eine Reaction in der Subcollection 'reactions' unter dem angegebenen Dokument (z. B. Message oder Thread)
+    addReaction(collectionName: string, documentId: string, reaction: Reaction): Promise<void> {
+        const reactionDocRef = doc(this.firestore, collectionName, documentId, 'reactions', reaction.userId);
         return setDoc(reactionDocRef, reaction.toJSON(), { merge: true });
     }
 
-    // Holt alle Reaktionen für eine bestimmte Message
-    getReactions(messageId: string): Observable<Reaction[]> {
-        const reactionsRef = collection(this.firestore, 'messages', messageId, 'reactions');
+    // Holt alle Reaktionen für ein bestimmtes Dokument (z. B. Message oder Thread)
+    getReactions(collectionName: string, documentId: string): Observable<Reaction[]> {
+        const reactionsRef = collection(this.firestore, collectionName, documentId, 'reactions');
         return collectionData(reactionsRef, { idField: 'id' }) as Observable<Reaction[]>;
     }
 }

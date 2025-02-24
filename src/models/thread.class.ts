@@ -1,4 +1,5 @@
 export class Thread {
+    id: string = '';
     channelId: string = '';
     creationDate: number | null = null;
     reactions: string[] = [];
@@ -6,6 +7,7 @@ export class Thread {
     userId: string = '';
 
     constructor(obj?: any) {
+        this.id = obj?.id ?? '';
         this.channelId = obj?.channelId ?? '';
         this.creationDate = obj?.creationDate ?? null;
         this.reactions = obj?.reactions ?? [];

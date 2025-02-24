@@ -170,3 +170,14 @@
         border: 1px solid v.$purple_1;
     }
 }
+
+.own-message {
+    .add-reactions {
+        right: unset;
+        left: 40px;
+    }
+}
+
+.reaction.liked {
+    border: 1px solid v.$purple_1;
+  }
