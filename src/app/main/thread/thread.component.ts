@@ -8,10 +8,12 @@ import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactionsComponent } from "../reactions/reactions.component";
+import { MessageComponent } from "./message/message.component";
+import { ThreadMessageComponent } from "./thread-message/thread-message.component";
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, ReactionsComponent],
+  imports: [CommonModule, FormsModule, ReactionsComponent, MessageComponent, ThreadMessageComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -76,6 +78,16 @@ export class ThreadComponent implements OnInit {
     const messageDocRef = doc(this.firestore, `messages/${messageId}`);
     updateDoc(messageDocRef, {
       reactions: arrayUnion(reaction)
+    })
+      .then(() => console.log('Reaction hinzugefügt!'))
+      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+  }
+
+  // Neue Methode zum Behandeln der Reaktionen aus der Message-Komponente
+  handleReactionAdded(event: { messageId: string, reaction: string }): void {
+    const messageDocRef = doc(this.firestore, `messages/${event.messageId}`);
+    updateDoc(messageDocRef, {
+      reactions: arrayUnion(event.reaction)
     })
       .then(() => console.log('Reaction hinzugefügt!'))
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));

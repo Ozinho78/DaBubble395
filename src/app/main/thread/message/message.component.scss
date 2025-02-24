@@ -1,0 +1,97 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.reply-container {
+    padding: 1px 0;
+
+    &:hover {
+        background-color: v.$purple_bg;
+
+        .message-text {
+            background-color: #FFFFFF;
+        }
+    }
+}
+
+.reply {
+    margin: 10px 40px;
+    @include m.flexBox(row, normal, normal, 20px);
+}
+
+.avatar {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+}
+
+.message {
+    width: 100%;
+    @include m.flexBox(column, normal, normal, 8px);
+}
+
+.message-info {
+    @include m.flexBox(row, normal, center, 20px);
+}
+
+.message-info-name {
+    @include m.styleFont("Nunito", 18px, 700, 24.55px);
+    cursor: pointer;
+
+    &:hover {
+        color: v.$purple_1;
+    }
+}
+
+.message-info-time {
+    @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+}
+
+.message-text {
+    @include m.styleFont("Nunito", 18px, 400, 24.55px);
+    padding: 15px;
+    gap: 8px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: #ECEEFE;
+}
+
+.message-reactions {
+    @include m.flexBox(row, normal, normal, 20px);
+}
+
+.reaction-btn-container {
+    height: 34px;
+    width: 34px;
+    @include m.flexBox(row, center, center);
+    background: #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.100s ease;
+}
+
+.add-reactions-container {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.own-message {
+    .reply {
+        @include m.flexBox(row-reverse, normal, normal);
+
+        .message {
+            @include m.flexBox(column, normal, flex-end);
+
+            .message-info {
+                @include m.flexBox(row-reverse, normal, center);
+            }
+
+            .message-text {
+                border-top-right-radius: 0;
+                border-top-left-radius: 20px;
+                background-color: v.$purple_2;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
