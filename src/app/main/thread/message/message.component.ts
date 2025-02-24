@@ -49,4 +49,25 @@ export class MessageComponent implements OnInit {
   onAddReaction(reaction: string): void {
     this.reactionAdded.emit({ messageId: this.message.id!, reaction });
   }
+
+  // Methode zum Hinzufügen einer Reaction
+  addReaction(messageId: string, reaction: string) {
+    debugger;
+    const messageDocRef = doc(this.firestore, `messages/${messageId}`);
+    updateDoc(messageDocRef, {
+      reactions: arrayUnion(reaction)
+    })
+      .then(() => console.log('Reaction hinzugefügt!'))
+      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+  }
+
+  // Neue Methode zum Behandeln der Reaktionen aus der Message-Komponente
+  handleReactionAdded(event: { messageId: string, reaction: string }): void {
+    const messageDocRef = doc(this.firestore, `messages/${event.messageId}`);
+    updateDoc(messageDocRef, {
+      reactions: arrayUnion(event.reaction)
+    })
+      .then(() => console.log('Reaction hinzugefügt!'))
+      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+  }
 }

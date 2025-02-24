@@ -15,14 +15,15 @@
 
   <div class="shadow"></div>
 
+  <!-- Chat Container -->
   <div class="chat-container">
-    
-    <!-- Thread Message -->
+
+    <!-- Thread -->
     <div class="replies">
       <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
     </div>
-
     <div *ngIf="messages$ | async as messages">
+
       <!-- Zähler -->
       <div class="replies-spacer">
         <div>{{ messages.length }} Antworten</div>
@@ -30,13 +31,13 @@
 
       <!-- Thread Messages -->
       <div class="replies">
-        <app-message *ngFor="let message of messages" [message]="message"
-          (reactionAdded)="handleReactionAdded($event)"></app-message>
+        <app-message *ngFor="let message of messages" [message]="message"></app-message>
       </div>
 
     </div>
   </div>
 
+  <!-- New Message -->
   <div class="input-area-container">
     <textarea type="text" [(ngModel)]="newMessageText" placeholder="Antworten..."></textarea>
     <div class="input-area-btns">
@@ -58,4 +59,5 @@
       </div>
     </div>
   </div>
+  
 </div>
