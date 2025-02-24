@@ -32,9 +32,22 @@
             <div class="message-reactions">
                 <ng-container *ngIf="groupedReactions | keyvalue as reactionGroups">
                     <ng-container *ngFor="let group of reactionGroups">
-                        <div class="reaction" [class.liked]="group.value.likedByMe">
+                        <div class="reaction" [class.liked]="group.value.likedByMe"
+                            (click)="group.value.likedByMe ? removeMyReaction(group.key) : onEmojiSelected(group.key)"
+                            (mouseenter)="openReactionTooltip(group.key, group.value.userNames)"
+                            (mouseleave)="closeReactionTooltip()">
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
+
+                            <!-- Tooltip-Overlay, das beim Hover angezeigt wird -->
+                            <div class="reaction-tooltip" *ngIf="showReactionTooltip && tooltipEmoji === group.key">
+                                <div class="tooltip-content">
+                                    <img [src]="'img/emojis/' + tooltipEmoji + '.svg'" alt="{{ tooltipEmoji }}"
+                                        class="tooltip-emoji">
+                                    <div class="tooltip-names">{{ tooltipText }}</div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </ng-container>
 
