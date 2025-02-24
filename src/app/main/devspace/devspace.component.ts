@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
 import { Subscription } from 'rxjs';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,18 @@ import { Subscription } from 'rxjs';
   imports: [AddChannelComponent, RouterLink, CommonModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
+  animations: [
+    trigger('fadeOut', [
+      state('void', style({ opacity: 0, height: 0, overflow: 'hidden' })),
+      transition(':leave', [
+        animate('500ms ease-out', style({ opacity: 0, height: 0 }))
+      ]),
+      transition(':enter', [
+        style({ opacity: 0, height: '0px' }),
+        animate('500ms ease-in', style({ opacity: 1, height: '*' }))
+      ])
+    ])
+  ]
 })
 export class DevspaceComponent implements OnInit {
   isVisible = true;
@@ -28,6 +41,13 @@ export class DevspaceComponent implements OnInit {
   users: User[] = [];
   userJson: [{}] = [{}];
   channels: Channel[] = [];
+
+
+  isVisible2 = true;
+
+  toggleElement() {
+    this.isVisible2 = !this.isVisible2;
+  }
 
   
 

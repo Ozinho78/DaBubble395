@@ -21,8 +21,10 @@
 
     <br /><br />
 
+    <button (click)="toggleElement()">Weg damit</button>
+
     @for (user of users; track $index) {
-    <p class="avatar-user">
+    <p *ngIf="isVisible2" [@fadeOut] class="avatar-user">
       <img src="img/avatar/{{ user.avatar }}" alt="" />{{ user.name }}
     </p>
     }
