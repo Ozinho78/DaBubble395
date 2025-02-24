@@ -5,6 +5,26 @@
   @include m.flexBox(column, flex-end, center);
   height: 100vh;
 
+  .avatar-header {
+    width: 100%;
+
+    .logo {
+      @include m.flexBox(row, flex-start, center);
+      margin-top: 50px;
+      margin-left: 50px;
+
+      .logo-logo {
+        width: 75px;
+        height: 75px;
+        margin-right: 10px;
+      }
+
+      .logo-name {
+        height: 24px;
+      }
+    }
+  }
+
   .avatar-dialog {
     @include m.flexBox(column, center, center);
     height: 700px;
