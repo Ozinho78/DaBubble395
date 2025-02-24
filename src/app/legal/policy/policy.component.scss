@@ -1,0 +1,99 @@
+@use "../../../variables.scss" as v;
+@use "../../../mixins.scss" as m;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  @include m.styleFont("Nunito");
+}
+
+/* Die gesamte Scrollbar */
+::-webkit-scrollbar {
+  width: 20px; /* Breite der vertikalen Scrollbar */
+  height: 20px; /* Höhe der horizontalen Scrollbar */
+}
+
+/* Die Spur (Hintergrund der Scrollbar) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+
+/* Der Scrollbalken (Schiebeelement) */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  background: purple;
+  border-radius: 10px;
+}
+
+/* Wenn man mit der Maus über die Scrollbar fährt */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+a {
+  text-decoration: none;
+}
+
+.policy-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  @include m.flexBox(row, center, center);
+  // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+  // @include m.flexBox(row, center, center);
+}
+
+.logo {
+  position: absolute;
+  width: 306px;
+  height: 70px;
+  top: 25px;
+  left: 50px;
+  @include m.flexBox(row, center, center, 29px);
+  img {
+    width: 70px;
+    height: 70px;
+  }
+  span {
+    @include m.styleFont("Nunito", 50px, 700, 1.5, #000000);
+  }
+  // img {
+  //   width: 306px;    // Figma-Vorgabe
+  //   height: 70px;
+  // }
+}
+
+.policy-content {
+  overflow-y: scroll;
+  
+  width: 676px;
+  height: 469px;
+  border-radius: 30px;
+  /* Auto layout */
+  // @include m.flexBox(column, center, flex-start, 32px);
+  padding: 48px 56px;
+  // position: absolute;
+  left: calc(50% - 676.27px/2);
+  top: calc(50% - 469px/2);
+  background: #FFFFFF;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 30px;
+}
+
+.policy-text {
+  h1, h2, h3, h4, h5, h6 {
+    color: v.$purple_1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+
+
+
+
+

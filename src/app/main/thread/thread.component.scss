@@ -15,7 +15,8 @@ h2 {
     @include m.styleFont();
 
     .header {
-        height: 96px;
+        min-height: 96px;
+        max-height: 96px;
         margin: 0 40px;
         @include m.flexBox(row, space-between, center);
 
@@ -60,6 +61,20 @@ h2 {
     .chat-container {
         overflow-y: auto;
 
+        .replies-spacer {
+            margin: 10px 33px;
+            @include m.flexBox(row, normal, center);
+            @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_4);
+
+            &::after {
+                content: "";
+                flex-grow: 1;
+                height: 1px;
+                background-color: v.$purple_4;
+                margin-left: 20px;
+            }
+        }
+
         .replies {
             @include m.flexBox(column, normal, normal);
 
@@ -70,18 +85,12 @@ h2 {
                     margin: 10px 40px;
                     @include m.flexBox(row, normal, normal, 20px);
 
-                    .avatar {
-                        height: 70px;
-                        width: 70px;
-                        border-radius: 50%;
-                    }
-
                     .message {
                         width: 100%;
                         @include m.flexBox(column, normal, normal, 8px);
 
                         .message-info {
-                            @include m.flexBox(row, normal, flex-end, 20px);
+                            @include m.flexBox(row, normal, center, 20px);
 
                             .message-info-name {
                                 @include m.styleFont("Nunito", 18px, 700, 24.55px);
@@ -151,6 +160,27 @@ h2 {
 
                     .message-text {
                         background-color: #FFFFFF !important;
+                    }
+                }
+            }
+        }
+
+        .own-message {
+            .reply {
+                @include m.flexBox(row-reverse !important, normal, normal);
+
+                .message {
+                    @include m.flexBox(column, normal, flex-end !important);
+
+                    .message-info {
+                        @include m.flexBox(row-reverse !important, normal, center);
+                    }
+
+                    .message-text {
+                        border-top-right-radius: 0 !important;
+                        border-top-left-radius: 20px;
+                        background-color: v.$purple_2 !important;
+                        color: #FFFFFF !important;
                     }
                 }
             }
@@ -240,4 +270,10 @@ h2 {
             border: 1px solid v.$purple_3;
         }
     }
+}
+
+.avatar {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
 }

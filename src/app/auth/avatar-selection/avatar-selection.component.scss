@@ -2,7 +2,7 @@
 @use "../../../variables.scss" as v;
 
 .avatar-main {
-  @include m.flexBox(row, center, center);
+  @include m.flexBox(column, flex-end, center);
   height: 100vh;
 
   .avatar-dialog {
@@ -14,76 +14,97 @@
     box-sizing: border-box;
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     padding: 50px 60px;
-  }
 
-  .avatar-back-arrow {
-    position: relative;
-    width: 100%;
-    top: 40px;
-    left: -20px;
-    cursor: pointer;
+    .avatar-back-arrow {
+      position: relative;
+      width: 100%;
+      top: 40px;
+      left: -20px;
+      cursor: pointer;
 
-    img {
-      width: 17px;
-      height: 17px;
+      img {
+        width: 17px;
+        height: 17px;
+      }
     }
-  }
 
-  h2 {
-    @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
-    margin-top: 0;
-  }
+    h2 {
+      @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
+      margin-top: 0;
+    }
 
-  .selected-avatar {
-    max-height: 168px;
-    border-radius: 50%;
-  }
-
-  .user-name {
-    @include m.styleFont("Nunito", 32px, 700, 43.56px, black);
-    margin-top: 20px;
-  }
-
-  .avatar-choose {
-    @include m.styleFont("Nunito", 20px, 400, 27.28px, black);
-    width: 100%;
-    text-align: left;
-    margin-top: 20px;
-  }
-
-  .avatar-list {
-    @include m.flexBox(row, center, center);
-    margin-top: 20px;
-
-    img {
-      width: 64px;
-      height: 64px;
-      margin: 10px;
+    .selected-avatar {
+      max-height: 168px;
       border-radius: 50%;
-      cursor: pointer;
+    }
+
+    .user-name {
+      @include m.styleFont("Nunito", 32px, 700, 43.56px, black);
+      margin-top: 20px;
+    }
+
+    .avatar-choose {
+      @include m.styleFont("Nunito", 20px, 400, 27.28px, black);
+      width: 100%;
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .avatar-list {
+      @include m.flexBox(row, center, center);
+      margin-top: 20px;
+
+      img {
+        width: 64px;
+        height: 64px;
+        margin: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+
+    .register {
+      @include m.flexBox(row, flex-end, flex-end);
+      width: 100%;
+      margin-top: 32px;
+
+      .avatar-btn {
+        @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
+        padding: 12px 20px;
+        margin-top: 35px;
+        border-radius: 100px;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 0 1px v.$purple_1;
+        background-color: v.$purple_1;
+        transition: 125ms;
+
+        &:hover {
+          background-color: v.$purple_2;
+          box-shadow: 0 0 0 1px v.$purple_2;
+          color: white;
+        }
+      }
     }
   }
 
-  .register {
-    @include m.flexBox(row, flex-end, flex-end);
-    width: 100%;
-    margin-top: 32px;
+  .legal-infos {
+    @include m.flexBox(row, space-around, center);
+    width: 250px;
+    height: 120px;
+    margin-top: 50px;
 
-    .avatar-btn {
-      @include m.styleFont("Nunito", 18px, 700, 24.55px, white);
-      padding: 12px 20px;
-      margin-top: 35px;
+    a {
+      @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
+      text-decoration: none;
+      box-sizing: border-box;
+      padding: 8px 12px;
       border-radius: 100px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 0 1px v.$purple_1;
-      background-color: v.$purple_1;
       transition: 125ms;
 
       &:hover {
-        background-color: v.$purple_2;
+        font-weight: 700;
         box-shadow: 0 0 0 1px v.$purple_2;
-        color: white;
       }
     }
   }

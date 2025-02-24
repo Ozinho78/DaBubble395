@@ -16,7 +16,7 @@ export class UserService {
                     name: user?.name || 'Unbekannt',
                     avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
                 };
-                console.log('User data for', userId, ':', result);
+                // console.log('User data for', userId, ':', result);
                 return result;
             })
         );

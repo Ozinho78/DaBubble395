@@ -1,20 +1,26 @@
-import { Component, inject, Injectable, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
 import { addDoc, Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.model';
 import { Channel } from '../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
+import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { VisibleService } from '../../../services/visible.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent],
+  imports: [AddChannelComponent, RouterLink, CommonModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
 })
 export class DevspaceComponent implements OnInit {
+  isVisible = true;
+  private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
 
   userDatabase = collection(this.firestore, 'users');
@@ -22,6 +28,8 @@ export class DevspaceComponent implements OnInit {
   users: User[] = [];
   userJson: [{}] = [{}];
   channels: Channel[] = [];
+
+  
 
   testData = [
     {
@@ -67,7 +75,7 @@ export class DevspaceComponent implements OnInit {
   unsubUserNames;
   unsubChannelNames;
 
-  constructor() {
+  constructor(private visibleService: VisibleService) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       list.forEach((element) => {
         // this.users[element.id] = element.data();
@@ -88,6 +96,10 @@ export class DevspaceComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscription = this.visibleService.visibleState$.subscribe(value => {
+      this.isVisible = value;
+    });
+    
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
