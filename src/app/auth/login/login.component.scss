@@ -32,22 +32,25 @@
     background-color: v.$purple_bg;
 
     .login-header {
-      @include m.flexBox(row, center, center);
+      @include m.flexBox(row, space-between, center);
       width: 100%;
+      margin-top: 75px;
 
-      .login-left{
-        @include m.flexBox(row, flex-start, center);
-        width: 50%;
+      .login-left {
+        @include m.flexBox(row, flex-start, center);   
+        margin-left: 50px;
 
         .logo {
           @include m.flexBox(row, flex-start, center);
-          width: 100%;
-          margin-left: 50px;
 
-          img {
-            width: 50px;
-            height: 50px;
+          .logo-logo {
+            width: 75px;
+            height: 75px;
             margin-right: 10px;
+          }
+
+          .logo-name {
+            height: 24px;
           }
         }
 
@@ -59,8 +62,6 @@
       .register-route {
         @include m.flexBox(column, center, flex-end);
         @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
-        width: 100%;
-        margin-top: 75px;
         margin-right: 50px;
 
         a {
