@@ -63,7 +63,7 @@
 }
 
 .message-reactions {
-    @include m.flexBox(row, normal, center, 20px);
+    @include m.flexBox(row, normal, center, 8px);
 }
 
 .reaction-btn {
