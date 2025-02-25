@@ -25,6 +25,7 @@ button, svg {
   @include m.styleFont("Nunito");
   // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
   // @include m.flexBox(row, center, center);
+  z-index: 50;
 }
 
 .dialog-content {

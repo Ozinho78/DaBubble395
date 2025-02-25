@@ -33,6 +33,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class DevspaceComponent implements OnInit {
   isVisible = true;
+  isChannelVisible = true;
+  isUserVisible = true;
   private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
 
@@ -43,12 +45,13 @@ export class DevspaceComponent implements OnInit {
   channels: Channel[] = [];
 
 
-  isVisible2 = true;
-
-  toggleElement() {
-    this.isVisible2 = !this.isVisible2;
+  toggleChannelVisibility() {
+    this.isChannelVisible = !this.isChannelVisible;
   }
 
+  toggleUserVisiblity(){
+   this.isUserVisible = !this.isUserVisible;
+  }
   
 
   testData = [

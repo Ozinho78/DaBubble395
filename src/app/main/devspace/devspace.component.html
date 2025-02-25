@@ -8,26 +8,49 @@
       <img src="img/edit_square.png" alt="" />
     </div>
 
-    @for (channel of channels; track $index){
-    <p>#{{ channel.name }}</p>
-    }
+    <div>
+      <div class="channel-list-ctn">
+        <div class="channel-header">
+          <div class="channel-sub-header">
+            <img (click)="toggleChannelVisibility()" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
+            <div>
+              <img src="img/workspaces.png" alt="Workspaces Icon">
+              <span>Channels</span>
+            </div>
+          </div>
+          <img (click)="openChannelDialog()" src="img/add.png" alt="Add Icon">
+        </div>
 
-    
+        <div class="channel-list">
+          @for (channel of channels; track $index){
+            <span *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
+            }
+        </div>
+        <div class="add-channel-ctn">
+          <img (click)="openChannelDialog()" src="img/add_circle.png" alt="Add Circle Icon">
+          <span>Channel hinzufügen</span>
+        </div>
+      </div>
+        
+      
 
-    <button (click)="openChannelDialog()">Neuen Channel hinzufügen</button>
-    <app-add-channel
-      (onSave)="saveChannelToFirestore($event)"
-    ></app-add-channel>
+      
+      <app-add-channel
+        (onSave)="saveChannelToFirestore($event)"
+      ></app-add-channel>
 
-    <br /><br />
+      <br /><br />
 
-    <button (click)="toggleElement()">Weg damit</button>
+      <div>
+        <button (click)="toggleUserVisiblity()">Weg damit</button>
 
-    @for (user of users; track $index) {
-    <p *ngIf="isVisible2" [@fadeOut] class="avatar-user">
-      <img src="img/avatar/{{ user.avatar }}" alt="" />{{ user.name }}
-    </p>
-    }
+        @for (user of users; track $index) {
+        <p *ngIf="isUserVisible" [@fadeOut] class="avatar-user">
+          <img src="img/avatar/{{ user.avatar }}" alt="" />{{ user.name }}
+        </p>
+        }
+      </div>
+    </div>
 
     <a routerLink="/imprint">Imprint</a><br />
     <a routerLink="/policy">Datenschutz</a>
