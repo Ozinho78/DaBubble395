@@ -21,46 +21,11 @@ svg {
   cursor: pointer;
 }
 
-.navbar {
-  /* 77. Hide/show navigation bar */
-  position: absolute;
-  width: 60px;
-  height: 347px;
-  // top: calc(50% - 347px/2 + 214.5px); // Figma
-  top: calc(50% - 347px / 2 + 214.5px);
-  left: -10px;
-  z-index: 1;
-  /* Auto layout */
-  @include m.flexBox(column, center, center, 10px);
-  padding: 23px 14px;
-  /* White */
-  background: #ffffff;
-  box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.2);
-  border-radius: 0px 30px 30px 0px;
-  .navbar-content {
-    @include m.flexBox(row, center, center, 10px);
-    /* Workspace-Menü schließen */
-    // width: 253px;
-    // height: 24px;
-    text-wrap: nowrap;
-    @include m.styleFont("Nunito", 20px, 500, 1.2, #000000);
-    /* identical to box height, or 24px */
-    transform: rotate(-90deg);
-    /* Inside auto layout */
-    flex: none;
-    order: 1;
-    flex-grow: 0;
-    svg {
-      transform: rotate(90deg);
-    }
-  }
-}
-
 .devspace-wrapper {
   height: 80vh;
   /* Menu 1 - channels + workspaces */
   /* Auto layout */
-  padding: 32px 30px;
+  
   // position: absolute;
   width: 366px;
   height: 940px;
@@ -73,12 +38,14 @@ svg {
 }
 
 .devspace-content {
-  padding: 20px;
+  width: 100%;
+  padding: 32px 30px;
   @include m.flexBox(column, center, flex-start);
   .header {
     @include m.flexBox(row, space-between, center);
     @include m.styleFont("Nunito", 24px, 700, 1.36, #000000);
     width: 100%;
+    padding-bottom: 20px;
     .workspace {
       @include m.flexBox(row, center, center, 15px);
       img {
@@ -125,3 +92,49 @@ svg {
   order: 2;
   flex-grow: 0;
 }
+
+
+
+.channel-list-ctn {
+  width: 100%;
+  
+  .channel-header {
+    width: 100%;
+    width: 306px;
+    @include m.styleFont("Nunito", 20px, 700, 1.36, #000000);
+    @include m.flexBox(row, space-between, center);
+    img {
+      cursor: pointer;
+    }
+
+    .channel-sub-header {
+      @include m.flexBox(row, center, center, 15px); 
+      
+      div {
+        @include m.flexBox(row, center, center, 10px);
+        img {
+          cursor: default;
+        }
+      }
+    }
+    padding-bottom: 20px;
+  }
+
+  .channel-list {
+    width: 100%;
+    padding-left: 20px;
+    @include m.flexBox(column, flex-start, flex-start, 13px);
+  }
+
+  .add-channel-ctn {
+    @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+    @include m.flexBox(row, center, center, 10px);
+    padding: 4px 10px;
+    img {
+      cursor: pointer;
+    }
+  }
+}
+
+// @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+// @include m.flexBox(row, center, center);
