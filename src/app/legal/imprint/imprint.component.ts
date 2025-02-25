@@ -9,4 +9,8 @@ import { RouterLink } from '@angular/router';
 })
 export class ImprintComponent {
 
+  goBack(){
+    window.history.back();
+  }
+
 }
