@@ -1,0 +1,88 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.input-area-container {
+    height: 145px;
+    margin: 5px 20px 20px 20px;
+    padding: 20px;
+    @include m.flexBox(column, space-between, normal);
+    border: 1px solid v.$purple_4;
+    border-radius: 20px;
+
+    textarea {
+        height: 50px;
+        @include m.styleFont("Nunito", 18px, 400, 24.55px);
+        border: none;
+        resize: none;
+        overflow-y: auto;
+
+        &:focus {
+            outline: none;
+        }
+
+        &::placeholder {
+            color: v.$grey;
+        }
+    }
+
+    &:hover {
+        border: 1px solid v.$purple_2;
+    }
+
+    &:focus-within {
+        border: 1px solid v.$purple_3;
+    }
+}
+
+.input-area-btns {
+    @include m.flexBox(row, space-between, center);
+
+    .left-btn-container {
+        @include m.flexBox(row, normal, center, 5px);
+
+        .emojis-btn img,
+        .mention-btn img {
+            display: none;
+        }
+
+        .emojis-btn .emoji-inactive-img,
+        .mention-btn .mention-inactive-img {
+            display: inline;
+        }
+
+        .emojis-btn:hover .emoji-inactive-img,
+        .mention-btn:hover .mention-inactive-img {
+            display: none;
+        }
+
+        .emojis-btn:hover .emoji-hover-img,
+        .mention-btn:hover .mention-hover-img {
+            display: inline;
+            cursor: pointer;
+        }
+    }
+
+
+}
+
+.send-btn {
+    cursor: pointer;
+
+    .default-img {
+        display: block;
+    }
+
+    .hover-img {
+        display: none;
+    }
+
+    &:hover {
+        .default-img {
+            display: none !important;
+        }
+
+        .hover-img {
+            display: block !important;
+        }
+    }
+}
