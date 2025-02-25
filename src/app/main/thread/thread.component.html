@@ -12,32 +12,41 @@
       </svg>
     </div>
   </div>
+
   <div class="shadow"></div>
   <div class="chat-container">
 
-    <!-- thread -->
+    <!-- Thread Header -->
     <div class="replies">
       <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
     </div>
 
+    <div *ngIf="groupedMessages$ | async as groupedMessages">
 
-    <div *ngIf="messages$ | async as messages">
-
-      <!-- counter -->
+      <!-- ✅ Anzahl der Nachrichten wird korrekt berechnet -->
       <div class="replies-spacer">
-        <div>{{ messages.length }} Antworten</div>
+        <div>{{ totalMessagesCount$ | async }} Antworten</div>
       </div>
 
-      <!-- messages -->
+      <!-- Nachrichten gruppiert nach Datum -->
       <div class="replies">
-        <app-message *ngFor="let message of messages" [message]="message"
-          (editRequest)="handleEditRequest($event)"></app-message>
+        <div *ngFor="let group of groupedMessages">
+          <!-- Datum als Trennlinie -->
+          <div class="date-header">
+            <div class="date">{{ group.date }}</div>
+          </div>
+
+          <!-- Nachrichten innerhalb dieses Tages -->
+          <app-message *ngFor="let message of group.messages" [message]="message"
+            (editRequest)="handleEditRequest($event)">
+          </app-message>
+        </div>
       </div>
 
     </div>
   </div>
 
-  <!-- input -->
+  <!-- Nachrichteneingabe -->
   <app-message-input [threadId]="thread?.id ?? null" #messageInput></app-message-input>
 
 </div>

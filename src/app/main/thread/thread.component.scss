@@ -80,7 +80,7 @@ h2 {
     .chat-container {
         overflow-y: visible;
         overflow-x: hidden;
-        padding: 15px 0 0 0;
+        padding: 5px 0 0 0;
 
         .replies-spacer {
             margin: 10px 33px;
@@ -99,5 +99,36 @@ h2 {
         .replies {
             @include m.flexBox(column, normal, normal);
         }
+    }
+}
+
+.date-header {
+    padding: 5px 0;
+    @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);
+    @include m.flexBox(row, center, center);
+
+    .date {
+        height: 28px;
+        padding: 0 24px;
+        @include m.flexBox(row, center, center);
+        border: 1px solid v.$purple_4;
+        border-radius: 20px;
+        cursor: unset;
+    }
+
+    &::before {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: v.$purple_4;
+        margin-left: 20px;
+    }
+
+    &::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: v.$purple_4;
+        margin-right: 20px;
     }
 }

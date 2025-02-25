@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageComponent } from "./message/message.component";
 import { ThreadMessageComponent } from "./thread-message/thread-message.component";
 import { MessageInputComponent } from "./message-input/message-input.component";
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-thread',
@@ -17,7 +18,8 @@ import { MessageInputComponent } from "./message-input/message-input.component";
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('messageInput') messageInput!: MessageInputComponent;
-  messages$!: Observable<Message[]>;
+  groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
+  totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
   channelName$!: Observable<string>;
   thread: Thread | null = null;
   newMessageText: string = '';
@@ -34,7 +36,36 @@ export class ThreadComponent implements OnInit {
     });
 
     this.channelName$ = this.threadService.getChannelName(this.threadId);
-    this.messages$ = this.threadService.getMessages(this.threadId);
+
+    this.groupedMessages$ = this.threadService.getMessages(this.threadId).pipe(
+      map(messages => {
+        const grouped = messages.reduce((acc, message) => {
+          const date = message.creationDate
+            ? new Date(message.creationDate).toLocaleDateString('de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            })
+            : 'Unbekanntes Datum';
+
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(message);
+          return acc;
+        }, {} as { [key: string]: Message[] });
+
+        return Object.keys(grouped).map(date => ({
+          date,
+          messages: grouped[date]
+        }));
+      })
+    );
+
+    // ✅ Berechnet die Gesamtanzahl der Nachrichten
+    this.totalMessagesCount$ = this.groupedMessages$.pipe(
+      map(groups => groups.reduce((acc, group) => acc + group.messages.length, 0))
+    );
   }
 
   handleEditRequest(event: { id: string, text: string }) {
