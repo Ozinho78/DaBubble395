@@ -1,49 +1,38 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, collectionData } from '@angular/fire/firestore';
 import { ThreadService } from '../../../services/thread.service';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
-import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageComponent } from "./message/message.component";
+import { ThreadMessageComponent } from "./thread-message/thread-message.component";
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MessageComponent, ThreadMessageComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
   messages$!: Observable<Message[]>;
   thread: Thread | null = null;
-  userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   newMessageText: string = '';
 
   constructor(
     private firestore: Firestore,
-    private threadService: ThreadService,
-    private userService: UserService
+    private threadService: ThreadService
   ) { }
 
   ngOnInit() {
     const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
-
-    // Thread laden
     this.threadService.getThreadById(threadId).subscribe(threadData => {
       this.thread = new Thread(threadData);
+      this.thread.id = threadId;
     });
 
-    // Nachrichten (Replies) laden
     this.messages$ = this.threadService.getMessages(threadId);
-  }
-
-  getUserData(userId: string): Observable<{ name: string, avatar: string }> {
-    if (!this.userCache.has(userId)) {
-      const userData$ = this.userService.getUserById(userId);
-      this.userCache.set(userId, userData$);
-    }
-    return this.userCache.get(userId)!;
   }
 
   sendMessage() {
@@ -53,16 +42,17 @@ export class ThreadComponent implements OnInit {
       text: this.newMessageText,
       userId: 'qdWWqOADh6O1FkGpHlTr', // Temporärer Benutzer
       threadId: '6DGHEdX29kIHBFTtGrSr', // Temporärer Thread
-      creationDate: Date.now(), // Unix Timestamp in Millisekunden
-      reactions: [] // Leere Reaktionen
+      creationDate: Date.now(),
+      reactions: []
     });
 
-    const messagesRef = collection(this.firestore, 'messages'); // Firestore-Referenz
+    // Initialisiere messagesRef lokal
+    const messagesRef = collection(this.firestore, 'messages');
 
-    addDoc(messagesRef, newMessage.toJSON()) // Firestore erwartet ein Objekt, daher `toJSON()`
+    addDoc(messagesRef, newMessage.toJSON())
       .then(() => {
         console.log('Nachricht gesendet!');
-        this.newMessageText = ''; // Eingabefeld leeren
+        this.newMessageText = '';
       })
       .catch(error => console.error('Fehler beim Senden:', error));
   }

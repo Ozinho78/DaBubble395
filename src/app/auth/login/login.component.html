@@ -1,36 +1,53 @@
 <section class="login-main">
-    <div class="login-intro">
-        <img src="/img/logo.svg" alt="DaBubble Logo">
-        <span>DABubble</span>
+  <div class="login-intro">
+    <img src="/img/logo.svg" alt="DaBubble Logo" />
+    <span>DABubble</span>
+  </div>
+  <div class="login">
+    <div class="login-header">
+      <div class="login-left">
+        <div class="logo">
+            <img class="logo-logo" src="/img/logo.svg" alt="DABubble Logo">
+            <img class="logo-name" src="/img/logo_name.svg" alt="Logo Name">
+        </div>
+      </div>
+      <div class="register-route">
+        <span>Neu bei DABubble?</span>
+        <a href="/register">Konto erstellen</a>
+      </div>
     </div>
-    <div class="login">
-        <div class="register-route">
-            <span>Neu bei DABubble?</span>
-            <a href="/register">Konto erstellen</a>
-        </div>
-        <div class="login-dialog">
-            <h2>Anmeldung</h2>
-            <p>Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-            <input type="email" placeholder="beispielname@email.com" [(ngModel)]="email">
-            <input type="password" placeholder="Passwort" [(ngModel)]="password">
-            <a href="">
-                <span>Passwort vergessen?</span>
-            </a>
-            <div class="login-border"></div>
-            <div class="login-border-word">ODER</div>
-            <button class="login-google">
-                <img src="/img/google.png" alt="Google Logo">
-                <span>Anmelden mit Google</span>
-            </button>
-            <div class="login-btn">
-                <button class="login-btn-register" (click)="login()">Anmelden</button>
-                <button class="login-btn-guest" (click)="guestLogin()">Gäste-Login</button>
-            </div>
-            <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
-        </div>
-        <div class="legal-infos">
-            <a href="/imprint">Impressum</a>
-            <a href="/policy">Datenschutz</a>
-        </div>
+    <div class="login-dialog">
+      <h2>Anmeldung</h2>
+      <p>
+        Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
+        verwendest.
+      </p>
+      <input
+        type="email"
+        placeholder="beispielname@email.com"
+        [(ngModel)]="email"
+      />
+      <input type="password" placeholder="Passwort" [(ngModel)]="password" />
+      <a href="">
+        <span>Passwort vergessen?</span>
+      </a>
+      <div class="login-border"></div>
+      <div class="login-border-word">ODER</div>
+      <button class="login-google">
+        <img src="/img/google.png" alt="Google Logo" />
+        <span>Anmelden mit Google</span>
+      </button>
+      <div class="login-btn">
+        <button class="login-btn-register" (click)="login()">Anmelden</button>
+        <button class="login-btn-guest" (click)="guestLogin()">
+          Gäste-Login
+        </button>
+      </div>
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
     </div>
+    <div class="legal-infos">
+      <a href="/imprint">Impressum</a>
+      <a href="/policy">Datenschutz</a>
+    </div>
+  </div>
 </section>
