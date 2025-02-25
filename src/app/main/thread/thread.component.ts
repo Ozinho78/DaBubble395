@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Firestore, addDoc, collection, collectionData } from '@angular/fire/firestore';
 import { ThreadService } from '../../../services/thread.service';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
@@ -19,22 +18,23 @@ import { MessageInputComponent } from "./message-input/message-input.component";
 export class ThreadComponent implements OnInit {
   @ViewChild('messageInput') messageInput!: MessageInputComponent;
   messages$!: Observable<Message[]>;
+  channelName$!: Observable<string>;
   thread: Thread | null = null;
   newMessageText: string = '';
+  threadId: string = '6DGHEdX29kIHBFTtGrSr'; // Beispiel, später dynamisch setzen
 
   constructor(
-    private firestore: Firestore,
     private threadService: ThreadService
   ) { }
 
   ngOnInit() {
-    const threadId = '6DGHEdX29kIHBFTtGrSr'; // Testweise, später dynamisch setzen
-    this.threadService.getThreadById(threadId).subscribe(threadData => {
+    this.threadService.getThreadById(this.threadId).subscribe(threadData => {
       this.thread = new Thread(threadData);
-      this.thread.id = threadId;
+      this.thread.id = this.threadId;
     });
 
-    this.messages$ = this.threadService.getMessages(threadId);
+    this.channelName$ = this.threadService.getChannelName(this.threadId);
+    this.messages$ = this.threadService.getMessages(this.threadId);
   }
 
   handleEditRequest(event: { id: string, text: string }) {
