@@ -1,3 +1,8 @@
+<!-- Datum über dem Thread-Text -->
+<div class="date-header">
+    <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
+</div>
+
 <div class="reply-container" [ngClass]="{'own-message': thread.userId === 'qdWWqOADh6O1FkGpHlTr'}">
 
     <!-- add reactions -->
