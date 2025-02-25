@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
+import { runInInjectionContext, Injector } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -20,12 +21,15 @@ export class HeaderComponent {
   constructor(
     private firestore: Firestore,
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private injector: Injector
   ) {}
 
   ngOnInit(): void {
-    const itemsRef = collection(this.firestore, 'users');
-    this.userName = collectionData(itemsRef);
+    runInInjectionContext(this.injector, () => {
+      const itemsRef = collection(this.firestore, 'users');
+      this.userName = collectionData(itemsRef);
+    });
   }
 
   toggleMenu(): void {
