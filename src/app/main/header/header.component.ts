@@ -47,7 +47,6 @@ export class HeaderComponent {
   }
 
   close(): void {
-    this.menuOpen = false;
     this.profileEditOpen = false;
   }
 
@@ -55,7 +54,6 @@ export class HeaderComponent {
     this.closeImgSrc = '/img/header-img/close-hover.png';
   }
 
-  // Wenn die Maus das Bild verlässt: zurück zum Standardbild
   onMouseLeaveClose(): void {
     this.closeImgSrc = '/img/header-img/close.png';
   }
