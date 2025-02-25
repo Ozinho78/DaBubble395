@@ -1,6 +1,25 @@
 @use "../../../mixins.scss" as m;
 @use "../../../variables.scss" as v;
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: v.$purple_2;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: v.$purple_1;
+    }
+}
+
+::-webkit-scrollbar-track {
+    background-color: v.$purple_4;
+    margin: 0;
+    border-radius: 5px;
+}
+
 h2 {
     margin: 0;
     @include m.styleFont("Nunito", 24px, 700, 37.74px);
