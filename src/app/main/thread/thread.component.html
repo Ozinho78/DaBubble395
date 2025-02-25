@@ -12,52 +12,32 @@
       </svg>
     </div>
   </div>
-
   <div class="shadow"></div>
-
-  <!-- Chat Container -->
   <div class="chat-container">
 
-    <!-- Thread -->
+    <!-- thread -->
     <div class="replies">
       <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
     </div>
+
+
     <div *ngIf="messages$ | async as messages">
 
-      <!-- Zähler -->
+      <!-- counter -->
       <div class="replies-spacer">
         <div>{{ messages.length }} Antworten</div>
       </div>
 
-      <!-- Thread Messages -->
+      <!-- messages -->
       <div class="replies">
-        <app-message *ngFor="let message of messages" [message]="message"></app-message>
+        <app-message *ngFor="let message of messages" [message]="message"
+          (editRequest)="handleEditRequest($event)"></app-message>
       </div>
 
     </div>
   </div>
 
-  <!-- New Message -->
-  <div class="input-area-container">
-    <textarea type="text" [(ngModel)]="newMessageText" placeholder="Antworten..."></textarea>
-    <div class="input-area-btns">
-      <div class="left-btn-container">
-        <div class="emojis-btn">
-          <img class="emoji-inactive-img" src="img/threads-img/emojis_inactive.svg" alt="Emojis">
-          <img class="emoji-default-img" src="img/threads-img/emojis.svg" alt="Emojis">
-          <img class="emoji-hover-img" src="img/threads-img/emojis_hover.svg" alt="Emojis">
-        </div>
-        <div class="mention-btn">
-          <img class="mention-inactive-img" src="img/threads-img/mention_inactive.svg" alt="Erwähnen">
-          <img class="mention-default-img" src="img/threads-img/mention.svg" alt="Erwähnen">
-          <img class="mention-hover-img" src="img/threads-img/mention_hover.svg" alt="Erwähnen">
-        </div>
-      </div>
-      <div class="send-btn">
-        <img class="default-img" src="img/threads-img/send.svg" alt="Absenden">
-        <img (click)="sendMessage()" class="hover-img" src="img/threads-img/send_hover.svg" alt="Absenden">
-      </div>
-    </div>
-  </div>
+  <!-- input -->
+  <app-message-input [threadId]="thread?.id ?? null" #messageInput></app-message-input>
 
 </div>

@@ -1,0 +1,21 @@
+<div class="input-area-container">
+    <textarea type="text" [(ngModel)]="messageText" placeholder="Antworten..."></textarea>
+    <div class="input-area-btns">
+        <div class="left-btn-container">
+            <div class="emojis-btn">
+                <img class="emoji-inactive-img" src="img/threads-img/emojis_inactive.svg" alt="Emojis">
+                <img class="emoji-default-img" src="img/threads-img/emojis.svg" alt="Emojis">
+                <img class="emoji-hover-img" src="img/threads-img/emojis_hover.svg" alt="Emojis">
+            </div>
+            <div class="mention-btn">
+                <img class="mention-inactive-img" src="img/threads-img/mention_inactive.svg" alt="Erwähnen">
+                <img class="mention-default-img" src="img/threads-img/mention.svg" alt="Erwähnen">
+                <img class="mention-hover-img" src="img/threads-img/mention_hover.svg" alt="Erwähnen">
+            </div>
+        </div>
+        <div class="send-btn">
+            <img class="default-img" src="img/threads-img/send.svg" alt="Absenden">
+            <img (click)="sendMessage()" class="hover-img" src="img/threads-img/send_hover.svg" alt="Absenden">
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Firestore } from '@angular/fire/firestore';
@@ -16,6 +16,7 @@ import { ReactionService } from '../../../../services/reaction.service';
 })
 export class MessageComponent implements OnInit {
   @Input() message!: Message;
+  @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
   currentUserId!: string;
   userData$!: Observable<{ name: string, avatar: string }>;
@@ -27,6 +28,7 @@ export class MessageComponent implements OnInit {
   showReactionTooltip: boolean = false;
   tooltipEmoji: string = '';
   tooltipText: string = '';
+  menuOpen: boolean = false; // Menü-Zustand
 
   constructor(
     private firestore: Firestore,
@@ -40,7 +42,7 @@ export class MessageComponent implements OnInit {
     // Lade die Reaktionen
     if (this.message.id) {
       this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
-      
+
       this.reactions$.subscribe(reactions => {
         const groups = reactions.reduce((acc, reaction) => {
           if (!acc[reaction.type]) {
@@ -146,5 +148,17 @@ export class MessageComponent implements OnInit {
   get currentUserName(): string {
     // Setze hier den aktuellen Benutzernamen, eventuell aus dem AuthService oder dem userData$
     return 'Frederik Beck'; // Beispiel
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  requestEdit() {
+    this.editRequest.emit({ id: this.message.id!, text: this.message.text });
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
   }
 }
