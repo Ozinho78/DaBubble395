@@ -1,6 +1,25 @@
 @use "../../../mixins.scss" as m;
 @use "../../../variables.scss" as v;
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: v.$purple_2;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: v.$purple_1;
+    }
+}
+
+::-webkit-scrollbar-track {
+    background-color: v.$purple_4;
+    margin: 0;
+    border-radius: 5px;
+}
+
 h2 {
     margin: 0;
     @include m.styleFont("Nunito", 24px, 700, 37.74px);
@@ -79,90 +98,6 @@ h2 {
 
         .replies {
             @include m.flexBox(column, normal, normal);
-        }
-    }
-
-    .input-area-container {
-        height: 145px;
-        margin: 5px 20px 20px 20px;
-        padding: 20px;
-        @include m.flexBox(column, space-between, normal);
-        border: 1px solid v.$purple_4;
-        border-radius: 20px;
-
-        textarea {
-            height: 50px;
-            @include m.styleFont("Nunito", 18px, 400, 24.55px);
-            border: none;
-            resize: none;
-            overflow-y: auto;
-
-            &:focus {
-                outline: none;
-            }
-
-            &::placeholder {
-                color: v.$grey;
-            }
-        }
-
-        .input-area-btns {
-            @include m.flexBox(row, space-between, center);
-
-            .left-btn-container {
-                @include m.flexBox(row, normal, center, 5px);
-
-                .emojis-btn img,
-                .mention-btn img {
-                    display: none;
-                }
-
-                .emojis-btn .emoji-inactive-img,
-                .mention-btn .mention-inactive-img {
-                    display: inline;
-                }
-
-                .emojis-btn:hover .emoji-inactive-img,
-                .mention-btn:hover .mention-inactive-img {
-                    display: none;
-                }
-
-                .emojis-btn:hover .emoji-hover-img,
-                .mention-btn:hover .mention-hover-img {
-                    display: inline;
-                    cursor: pointer;
-                }
-            }
-
-            .send-btn {
-                cursor: pointer;
-
-                .default-img {
-                    display: block;
-                }
-
-                .hover-img {
-                    display: none;
-                }
-
-                &:hover {
-                    .default-img {
-                        display: none !important;
-                    }
-
-                    .hover-img {
-                        display: block !important;
-                    }
-                }
-            }
-        }
-
-        &:hover {
-            border: 1px solid v.$purple_2;
-        }
-
-        &:focus-within {
-            border: 1px solid v.$purple_3;
         }
     }
 }
