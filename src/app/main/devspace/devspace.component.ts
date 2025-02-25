@@ -49,7 +49,7 @@ export class DevspaceComponent implements OnInit {
     this.isChannelVisible = !this.isChannelVisible;
   }
 
-  toggleUserVisiblity(){
+  toggleUserVisibility(){
    this.isUserVisible = !this.isUserVisible;
   }
   

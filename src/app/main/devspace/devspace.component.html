@@ -12,7 +12,7 @@
       <div class="channel-list-ctn">
         <div class="channel-header">
           <div class="channel-sub-header">
-            <img (click)="toggleChannelVisibility()" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
+            <img (click)="toggleChannelVisibility()" [class.channel-rotate]="!isChannelVisible" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
             <div>
               <img src="img/workspaces.png" alt="Workspaces Icon">
               <span>Channels</span>
@@ -39,20 +39,32 @@
         (onSave)="saveChannelToFirestore($event)"
       ></app-add-channel>
 
-      <br /><br />
+      <br />
 
-      <div>
-        <button (click)="toggleUserVisiblity()">Weg damit</button>
+      <div class="user-list-ctn">
+        <div class="user-header">
+          <img (click)="toggleUserVisibility()" [class.channel-rotate]="!isUserVisible" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
+          <div>
+            <img src="img/account_circle.png" alt="Account Circle Item">
+            <span>Direktnachrichten</span>
+          </div>
+        </div>
 
-        @for (user of users; track $index) {
-        <p *ngIf="isUserVisible" [@fadeOut] class="avatar-user">
-          <img src="img/avatar/{{ user.avatar }}" alt="" />{{ user.name }}
-        </p>
-        }
+        <div class="user-list">
+          @for (user of users; track $index) {
+            <div *ngIf="isUserVisible" [@fadeOut] class="avatar-user">
+                <img src="img/avatar/{{ user.avatar }}" alt="" />
+                <span>{{ user.name }}</span>
+            </div>
+          }
+        </div>
       </div>
     </div>
 
-    <a routerLink="/imprint">Imprint</a><br />
-    <a routerLink="/policy">Datenschutz</a>
+    <div class="legal-links">
+      <a routerLink="/imprint">Imprint</a><br />
+      <a routerLink="/policy">Datenschutz</a>
+    </div>
+    
   </div>
 </div>
