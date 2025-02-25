@@ -1,0 +1,102 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.detail-profile {
+  width: 500px;
+  position: absolute;
+  top: 120px;
+  right: 20px;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 45px 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+
+  .profile-pic-detail {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+  }
+
+  .edit-container {
+    @include m.flexBox(column, center, center, 38px);
+
+    .profile-detail-headline {
+      @include m.flexBox(row, space-between, center);
+      width: 100%;
+
+      img {
+        height: 24px;
+        width: 24px;
+        padding: 6.5px;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #eceefe;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    h1 {
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 32.74px;
+      letter-spacing: 0%;
+      margin: 0;
+    }
+
+    .detail-name {
+      @include m.flexBox(row, space-between, center);
+      width: 100%;
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 43.65px;
+      letter-spacing: 0%;
+
+      .edit {
+        color: #535af1;
+        font-family: Nunito;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 24.55px;
+        letter-spacing: 0%;
+        transition: font-weight 0.1s ease-in-out;
+
+        &:hover {
+          cursor: pointer;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .email {
+      width: 100%;
+      div {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        padding-bottom: 15px;
+        span {
+          font-family: Nunito;
+          font-weight: 700;
+          font-size: 20px;
+          line-height: 27.28px;
+          letter-spacing: 0%;
+        }
+      }
+      .user-email {
+        color: #1381ff;
+        font-family: Nunito;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 21.6px;
+        letter-spacing: 0%;
+      }
+    }
+  }
+}

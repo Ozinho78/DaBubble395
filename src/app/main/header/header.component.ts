@@ -4,10 +4,11 @@ import { Component } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
+import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, ProfileDetailComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

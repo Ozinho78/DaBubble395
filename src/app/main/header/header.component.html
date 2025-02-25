@@ -32,41 +32,9 @@
     <p (click)="logout()" class="log-out">Log out</p>
   </div>
 
-  <div
-    class="detail-profile"
+  <app-profile-detail
     *ngIf="profileEditOpen"
-    (click)="profileEditOpen = false"
-  >
-    <div class="edit-container" (click)="$event.stopPropagation()">
-      <div class="profile-detail-headline">
-        <h1>Profil</h1>
-        <img
-          (click)="close()"
-          (mouseenter)="onMouseEnterClose()"
-          (mouseleave)="onMouseLeaveClose()"
-          [src]="closeImgSrc"
-          alt="Schließen"
-        />
-      </div>
-      <ng-container *ngIf="userName | async as users">
-        <img
-          class="profile-pic-detail"
-          [src]="'/img/avatar/' + users[0]?.avatar"
-          alt="Profilepicture-detail-view"
-        />
-        <div class="detail-name">
-          <span>{{ users[0]?.name }}</span>
-          <div class="edit">Bearbeiten</div>
-        </div>
-        <div>Aktiv</div>
-        <div class="email">
-          <div>
-            <img src="/img/header-img/header-mail.png" alt="" />
-            <span>E-Mail-Adresse</span>
-          </div>
-          <span class="user-email">{{ users[0]?.mail }}</span>
-        </div>
-      </ng-container>
-    </div>
-  </div>
+    [userName]="userName"
+    (close)="close()"
+  ></app-profile-detail>
 </div>
