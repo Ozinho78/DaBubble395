@@ -18,7 +18,7 @@ export class AuthService {
 
   constructor(private router: Router) {}
 
-  storeUserData(name: string, email: string, password: string) {
+  storeUserData(name: string, email: string, password: string, avatarFilename: any) {
     this.userData = { name, email, password };
   }
 
@@ -35,15 +35,17 @@ export class AuthService {
 
   }
 
-  async registerUser(avatar: string): Promise<void> {
+  async registerUser(avatarFilename: string): Promise<void> {
     if (!this.hasUserData()) {
       console.error('Keine gespeicherten Benutzerdaten gefunden!');
       return;
     }
 
+    this.userData.avatar = avatarFilename;
+
     try {
       const userCredential = await this.createUser();
-      await this.updateUserProfile(userCredential.user, avatar);
+      await this.updateUserProfile(userCredential.user, avatarFilename);
       await this.setAuthToken(userCredential.user);
       const userService = this.injector.get(UserService);
       await userService.createUser();

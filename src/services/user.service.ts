@@ -29,7 +29,21 @@ export class UserService {
     }
 
     async createUser(): Promise<void> {
+        if (!this.authService.hasUserData()) {
+            console.error("Keine Benutzerinformationen gefunden!");
+            return;
+        }
+    
+        const { name, email, avatar } = this.authService.userData;
+    
         const usersCollectionRef = collection(this.firestore, 'users');
-        await addDoc(usersCollectionRef, this.user.toJson());
+        await addDoc(usersCollectionRef, {
+            name,
+            email,
+            avatar: avatar || 'default.png'
+        });
+    
+        console.log('Benutzer erfolgreich in Firestore gespeichert!');
     }
+    
 }

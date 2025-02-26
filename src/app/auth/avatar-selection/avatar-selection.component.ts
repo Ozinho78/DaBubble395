@@ -44,8 +44,17 @@ export class AvatarSelectionComponent {
 
   async accept() {
     if (this.selectedAvatar.src) {
+      const avatarFilename = this.selectedAvatar.src.split('/').pop() || 'default.png';
+
+      this.authService.storeUserData(
+        this.userData.name,
+        this.userData.email,
+        this.userData.password,
+        avatarFilename
+    );
+
       try {
-        await this.authService.registerUser(this.selectedAvatar.src);
+        await this.authService.registerUser(avatarFilename);
         this.showSuccessMsg = true;
         setTimeout(() => {
           this.showSuccessMsg = false;
