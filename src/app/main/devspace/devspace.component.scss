@@ -22,13 +22,14 @@ svg {
 }
 
 .devspace-wrapper {
-  height: 80vh;
+  height: calc(100dvh - 139px);
   /* Menu 1 - channels + workspaces */
   /* Auto layout */
   
   // position: absolute;
   width: 366px;
-  height: 940px;
+  overflow-y: scroll;
+  // height: 940px;
   // left: 20px;
   // top: 115px;
   /* White */
