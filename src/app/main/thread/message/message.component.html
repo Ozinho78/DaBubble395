@@ -1,8 +1,7 @@
-<div class="reply-container" [ngClass]="{'own-message': message.userId === 'qdWWqOADh6O1FkGpHlTr'}"
-    (mouseleave)="closeMenu()">
+<div class="reply-container" [ngClass]="{'own-message': message.userId === currentUserId}" (mouseleave)="closeMenu()">
 
     <!-- add reactions -->
-    <div class="add-reactions-container" [ngClass]="{'own-message': message.userId === 'qdWWqOADh6O1FkGpHlTr'}">
+    <div class="add-reactions-container" [ngClass]="{'own-message': message.userId === currentUserId}">
         <div class="add-reactions">
 
             <div class="svg-container" (click)="toggleReactionsOverlay()">
