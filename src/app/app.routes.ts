@@ -4,6 +4,7 @@ import { MainComponent } from './main/main.component';
 import { LoginComponent } from '../app/auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { AvatarSelectionComponent } from './auth/avatar-selection/avatar-selection.component';
+import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
 import { AuthGuard } from '../app/guards/auth.guard';
 import { RegisterGuard } from '../app/guards/register.guard';
 import { ImprintComponent } from './legal/imprint/imprint.component';
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'avatar-selection', component: AvatarSelectionComponent, canActivate: [RegisterGuard, AuthGuard] },
   { path: 'main', component: MainComponent, canActivate: [AuthGuard] },
+  { path: "request-password-reset", component: RequestPasswordResetComponent },
   { path: 'imprint', component: ImprintComponent },
   { path: 'policy', component: PolicyComponent },
 ];
