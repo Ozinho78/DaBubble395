@@ -128,4 +128,16 @@
       }
     }
   }
+
+  .success-msg {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    height: 149px;
+    width: 531px;
+    background-color: v.$purple_2;
+    border-radius: 12px 12px 0 12px;
+  }
 }
