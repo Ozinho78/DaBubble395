@@ -30,6 +30,9 @@ export class MessageInputComponent {
   /** Emoji-Picker umschalten */
   toggleEmojiPicker() {
     this.showEmojiPicker = !this.showEmojiPicker;
+    if (this.showEmojiPicker) {
+      this.showMentionList = false; // Erwähnungsliste schließen, wenn Emojis geöffnet werden
+    }
   }
 
   /** Emoji zum Textfeld hinzufügen */
@@ -55,9 +58,9 @@ export class MessageInputComponent {
         })
         .catch(error => console.error('Fehler beim Bearbeiten:', error));
     } else {
-      // Neue Nachricht senden
+      // Neue Nachricht erstellen
       const newMessage = new Message({
-        text: this.messageText,
+        text: this.messageText, // Speichert den Text 1:1
         userId: 'qdWWqOADh6O1FkGpHlTr', // Temporärer Benutzer
         threadId: this.threadId,
         creationDate: Date.now(),
@@ -73,6 +76,7 @@ export class MessageInputComponent {
         .catch(error => console.error('Fehler beim Senden:', error));
     }
   }
+
 
   /** Nachricht für die Bearbeitung setzen */
   editMessage(messageId: string, text: string) {
@@ -93,6 +97,7 @@ export class MessageInputComponent {
 
     if (lastWord?.startsWith('@')) {
       this.showMentionList = true;
+      this.showEmojiPicker = false; // Emojis schließen
       this.filterUsers(lastWord.substring(1).toLowerCase());
     } else {
       this.showMentionList = false;
@@ -112,14 +117,15 @@ export class MessageInputComponent {
   toggleMentionList() {
     this.showMentionList = !this.showMentionList;
     if (this.showMentionList) {
-      this.filterUsers(''); // Zeigt alle Nutzer an, wenn die Liste geöffnet wird
+      this.showEmojiPicker = false; // Emojis schließen, wenn Erwähnung geöffnet wird
+      this.filterUsers('');
     }
   }
 
-  /** Erwähnung einfügen */
+  /** Erwähnung einfügen (nur als @Name im Eingabefeld) */
   mentionUser(user: any) {
     const words = this.messageText.split(' ');
-    words[words.length - 1] = `@${user.name} `; // Ersetzt das @-Wort mit dem Nutzernamen
+    words[words.length - 1] = `@${user.name} `; // Fügt den Namen mit @ hinzu
     this.messageText = words.join(' ');
 
     this.showMentionList = false; // Schließt die Erwähnungsliste

@@ -60,6 +60,12 @@
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     background-color: #ECEEFE;
+
+    a {
+        text-decoration: none;
+        color: #000000;
+        font-weight: bold;
+    }
 }
 
 .message-reactions {
