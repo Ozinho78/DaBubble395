@@ -100,6 +100,7 @@ export class DevspaceComponent implements OnInit {
 
   constructor(private visibleService: VisibleService) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
+      this.users = [];
       list.forEach((element) => {
         // this.users[element.id] = element.data();
         let singleUser = element.data() as User;
@@ -111,6 +112,7 @@ export class DevspaceComponent implements OnInit {
       });
     });
     this.unsubChannelNames = onSnapshot(this.channelDatabase, (list) => {
+      this.channels = [];
       list.forEach((element) => {
         const singleChannel = element.data() as Channel;
         this.channels.push(singleChannel);
