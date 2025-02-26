@@ -55,12 +55,13 @@ export class MessageInputComponent {
       updateDoc(messageRef, { text: this.messageText })
         .then(() => {
           this.resetInput();
+          this.scrollToBottom(); // Nach dem Bearbeiten scrollen
         })
         .catch(error => console.error('Fehler beim Bearbeiten:', error));
     } else {
       // Neue Nachricht erstellen
       const newMessage = new Message({
-        text: this.messageText, // Speichert den Text 1:1
+        text: this.messageText,
         userId: 'qdWWqOADh6O1FkGpHlTr', // Temporärer Benutzer
         threadId: this.threadId,
         creationDate: Date.now(),
@@ -72,11 +73,11 @@ export class MessageInputComponent {
       addDoc(messagesRef, newMessage.toJSON())
         .then(() => {
           this.resetInput();
+          this.scrollToBottom(); // Nach dem Senden scrollen
         })
         .catch(error => console.error('Fehler beim Senden:', error));
     }
   }
-
 
   /** Nachricht für die Bearbeitung setzen */
   editMessage(messageId: string, text: string) {
@@ -129,5 +130,15 @@ export class MessageInputComponent {
     this.messageText = words.join(' ');
 
     this.showMentionList = false; // Schließt die Erwähnungsliste
+  }
+
+  /** Scrollt den Chat nach unten */
+  scrollToBottom() {
+    setTimeout(() => {
+      const chatContainer = document.getElementById('chat-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }, 100); // Timeout für sicheres Scrollen nach Rendering
   }
 }

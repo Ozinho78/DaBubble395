@@ -68,6 +68,22 @@ export class ThreadComponent implements OnInit {
     );
   }
 
+  ngAfterViewInit() {
+    this.groupedMessages$.subscribe(() => {
+      this.scrollToBottom();
+    });
+  }
+
+  /** Scrollt den Chat nach unten */
+  scrollToBottom() {
+    setTimeout(() => {
+      const chatContainer = document.getElementById('chat-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }, 100); // Sicherstellen, dass Nachrichten geladen wurden
+  }
+
   handleEditRequest(event: { id: string, text: string }) {
     this.messageInput.editMessage(event.id, event.text);
   }
