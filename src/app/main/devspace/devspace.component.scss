@@ -44,10 +44,9 @@ svg {
   height: calc(100dvh - 139px);
   /* Menu 1 - channels + workspaces */
   /* Auto layout */
-  
+  overflow-y: scroll;  
   // position: absolute;
   width: 366px;
-  overflow-y: scroll;
   // height: 940px;
   // left: 20px;
   // top: 115px;
@@ -96,7 +95,6 @@ svg {
   order: 2;
   flex-grow: 0;
 }
-
 
 
 .channel-list-ctn {
