@@ -38,7 +38,7 @@
     <a href="/imprint">Impressum</a>
     <a href="/policy">Datenschutz</a>
   </div>
-  <div class="success-msg">
-    <p>Konto erfolgreich erstellt!</p>
+  <div class="success-msg" *ngIf="showSuccessMsg">
+    <span>Konto erfolgreich erstellt!</span>
   </div>
 </section>

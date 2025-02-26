@@ -11,6 +11,8 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class AvatarSelectionComponent {
 
+  showSuccessMsg = false;
+
   avatars = [
     { name: 'avatar1', src: '/img/avatar/avatar1.png' },
     { name: 'avatar2', src: '/img/avatar/avatar2.png' },
@@ -40,11 +42,21 @@ export class AvatarSelectionComponent {
     this.selectedAvatar = avatar;
   }
 
-  accept() {
+  async accept() {
     if (this.selectedAvatar.src) {
-      this.authService.registerUser(this.selectedAvatar.src);
+      try {
+        await this.authService.registerUser(this.selectedAvatar.src);
+        this.showSuccessMsg = true;
+        setTimeout(() => {
+          this.showSuccessMsg = false;
+          this.router.navigate(['/main']);
+        }, 1000);
+      } catch (error) {
+        console.error("Fehler bei der Registrierung:", error);
+      }
     } else {
       console.error("Kein Avatar ausgewählt!");
     }
   }
+  
 }

@@ -33,7 +33,7 @@ export class AuthService {
 
   }
 
-  async registerUser(avatar: string) {
+  async registerUser(avatar: string): Promise<void> {
     if (!this.hasUserData()) {
       console.error('Keine gespeicherten Benutzerdaten gefunden!');
       return;
@@ -43,7 +43,6 @@ export class AuthService {
       const userCredential = await this.createUser();
       await this.updateUserProfile(userCredential.user, avatar);
       await this.setAuthToken(userCredential.user);
-      this.router.navigate(['/main']);
       this.deleteDummyToken();
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
@@ -77,5 +76,9 @@ export class AuthService {
       console.error('Fehler beim Login:', error);
       throw error;
     }
+  }
+
+  hideMsg() {
+    
   }
 }
