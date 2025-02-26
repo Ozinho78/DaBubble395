@@ -27,39 +27,32 @@ export class MessageInputComponent {
     this.allUsers$ = this.userService.getAllUsers();
   }
 
-  /** Emoji-Picker umschalten */
-  toggleEmojiPicker() {
-    this.showEmojiPicker = !this.showEmojiPicker;
-    if (this.showEmojiPicker) {
-      this.showMentionList = false; // Erwähnungsliste schließen, wenn Emojis geöffnet werden
-    }
-  }
-
-  /** Emoji zum Textfeld hinzufügen */
-  addEmoji(event: any) {
-    if (event && event.emoji && event.emoji.native) {
-      this.messageText += event.emoji.native; // Das eigentliche Emoji einfügen 😊
-    } else {
-      console.error('Fehler: Emoji konnte nicht hinzugefügt werden.', event);
-    }
-    this.showEmojiPicker = false; // Schließt den Picker nach Auswahl
-  }
-
   /** Nachricht senden oder bearbeiten */
   sendMessage() {
     if (!this.messageText.trim() || !this.threadId) return;
 
-    if (this.editingMessageId) {
-      // Nachricht bearbeiten
+    this.editingMessageId ? this.updateMessage() : this.createMessage();
+  }
+
+  /** Nachricht in Firestore aktualisieren */
+  private async updateMessage() {
+    if (!this.editingMessageId) return;
+
+    try {
       const messageRef = doc(this.firestore, 'messages', this.editingMessageId);
-      updateDoc(messageRef, { text: this.messageText })
-        .then(() => {
-          this.resetInput();
-          this.scrollToBottom(); // Nach dem Bearbeiten scrollen
-        })
-        .catch(error => console.error('Fehler beim Bearbeiten:', error));
-    } else {
-      // Neue Nachricht erstellen
+      await updateDoc(messageRef, { text: this.messageText });
+      debugger;
+
+      this.resetInput();
+      this.scrollToBottom(); // Nach dem Bearbeiten scrollen
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren:', error);
+    }
+  }
+
+  /** Neue Nachricht in Firestore speichern */
+  private async createMessage() {
+    try {
       const newMessage = new Message({
         text: this.messageText,
         userId: 'qdWWqOADh6O1FkGpHlTr', // Temporärer Benutzer
@@ -69,15 +62,15 @@ export class MessageInputComponent {
       });
 
       const messagesRef = collection(this.firestore, 'messages');
+      await addDoc(messagesRef, newMessage.toJSON());
 
-      addDoc(messagesRef, newMessage.toJSON())
-        .then(() => {
-          this.resetInput();
-          this.scrollToBottom(); // Nach dem Senden scrollen
-        })
-        .catch(error => console.error('Fehler beim Senden:', error));
+      this.resetInput();
+      this.scrollToBottom();
+    } catch (error) {
+      console.error('Fehler beim Speichern:', error);
     }
   }
+
 
   /** Nachricht für die Bearbeitung setzen */
   editMessage(messageId: string, text: string) {
@@ -89,6 +82,24 @@ export class MessageInputComponent {
   resetInput() {
     this.editingMessageId = null;
     this.messageText = '';
+  }
+
+  /** Emoji-Picker umschalten */
+  toggleEmojiPicker() {
+    this.showEmojiPicker = !this.showEmojiPicker;
+    if (this.showEmojiPicker) {
+      this.showMentionList = false; // Erwähnungsliste schließen, wenn Emojis geöffnet werden
+    }
+  }
+
+  /** Emoji zum Textfeld hinzufügen */
+  addEmoji(event: any) {
+    if (event?.emoji?.native) {
+      this.messageText += event.emoji.native; // Das eigentliche Emoji einfügen 😊
+    } else {
+      console.error('Fehler: Emoji konnte nicht hinzugefügt werden.', event);
+    }
+    this.showEmojiPicker = false; // Schließt den Picker nach Auswahl
   }
 
   /** Überprüft, ob @ eingegeben wurde und filtert Nutzer */
@@ -105,7 +116,7 @@ export class MessageInputComponent {
     }
   }
 
-  /** Filtert Nutzer basierend auf der Eingabe nach @ */
+  /** Nutzer für Erwähnung filtern */
   filterUsers(searchName: string) {
     this.allUsers$.subscribe(users => {
       this.filteredUsers = users.filter(user =>
@@ -114,7 +125,7 @@ export class MessageInputComponent {
     });
   }
 
-  /** Erwähnungsliste manuell umschalten */
+  /** Erwähnungsliste umschalten */
   toggleMentionList() {
     this.showMentionList = !this.showMentionList;
     if (this.showMentionList) {
@@ -123,13 +134,13 @@ export class MessageInputComponent {
     }
   }
 
-  /** Erwähnung einfügen (nur als @Name im Eingabefeld) */
+  /** Erwähnung in den Text einfügen */
   mentionUser(user: any) {
     const words = this.messageText.split(' ');
     words[words.length - 1] = `@${user.name} `; // Fügt den Namen mit @ hinzu
     this.messageText = words.join(' ');
 
-    this.showMentionList = false; // Schließt die Erwähnungsliste
+    this.showMentionList = false; // Erwähnungsliste schließen
   }
 
   /** Scrollt den Chat nach unten */
