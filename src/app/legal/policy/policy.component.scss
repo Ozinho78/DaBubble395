@@ -8,30 +8,51 @@
   @include m.styleFont("Nunito");
 }
 
-/* Die gesamte Scrollbar */
+
+
+// /* Die gesamte Scrollbar */
+// ::-webkit-scrollbar {
+//   width: 20px; /* Breite der vertikalen Scrollbar */
+//   height: 20px; /* Höhe der horizontalen Scrollbar */
+// }
+
+// /* Die Spur (Hintergrund der Scrollbar) */
+// ::-webkit-scrollbar-track {
+//   background: #f1f1f1; 
+//   border-radius: 10px;
+// }
+
+// /* Der Scrollbalken (Schiebeelement) */
+// ::-webkit-scrollbar-thumb {
+//   background: #888;
+//   background: rgb(141, 3, 221);
+//   border-radius: 10px;
+// }
+
+// /* Wenn man mit der Maus über die Scrollbar fährt */
+// ::-webkit-scrollbar-thumb:hover {
+//   background: #555; 
+// }
+
+
 ::-webkit-scrollbar {
-  width: 20px; /* Breite der vertikalen Scrollbar */
-  height: 20px; /* Höhe der horizontalen Scrollbar */
+  width: 4px;
 }
 
-/* Die Spur (Hintergrund der Scrollbar) */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-  border-radius: 10px;
-}
-
-/* Der Scrollbalken (Schiebeelement) */
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  background: rgb(141, 3, 221);
-  border-radius: 10px;
+  background-color: v.$purple_2;
+  border-radius: 5px;
+
+  &:hover {
+      background-color: v.$purple_1;
+  }
 }
 
-/* Wenn man mit der Maus über die Scrollbar fährt */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+::-webkit-scrollbar-track {
+  background-color: v.$purple_4;
+  margin: 20px;
+  border-radius: 5px;
 }
-
 
 a {
   text-decoration: none;
