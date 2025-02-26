@@ -254,19 +254,6 @@
     }
 }
 
-.menu-dropdown button {
-    width: 100%;
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    text-align: left;
-}
-
-.menu-dropdown button:hover {
-    background: #f0f0f0;
-}
-
 .date-header {
     padding: 5px 0;
     @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);

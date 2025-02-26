@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../../../models/message.class';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { UserService } from '../../../../services/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-message-input',
@@ -17,8 +19,13 @@ export class MessageInputComponent {
   editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
   messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
   showEmojiPicker: boolean = false;
+  showMentionList: boolean = false; // Zeigt die Erwähnungsliste an
+  filteredUsers: any[] = []; // Gefilterte Benutzerliste für die Erwähnung
+  allUsers$: Observable<any[]>; // Alle Nutzer
 
-  constructor(private firestore: Firestore) { }
+  constructor(private firestore: Firestore, private userService: UserService) {
+    this.allUsers$ = this.userService.getAllUsers();
+  }
 
   /** Emoji-Picker umschalten */
   toggleEmojiPicker() {
@@ -77,5 +84,44 @@ export class MessageInputComponent {
   resetInput() {
     this.editingMessageId = null;
     this.messageText = '';
+  }
+
+  /** Überprüft, ob @ eingegeben wurde und filtert Nutzer */
+  onTextChange(event: any) {
+    const inputText = event.target.value;
+    const lastWord = inputText.split(' ').pop(); // Letztes Wort im Textfeld prüfen
+
+    if (lastWord?.startsWith('@')) {
+      this.showMentionList = true;
+      this.filterUsers(lastWord.substring(1).toLowerCase());
+    } else {
+      this.showMentionList = false;
+    }
+  }
+
+  /** Filtert Nutzer basierend auf der Eingabe nach @ */
+  filterUsers(searchName: string) {
+    this.allUsers$.subscribe(users => {
+      this.filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(searchName)
+      );
+    });
+  }
+
+  /** Erwähnungsliste manuell umschalten */
+  toggleMentionList() {
+    this.showMentionList = !this.showMentionList;
+    if (this.showMentionList) {
+      this.filterUsers(''); // Zeigt alle Nutzer an, wenn die Liste geöffnet wird
+    }
+  }
+
+  /** Erwähnung einfügen */
+  mentionUser(user: any) {
+    const words = this.messageText.split(' ');
+    words[words.length - 1] = `@${user.name} `; // Ersetzt das @-Wort mit dem Nutzernamen
+    this.messageText = words.join(' ');
+
+    this.showMentionList = false; // Schließt die Erwähnungsliste
   }
 }
