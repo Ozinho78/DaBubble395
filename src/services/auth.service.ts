@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Injector } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
@@ -6,13 +6,15 @@ import {
   updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private userData: any = {};
+  public userData: any = {};
   private auth = inject(Auth);
+  private injector = inject(Injector);
 
   constructor(private router: Router) {}
 
@@ -43,6 +45,8 @@ export class AuthService {
       const userCredential = await this.createUser();
       await this.updateUserProfile(userCredential.user, avatar);
       await this.setAuthToken(userCredential.user);
+      const userService = this.injector.get(UserService);
+      await userService.createUser();
       this.deleteDummyToken();
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
@@ -76,9 +80,5 @@ export class AuthService {
       console.error('Fehler beim Login:', error);
       throw error;
     }
-  }
-
-  hideMsg() {
-    
   }
 }
