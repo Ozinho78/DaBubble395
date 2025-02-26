@@ -27,18 +27,13 @@ export class MessageInputComponent {
 
   /** Emoji zum Textfeld hinzufügen */
   addEmoji(event: any) {
-    console.log('Emoji Event:', event);
-
     if (event && event.emoji && event.emoji.native) {
       this.messageText += event.emoji.native; // Das eigentliche Emoji einfügen 😊
     } else {
       console.error('Fehler: Emoji konnte nicht hinzugefügt werden.', event);
     }
-
     this.showEmojiPicker = false; // Schließt den Picker nach Auswahl
   }
-
-
 
   /** Nachricht senden oder bearbeiten */
   sendMessage() {
