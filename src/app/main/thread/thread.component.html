@@ -14,7 +14,7 @@
   </div>
 
   <div class="shadow"></div>
-  <div class="chat-container">
+  <div id="chat-container" class="chat-container">
 
     <!-- Thread Header -->
     <div class="replies">
@@ -23,7 +23,7 @@
 
     <div *ngIf="groupedMessages$ | async as groupedMessages">
 
-      <!-- ✅ Anzahl der Nachrichten wird korrekt berechnet -->
+      <!-- Anzahl der Nachrichten -->
       <div class="replies-spacer">
         <div>{{ totalMessagesCount$ | async }} Antworten</div>
       </div>

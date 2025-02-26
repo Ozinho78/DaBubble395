@@ -2,6 +2,7 @@
 @use "../../../../variables.scss" as v;
 
 .input-area-container {
+    position: relative;
     height: 145px;
     margin: 5px 20px 20px 20px;
     padding: 20px;
@@ -27,62 +28,120 @@
 
     &:hover {
         border: 1px solid v.$purple_2;
+
+        .emojis-btn,
+        .mention-btn {
+            path {
+                fill: #000000;
+            }
+        }
     }
 
     &:focus-within {
         border: 1px solid v.$purple_3;
+
+        .emojis-btn,
+        .mention-btn {
+            path {
+                fill: #000000;
+            }
+        }
     }
 }
 
 .input-area-btns {
+    margin: 0 10px;
     @include m.flexBox(row, space-between, center);
+}
 
-    .left-btn-container {
-        @include m.flexBox(row, normal, center, 5px);
+.left-btn-container {
+    @include m.flexBox(row, normal, center, 5px);
+}
 
-        .emojis-btn img,
-        .mention-btn img {
-            display: none;
-        }
+.emojis-btn,
+.mention-btn {
+    height: 40px;
+    width: 40px;
+    @include m.flexBox(row, center, center);
+    cursor: pointer;
 
-        .emojis-btn .emoji-inactive-img,
-        .mention-btn .mention-inactive-img {
-            display: inline;
-        }
+    &:hover {
+        background-color: v.$purple_bg;
+        border-radius: 50%;
 
-        .emojis-btn:hover .emoji-inactive-img,
-        .mention-btn:hover .mention-inactive-img {
-            display: none;
-        }
-
-        .emojis-btn:hover .emoji-hover-img,
-        .mention-btn:hover .mention-hover-img {
-            display: inline;
-            cursor: pointer;
+        path {
+            fill: v.$purple_3 !important;
         }
     }
-
-
 }
 
 .send-btn {
+    height: 40px;
+    width: 40px;
+    @include m.flexBox(row, center, center);
     cursor: pointer;
 
-    .default-img {
-        display: block;
-    }
-
-    .hover-img {
-        display: none;
-    }
-
     &:hover {
-        .default-img {
-            display: none !important;
+        path {
+            fill: v.$purple_2;
+        }
+    }
+}
+
+.emoji-picker-container {
+    width: 100%;
+    padding: 10px 0;
+    position: absolute;
+    bottom: 195px; // Setzt den Picker über das Textfeld
+    left: 0;
+    z-index: 100;
+    background: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+    emoji-mart {
+        width: 100%;
+        @include m.flexBox(row, center, center);
+    }
+}
+
+.mention-list-container {
+    width: 100%;
+    max-height: 376.78px;
+    overflow-y: auto;
+    position: absolute;
+    bottom: 195px; // Setzt den Picker über das Textfeld
+    left: 0;
+    z-index: 100;
+    background: #FFFFFF;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mention-list {
+    list-style: none;
+    padding: 10px 20px;
+    @include m.flexBox(column, normal, normal);
+    gap: 13px;
+
+    li {
+        height: 58px;
+        @include m.flexBox(row, normal, center);
+        cursor: pointer;
+        border-radius: 100px;
+        @include m.styleFont("Nunito", 18px, 400, 24.55px);
+
+        &:hover {
+            background: v.$purple_bg;
+            color: v.$purple_3;
         }
 
-        .hover-img {
-            display: block !important;
+        .mention-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-left: 12px;
+            margin-right: 12px;
         }
     }
 }
