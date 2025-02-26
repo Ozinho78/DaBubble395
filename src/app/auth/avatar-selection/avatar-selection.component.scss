@@ -128,4 +128,32 @@
       }
     }
   }
+
+  .success-msg {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin-right: 50px;
+    margin-bottom: 50px;
+    height: 149px;
+    width: 531px;
+    background-color: v.$purple_2;
+    border-radius: 12px 12px 0 12px;
+    animation: moveRight 0.5s ease-in-out forwards;
+
+    span {
+      @include m.flexBox(row, center, center);
+      @include m.styleFont("Nunito", 36px, 700, 49.1px, white);
+      height: 100%;
+    }
+  }
+}
+
+@keyframes moveRight {
+  0% {
+    right: -600px;
+  }
+  100% {
+    right: 0;
+  }
 }

@@ -1,9 +1,9 @@
 <section class="avatar-main">
   <div class="avatar-header">
     <div class="logo">
-      <img class="logo-logo" src="/img/logo.svg" alt="DABubble Logo">
-      <img class="logo-name" src="/img/logo_name.svg" alt="Logo Name">
-  </div>
+      <img class="logo-logo" src="/img/logo.svg" alt="DABubble Logo" />
+      <img class="logo-name" src="/img/logo_name.svg" alt="Logo Name" />
+    </div>
   </div>
   <div class="avatar-dialog">
     <div class="avatar-back-arrow">
@@ -14,8 +14,12 @@
       />
     </div>
     <h2>Wähle deinen Avatar</h2>
-    <img class="selected-avatar" [src]="selectedAvatar.src" alt="Avatar Dummy">
-    <span class="user-name" id="user-name">{{userData.name}}</span>
+    <img
+      class="selected-avatar"
+      [src]="selectedAvatar.src"
+      alt="Avatar Dummy"
+    />
+    <span class="user-name" id="user-name">{{ userData.name }}</span>
     <span class="avatar-choose">Aus der Liste wählen</span>
     <div class="avatar-list">
       <div
@@ -27,11 +31,14 @@
       </div>
     </div>
     <div class="register">
-        <button class="avatar-btn" (click)="accept()">Weiter</button>
-      </div>
+      <button class="avatar-btn" (click)="accept()">Weiter</button>
+    </div>
   </div>
   <div class="legal-infos">
     <a href="/imprint">Impressum</a>
     <a href="/policy">Datenschutz</a>
-</div>
+  </div>
+  <div class="success-msg" *ngIf="showSuccessMsg">
+    <span>Konto erfolgreich erstellt!</span>
+  </div>
 </section>
