@@ -4,9 +4,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  onAuthStateChanged,
+  User
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +18,18 @@ export class AuthService {
   public userData: any = {};
   private auth = inject(Auth);
   private injector = inject(Injector);
+  private userSubject = new BehaviorSubject<User | null>(null);
+  public user$ = this.userSubject.asObservable();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    onAuthStateChanged(this.auth, (user) => {
+      this.userSubject.next(user);
+    });
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.userSubject.value;
+  }
 
   storeUserData(name: string, email: string, password: string, avatarFilename: any) {
     this.userData = { name, email, password };
