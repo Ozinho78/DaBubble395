@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Injector } from '@angular/core';
 import {
   Auth,
   createUserWithEmailAndPassword,
@@ -6,17 +6,19 @@ import {
   updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private userData: any = {};
+  public userData: any = {};
   private auth = inject(Auth);
+  private injector = inject(Injector);
 
   constructor(private router: Router) {}
 
-  storeUserData(name: string, email: string, password: string) {
+  storeUserData(name: string, email: string, password: string, avatarFilename: any) {
     this.userData = { name, email, password };
   }
 
@@ -33,17 +35,20 @@ export class AuthService {
 
   }
 
-  async registerUser(avatar: string) {
+  async registerUser(avatarFilename: string): Promise<void> {
     if (!this.hasUserData()) {
       console.error('Keine gespeicherten Benutzerdaten gefunden!');
       return;
     }
 
+    this.userData.avatar = avatarFilename;
+
     try {
       const userCredential = await this.createUser();
-      await this.updateUserProfile(userCredential.user, avatar);
+      await this.updateUserProfile(userCredential.user, avatarFilename);
       await this.setAuthToken(userCredential.user);
-      this.router.navigate(['/main']);
+      const userService = this.injector.get(UserService);
+      await userService.createUser();
       this.deleteDummyToken();
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);

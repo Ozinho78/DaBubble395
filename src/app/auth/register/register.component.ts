@@ -28,7 +28,8 @@ export class RegisterComponent {
   async register() {
     if (this.isPrivacyAccepted) {
       await this.setToken();
-      this.authService.storeUserData(this.name, this.email, this.password);
+      const avatarFilename = 'default-avatar.png';
+      this.authService.storeUserData(this.name, this.email, this.password, avatarFilename);
       this.router.navigate(['/avatar-selection']);
     }
   }
