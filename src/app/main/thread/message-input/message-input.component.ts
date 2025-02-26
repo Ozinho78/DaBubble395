@@ -41,7 +41,6 @@ export class MessageInputComponent {
     try {
       const messageRef = doc(this.firestore, 'messages', this.editingMessageId);
       await updateDoc(messageRef, { text: this.messageText });
-      debugger;
 
       this.resetInput();
       this.scrollToBottom(); // Nach dem Bearbeiten scrollen
