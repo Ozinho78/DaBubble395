@@ -2,7 +2,7 @@ import { inject, Injectable, Injector, runInInjectionContext } from '@angular/co
 import { Firestore, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
-import { User } from '../app/models/user.model';
+import { User } from '../models/user.model';
 
 @Injectable({
     providedIn: 'root'
