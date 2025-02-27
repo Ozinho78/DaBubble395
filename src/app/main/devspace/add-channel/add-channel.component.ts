@@ -38,6 +38,10 @@ export class AddChannelComponent {
     // this.close();
   }
 
+  closeMemberModal(){
+    this.isOpenForMembers = false;
+  }
+
   save() {
     if (this.nameInput.trim()) {
       this.close();
