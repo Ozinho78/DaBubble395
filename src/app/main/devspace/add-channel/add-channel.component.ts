@@ -12,7 +12,7 @@ import { Channel } from '../../../../models/channel.model';
 })
 export class AddChannelComponent {
   isOpen = false;
-  isOpen2 = false;
+  isOpenForMembers = false;
   nameInput = '';
   descriptionInput = '';
 
@@ -34,13 +34,14 @@ export class AddChannelComponent {
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
     this.onSave.emit(newChannel);
-    this.close();
+    this.isOpenForMembers = false;
+    // this.close();
   }
 
   save() {
     if (this.nameInput.trim()) {
       this.close();
-      this.isOpen2 = true;
+      this.isOpenForMembers = true;
       // this.createAndEmitNewChannel();
     }
   }
