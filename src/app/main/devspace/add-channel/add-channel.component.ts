@@ -12,6 +12,7 @@ import { Channel } from '../../../../models/channel.model';
 })
 export class AddChannelComponent {
   isOpen = false;
+  isOpen2 = false;
   nameInput = '';
   descriptionInput = '';
 
@@ -25,16 +26,22 @@ export class AddChannelComponent {
     this.isOpen = false;
   }
 
+  createAndEmitNewChannel(){
+    let newChannel = new Channel;
+    newChannel.name = this.nameInput;
+    newChannel.description = this.descriptionInput;
+    newChannel.creationDate = new Date();
+    // this.onSave.emit(this.nameInput);
+    // this.onSave.emit(this.descriptionInput);
+    this.onSave.emit(newChannel);
+    this.close();
+  }
+
   save() {
     if (this.nameInput.trim()) {
-      let newChannel = new Channel;
-      newChannel.name = this.nameInput;
-      newChannel.description = this.descriptionInput;
-      newChannel.creationDate = new Date();
-      // this.onSave.emit(this.nameInput);
-      // this.onSave.emit(this.descriptionInput);
-      this.onSave.emit(newChannel);
       this.close();
+      this.isOpen2 = true;
+      // this.createAndEmitNewChannel();
     }
   }
 
