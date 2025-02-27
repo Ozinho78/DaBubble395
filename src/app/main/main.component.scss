@@ -10,4 +10,9 @@
     max-height: calc(100dvh - 119px);
     margin: 0 20px 20px 20px;
     @include m.flexBox(row, space-between, normal);
+    gap: 20px;
+}
+
+app-main-view {
+    flex-grow: 1; // Dehnt die Komponente auf volle Breite aus
 }

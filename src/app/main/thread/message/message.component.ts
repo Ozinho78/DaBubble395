@@ -96,7 +96,6 @@ export class MessageComponent implements OnInit {
       if (userData) {
         this.currentUserId = userData.uid;
         this.currentUserData = userData;
-        console.log('User erfolgreich gematcht:', this.currentUserData);
       } else {
         console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
       }
