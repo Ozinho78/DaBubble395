@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, docData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../app/models/user.model';
@@ -29,24 +29,32 @@ export class UserService {
         );
     }
 
+    getUserByEmail(email: string): Observable<any> {
+        const usersRef = collection(this.firestore, 'users'); // Firestore Users Collection
+        const queryRef = query(usersRef, where('email', '==', email));
+        return collectionData(queryRef, { idField: 'uid' }).pipe(
+            map(users => users.length > 0 ? users[0] : null)
+        );
+    }
+
     async createUser(): Promise<void> {
         if (!this.authService.hasUserData()) {
             console.error("Keine Benutzerinformationen gefunden!");
             return;
         }
-    
+
         const { name, email, avatar } = this.authService.userData;
-    
+
         const usersCollectionRef = collection(this.firestore, 'users');
         await addDoc(usersCollectionRef, {
             name,
             email,
             avatar: avatar || 'default.png'
         });
-    
+
         console.log('Benutzer erfolgreich in Firestore gespeichert!');
     }
-    
+
 
     /** Holt alle Nutzer aus der Firestore `users`-Sammlung */
     getAllUsers(): Observable<{ name: string, avatar: string, id: string }[]> {

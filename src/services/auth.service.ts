@@ -4,19 +4,29 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  user
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { map, Observable } from 'rxjs';
+import { collection, collectionData, query, where } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  user$: Observable<any>;
+
   public userData: any = {};
-  private auth = inject(Auth);
   private injector = inject(Injector);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: Auth) {
+    this.user$ = user(auth);
+  }
+
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
 
   storeUserData(name: string, email: string, password: string, avatarFilename: any) {
     this.userData = { name, email, password };
