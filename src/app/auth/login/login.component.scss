@@ -34,7 +34,7 @@
     .login-header {
       @include m.flexBox(row, space-between, center);
       width: 100%;
-      margin-top: 75px;
+      margin-top: 50px;
 
       .login-left {
         @include m.flexBox(row, flex-start, center);
@@ -44,8 +44,8 @@
           @include m.flexBox(row, flex-start, center);
 
           .logo-logo {
-            width: 75px;
-            height: 75px;
+            width: 70px;
+            height: 70px;
             margin-right: 10px;
           }
 
