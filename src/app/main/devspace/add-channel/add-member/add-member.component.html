@@ -1,9 +1,9 @@
-<div class="member-wrapper">
+<div class="member-wrapper" *ngIf="isOpen">
   <div class="member-content">
     <div class="header">
       <span>Leute hinzufügen</span>
       <svg
-      
+        (click)="closeMemberModal()"
         width="24"
         height="24"
         viewBox="0 0 24 24"
@@ -30,10 +30,14 @@
       </svg>
     </div>
     <div class="member-input1">
-      <input for="members-channel" type="radio"><label for="members">Alle Mitglieder von <span>OfficeTeam</span> hinzufügen</label>
+      <input for="members-channel" type="radio" /><label for="members"
+        >Alle Mitglieder von <span>{{ newChannelName }}</span> hinzufügen</label
+      >
     </div>
     <div class="member-input2">
-      <input for="members-single" type="radio"><label for="members-single">Bestimmte Leute hinzufügen</label>
+      <input for="members-single" type="radio" /><label for="members-single"
+        >Bestimmte Leute hinzufügen</label
+      >
     </div>
     <div class="save-btn">
       <button>Erstellen</button>

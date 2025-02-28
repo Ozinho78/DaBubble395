@@ -16,6 +16,7 @@ export class AddChannelComponent {
   openMemberInput = false;
   nameInput = '';
   descriptionInput = '';
+  @Output() memberModalClose = new EventEmitter<void>();
 
   @Output() onSave = new EventEmitter<Channel>();
 
@@ -34,13 +35,8 @@ export class AddChannelComponent {
     newChannel.creationDate = new Date();
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
-    this.onSave.emit(newChannel);
     this.openMemberInput = false;
     // this.close();
-  }
-
-  closeMemberModal(){
-    this.openMemberInput = false;
   }
 
   save() {
@@ -49,6 +45,11 @@ export class AddChannelComponent {
       this.openMemberInput = true;
       // this.createAndEmitNewChannel();
     }
+  }
+
+  closeMemberInput(){
+    this.memberModalClose.emit();
+    this.openMemberInput = false;
   }
 
 }
