@@ -24,7 +24,7 @@ export class UserService {
         ).pipe(
             map((user: any) => ({
                 name: user?.name || 'Unbekannt',
-                avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
             }))
         );
     }
@@ -67,7 +67,7 @@ export class UserService {
                 users.map(user => ({
                     id: user.id,
                     name: user?.name || 'Unbekannt',
-                    avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                    avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
                 }))
             )
         );
