@@ -7,6 +7,7 @@ import { Message } from '../../../../models/message.class';
 import { Reaction } from '../../../../models/reaction.class';
 import { UserService } from '../../../../services/user.service';
 import { ReactionService } from '../../../../services/reaction.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-message',
@@ -19,6 +20,8 @@ export class MessageComponent implements OnInit {
   @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
   currentUserId!: string;
+  currentUserData: any | null = null;
+  currentUser: any;
   userData$!: Observable<{ name: string, avatar: string }>;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   userNamesCache: { [userId: string]: string } = {};
@@ -33,11 +36,15 @@ export class MessageComponent implements OnInit {
   constructor(
     private firestore: Firestore,
     private userService: UserService,
-    private reactionService: ReactionService
+    private reactionService: ReactionService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.currentUserId = 'qdWWqOADh6O1FkGpHlTr';
+
+    this.setUser();
+
+
     this.userData$ = this.userService.getUserById(this.message.userId);
     // Lade die Reaktionen
     if (this.message.id) {
@@ -72,6 +79,27 @@ export class MessageComponent implements OnInit {
         this.groupedReactions = groups;
       });
     }
+  }
+
+  setUser() {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.matchAuthUser(user.email);
+      }
+    });
+  }
+
+  matchAuthUser(email: string) {
+    if (!email) return;
+
+    this.userService.getUserByEmail(email).subscribe(userData => {
+      if (userData) {
+        this.currentUserId = userData.uid;
+        this.currentUserData = userData;
+      } else {
+        console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
+      }
+    });
   }
 
   getUserData(userId: string): Observable<{ name: string, avatar: string }> {
@@ -144,10 +172,8 @@ export class MessageComponent implements OnInit {
     this.showReactionTooltip = false;
   }
 
-  // Beispiel: Wenn du den aktuellen Benutzernamen brauchst:
   get currentUserName(): string {
-    // Setze hier den aktuellen Benutzernamen, eventuell aus dem AuthService oder dem userData$
-    return 'Frederik Beck'; // Beispiel
+    return this.currentUser?.displayName || 'Unbekannter Nutzer';
   }
 
   toggleMenu() {

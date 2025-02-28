@@ -1,8 +1,8 @@
 import { Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
 import { addDoc, Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { User } from '../../models/user.model';
-import { Channel } from '../../models/channel.model';
+import { User } from '../../../models/user.model';
+import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
