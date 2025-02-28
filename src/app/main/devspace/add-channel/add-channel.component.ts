@@ -2,17 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Channel } from '../../../../models/channel.model';
+import { AddMemberComponent } from "./add-member/add-member.component";
 
 
 @Component({
   selector: 'app-add-channel',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, AddMemberComponent],
   templateUrl: './add-channel.component.html',
   styleUrl: './add-channel.component.scss'
 })
 export class AddChannelComponent {
   isOpen = false;
-  isOpenForMembers = false;
+  openMemberInput = false;
   nameInput = '';
   descriptionInput = '';
 
@@ -34,18 +35,18 @@ export class AddChannelComponent {
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
     this.onSave.emit(newChannel);
-    this.isOpenForMembers = false;
+    this.openMemberInput = false;
     // this.close();
   }
 
   closeMemberModal(){
-    this.isOpenForMembers = false;
+    this.openMemberInput = false;
   }
 
   save() {
     if (this.nameInput.trim()) {
       this.close();
-      this.isOpenForMembers = true;
+      this.openMemberInput = true;
       // this.createAndEmitNewChannel();
     }
   }
