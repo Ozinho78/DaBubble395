@@ -28,6 +28,11 @@ export class AddChannelComponent {
     this.isOpen = false;
   }
 
+  resetInputs(){
+    this.nameInput = '';
+    this.descriptionInput = '';
+  }
+
   createAndEmitNewChannel(){
     let newChannel = new Channel;
     newChannel.name = this.nameInput;
@@ -36,6 +41,7 @@ export class AddChannelComponent {
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
     this.openMemberInput = false;
+    this.resetInputs();
     // this.close();
   }
 

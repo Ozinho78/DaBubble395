@@ -19,7 +19,11 @@ export class AddMemberComponent {
       this.isOpen = true;
     }, 1000)
     this.memberModalClosed.emit();
-    console.log(this.memberModalClosed);  
+    // console.log(this.memberModalClosed);  
   }
 
+  submitData(){
+    console.log(this.newChannelName);
+    this.closeMemberModal();
+  }
 }
