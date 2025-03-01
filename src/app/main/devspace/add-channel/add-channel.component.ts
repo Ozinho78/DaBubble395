@@ -40,8 +40,7 @@ export class AddChannelComponent {
     newChannel.creationDate = new Date();
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
-    this.openMemberInput = false;
-    this.resetInputs();
+    // this.openMemberInput = false;
     // this.close();
   }
 
@@ -49,13 +48,14 @@ export class AddChannelComponent {
     if (this.nameInput.trim()) {
       this.close();
       this.openMemberInput = true;
-      // this.createAndEmitNewChannel();
     }
   }
 
   closeMemberInput(){
     this.memberModalClose.emit();
     this.openMemberInput = false;
+    this.resetInputs();
+    // this.createAndEmitNewChannel();
   }
 
 }

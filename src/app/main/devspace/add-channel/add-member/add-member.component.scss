@@ -65,7 +65,9 @@ button, svg {
 
 
 /* radio_button_checked */
-
+input[type="radio"] {
+  accent-color: v.$purple_2; /* Ändert die Farbe des ausgewählten Radio-Buttons */
+}
 
 
 // /* Inside auto layout */
