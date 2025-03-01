@@ -133,12 +133,20 @@ input[type="radio"] {
   button {
     background-color: inherit;
     @include m.styleFont("Nunito", 18px, 700, 1.36, #FFFFFF);
-  }
-  transition: all 175ms ease-in-out;
-  &:hover {
-    transform: scale(1.1);
+    transition: all 175ms ease-in-out;
+    &:enabled:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+    &:disabled {
+      color: #666;             /* Dunkelgraue Schrift */
+      cursor: not-allowed;     /* "Verboten"-Cursor */
+      opacity: 0.8;            /* Etwas transparenter */
+    }
   }
 }
+
+
 
 
 
@@ -147,6 +155,7 @@ input[type="radio"] {
   @include m.flexBox(row, center, flex-start, 60px);
   padding-top: 10px;
   h3 {
+    @include m.styleFont("Nunito", 16px, 700, 1.36, #000000);
     padding-bottom: 10px;
   }
 }

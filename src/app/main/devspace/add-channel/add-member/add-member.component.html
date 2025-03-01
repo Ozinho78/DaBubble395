@@ -36,7 +36,7 @@
         name="choice"
         type="radio"
         [(ngModel)]="selectedOption"
-        value="1"
+        value=1
       /><label for="members"
         >Alle Mitglieder zu <span>{{ newChannelName }}</span> hinzufügen</label
       >
@@ -47,12 +47,12 @@
         name="choice"
         type="radio"
         [(ngModel)]="selectedOption"
-        value="2"
+        value=2
       /><label for="members-single">Bestimmte Leute hinzufügen</label>
     </div>
 
 
-    <div *ngIf="selectedOption == '2'" class="member-input3">
+    <div *ngIf="selectedOption == 2" class="member-input3">
       <input
         [(ngModel)]="searchTerm"
         for="single-member-input"
@@ -89,7 +89,7 @@
     </div>
     <!-- <div><p>{{ selectedOption }}</p></div> -->
     <div class="save-btn">
-      <button (click)="submitData()">Erstellen</button>
+      <button [disabled]="selectedOption != 1 && selectedOption != 2" (click)="submitData()">Erstellen</button>
     </div>
   </div>
 </div>

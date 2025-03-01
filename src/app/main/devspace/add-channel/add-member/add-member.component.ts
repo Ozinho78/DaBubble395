@@ -16,7 +16,8 @@ export class AddMemberComponent {
   @Output() memberModalClosed = new EventEmitter<void>();
   @Output() usersUpdated = new EventEmitter<string[]>();
 
-  selectedOption: string = ''; // Hier wird die ausgewählte Option gespeichert
+  selectedOption: number = 0;
+  // selectedOption: string = '';
   searchTerm: string = '';
 
   // Lokale Variablen zur Speicherung der Daten
@@ -50,10 +51,6 @@ export class AddMemberComponent {
   }
   
   closeMemberModal() {
-    // this.isOpen = false;
-    // setTimeout(() => {
-    //   this.isOpen = true;
-    // }, 1000)
     this.memberModalClosed.emit();
     // console.log(this.memberModalClosed);
   }
@@ -75,20 +72,16 @@ export class AddMemberComponent {
   }
 
   submitData() {
-    if(this.selectedOption == '1'){
+    if(this.selectedOption == 1){
       this.selectAllUsers();
-      // console.log(this.selectedUsersDocId);
       this.usersUpdated.emit(this.selectedUsersDocId);
       this.closeMemberModal();
     }
-    if(this.selectedOption == '2'){
+    if(this.selectedOption == 2){
       this.selectSingleUsers();
-      // console.log(this.selectedUsers);
-      // console.log(this.selectedUsersDocId);
       this.usersUpdated.emit(this.selectedUsersDocId);
       this.closeMemberModal();
     }
-    // console.log(this.usersArrayFromAddChannel);
   }
 
 
