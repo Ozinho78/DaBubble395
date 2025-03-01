@@ -11,13 +11,14 @@ import { FormsModule } from '@angular/forms';
 export class AddMemberComponent {
   @Input() newChannelName: string = '';
   @Output() memberModalClosed = new EventEmitter<void>();
-  isOpen = true;
+  // isOpen = true;
+  selectedOption: string = ''; // Hier wird die ausgewählte Option gespeichert
 
   closeMemberModal() {
-    this.isOpen = false;
-    setTimeout(() => {
-      this.isOpen = true;
-    }, 1000)
+    // this.isOpen = false;
+    // setTimeout(() => {
+    //   this.isOpen = true;
+    // }, 1000)
     this.memberModalClosed.emit();
     // console.log(this.memberModalClosed);  
   }
