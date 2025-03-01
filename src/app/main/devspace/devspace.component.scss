@@ -30,7 +30,7 @@ svg {
   border-radius: 5px;
 
   &:hover {
-      background-color: v.$purple_1;
+    background-color: v.$purple_1;
   }
 }
 
@@ -44,7 +44,7 @@ svg {
   height: calc(100dvh - 139px);
   /* Menu 1 - channels + workspaces */
   /* Auto layout */
-  // overflow-y: scroll;  
+  // overflow-y: scroll;
   // position: absolute;
   width: 366px;
   // height: 940px;
@@ -105,10 +105,9 @@ svg {
   flex-grow: 0;
 }
 
-
 .channel-list-ctn {
   width: 100%;
-  
+
   .channel-header {
     width: 100%;
     width: 306px;
@@ -119,8 +118,8 @@ svg {
     }
 
     .channel-sub-header {
-      @include m.flexBox(row, center, center, 15px); 
-      
+      @include m.flexBox(row, center, center, 15px);
+
       div {
         @include m.flexBox(row, center, center, 10px);
         img {
@@ -137,6 +136,14 @@ svg {
     padding-bottom: 13px;
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
     @include m.flexBox(column, flex-start, flex-start, 13px);
+    .single-channel {
+      width: 100%;
+      &:hover {
+        background-color: v.$purple_bg;
+        cursor: pointer;
+        border-radius: 20px;
+      }
+    }
   }
 
   .add-channel-ctn {
@@ -170,7 +177,6 @@ svg {
         cursor: default;
       }
     }
-
   }
 
   .user-list {
@@ -180,7 +186,6 @@ svg {
   }
   padding-bottom: 30px;
 }
-
 
 .avatar-user {
   @include m.flexBox(row, flex-start, center, 6px);
@@ -203,8 +208,6 @@ svg {
   }
 }
 
-
-
 .legal-links {
   width: 306px;
   @include m.styleFont("Nunito", 24px, 400, 1.36, #000000);
@@ -218,9 +221,6 @@ svg {
 .channel-rotate {
   transform: rotate(-90deg);
 }
-
-
-
 
 // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
 // @include m.flexBox(row, center, center);
