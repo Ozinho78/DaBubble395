@@ -37,6 +37,7 @@ export class DevspaceComponent implements OnInit {
   isUserVisible = true;
   private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
+  userLoggedIn: string = localStorage.getItem('user-id') || '';
 
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');

@@ -53,8 +53,13 @@
         <div class="user-list">
           @for (user of users; track $index) {
             <div *ngIf="isUserVisible" [@fadeOut] class="avatar-user">
+              <div class="avatar-img-with-name">
                 <img src="img/avatar/{{ user.avatar }}" alt="" />
                 <span>{{ user.name }}</span>
+              </div>
+              <div class="avatar-you">
+                <span *ngIf="userLoggedIn == user.docId" >(Du)</span>
+              </div>
             </div>
           }
         </div>
