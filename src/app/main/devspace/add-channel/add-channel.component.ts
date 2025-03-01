@@ -69,6 +69,12 @@ export class AddChannelComponent {
     }
   }
 
+  cancelMemberInput(){
+    this.memberModalClose.emit();
+    this.openMemberInput = false;
+    this.resetInputs();
+  }
+
   closeMemberInput() {
     this.memberModalClose.emit();
     this.openMemberInput = false;

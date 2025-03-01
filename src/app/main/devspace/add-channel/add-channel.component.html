@@ -57,6 +57,6 @@
 </div>
 
 
-<app-add-member [usersArrayFromAddChannel]="storedUsersFromDevSpace" [newChannelName]="nameInput" *ngIf="openMemberInput" (memberModalClosed)="closeMemberInput()" (usersUpdated)="handleUsersUpdate($event)"></app-add-member>
+<app-add-member [usersArrayFromAddChannel]="storedUsersFromDevSpace" [newChannelName]="nameInput" *ngIf="openMemberInput" (memberModalClosed)="closeMemberInput()" (cancelMemberInputModal)="cancelMemberInput()" (usersUpdated)="handleUsersUpdate($event)"></app-add-member>
 
 <!-- <app-add-member [firstModalIsOpen]="false" *ngIf="openMemberInput"></app-add-member> -->

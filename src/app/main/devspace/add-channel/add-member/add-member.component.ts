@@ -14,6 +14,7 @@ export class AddMemberComponent {
   @Input() newChannelName: string = '';
   @Input() usersArrayFromAddChannel: User[] = [];
   @Output() memberModalClosed = new EventEmitter<void>();
+  @Output() cancelMemberInputModal = new EventEmitter<void>();
   @Output() usersUpdated = new EventEmitter<string[]>();
 
   selectedOption: number = 0;
@@ -48,6 +49,10 @@ export class AddMemberComponent {
 
   removeUser(user: User): void {
     this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+  }
+
+  cancelMemberModal(){
+    this.cancelMemberInputModal.emit();
   }
   
   closeMemberModal() {
