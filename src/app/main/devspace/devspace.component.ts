@@ -167,7 +167,11 @@ export class DevspaceComponent implements OnInit {
     // console.log('Channel saved:', channelName);
   }
 
-  selectUserForDirectMessage(){
-    
+  selectUserForDirectMessage(docId: string) {
+    console.log(docId);
   }
+
+
+
+  
 }

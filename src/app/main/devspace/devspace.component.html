@@ -44,6 +44,7 @@
       </div>
 
       <app-add-channel
+        [usersArrayFromDevSpace]="users"
         (onSave)="saveChannelToFirestore($event)"
       ></app-add-channel>
 
@@ -69,7 +70,7 @@
             *ngIf="isUserVisible"
             [@fadeOut]
             class="avatar-user"
-            (click)="selectUserForDirectMessage()"
+            (click)="selectUserForDirectMessage(user.docId || '')"
           >
             <div class="avatar-img-with-name">
               <img src="img/avatar/{{ user.avatar }}" alt="" />

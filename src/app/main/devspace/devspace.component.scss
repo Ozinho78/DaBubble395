@@ -136,23 +136,30 @@ svg {
     padding-bottom: 13px;
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
     @include m.flexBox(column, flex-start, flex-start, 13px);
+
     .single-channel {
       width: 100%;
+      transition: all 125ms ease-in-out;
+
       &:hover {
         background-color: v.$purple_bg;
         cursor: pointer;
         border-radius: 20px;
       }
+
     }
+    
   }
 
   .add-channel-ctn {
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
     @include m.flexBox(row, center, center, 10px);
     padding: 4px 10px;
+
     img {
       cursor: pointer;
     }
+
   }
 }
 
@@ -172,7 +179,6 @@ svg {
 
     div {
       @include m.flexBox(row, center, center, 10px);
-
       img {
         cursor: default;
       }
