@@ -51,7 +51,7 @@
     </div>
     
     <div (click)="save()" class="save-btn">
-      <button>Erstellen</button>
+      <button [disabled]="nameInput.length < 3">Erstellen</button>
     </div>
   </div>
 </div>
