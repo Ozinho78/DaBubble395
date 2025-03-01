@@ -27,4 +27,9 @@ export class AddMemberComponent {
     console.log(this.newChannelName);
     this.closeMemberModal();
   }
+
+  showSelectedOption(){
+    let selectedOption = this.selectedOption;
+    console.log(selectedOption);
+  }
 }

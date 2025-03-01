@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  // box-sizing: content-box;
 }
 
 button, svg {
@@ -31,11 +32,12 @@ button, svg {
 .member-content {
   position: relative;
   width: 710px;
-  height: 279px;
+  // min-height: 279px;
   background: #FFFFFF;
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
   border-radius: 30px;
   padding: 40px;
+  padding-bottom: 120px;
   @include m.flexBox(column, flex-start, flex-start, 20px);
   .header {
     width: 100%;
@@ -60,6 +62,34 @@ button, svg {
     }
     @include m.flexBox(row, center, center, 20px);
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+  }
+  .member-input3 {
+    width: 100%;
+    input {
+      @include m.flexBox(row, center, flex-start, 20px);    
+      padding: 18px 20px;
+      width: 100%;
+      // width: 792px;
+      // height: 60px;
+  
+      /* Ligth purple (Lines) */
+      border: 1px solid v.$purple_4;
+      border-radius: 40px;
+  
+      /* Inside auto layout */
+      flex: none;
+      order: 1;
+      align-self: stretch;
+      flex-grow: 0;
+      ::placeholder {
+        /* z.B. Kooperationsprojekte */
+        // // width: 205px;
+        // height: 25px;
+        @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+        /* Text gray */
+        color: v.$grey;
+      }
+    }
   }
 }
 

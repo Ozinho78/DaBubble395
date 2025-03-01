@@ -31,15 +31,31 @@
       </svg>
     </div>
     <div class="member-input1">
-      <input for="members-channel" name="choice" type="radio" /><label for="members"
+      <input
+        for="members-channel"
+        name="choice"
+        type="radio"
+        [(ngModel)]="selectedOption"
+        value="1"
+      /><label for="members"
         >Alle Mitglieder von <span>{{ newChannelName }}</span> hinzufügen</label
       >
     </div>
     <div class="member-input2">
-      <input for="members-single" name="choice" type="radio" /><label for="members-single"
-        >Bestimmte Leute hinzufügen</label
-      >
+      <input
+        for="members-single"
+        name="choice"
+        type="radio"
+        [(ngModel)]="selectedOption"
+        value="2"
+      /><label for="members-single">Bestimmte Leute hinzufügen</label>
     </div>
+    <div *ngIf="selectedOption == '2'" class="member-input3">
+      <input for="single-member-input" type="text" /><label
+        for="single-member-input"
+      ></label>
+    </div>
+    <!-- <div><p>{{ selectedOption }}</p></div> -->
     <div class="save-btn">
       <button (click)="submitData()">Erstellen</button>
     </div>
