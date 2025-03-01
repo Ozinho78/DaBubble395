@@ -75,16 +75,13 @@ export class AddMemberComponent {
   }
 
   submitData() {
-    // console.log(this.newChannelName);
     if(this.selectedOption == '1'){
-      // const updatedUsers = this.selectedUsersDocId;
       this.selectAllUsers();
       // console.log(this.selectedUsersDocId);
       this.usersUpdated.emit(this.selectedUsersDocId);
       this.closeMemberModal();
     }
     if(this.selectedOption == '2'){
-      // const updatedUsers = this.selectedUsersDocId;
       this.selectSingleUsers();
       // console.log(this.selectedUsers);
       // console.log(this.selectedUsersDocId);
@@ -93,8 +90,6 @@ export class AddMemberComponent {
     }
     // console.log(this.usersArrayFromAddChannel);
   }
-
-
 
 
 }
