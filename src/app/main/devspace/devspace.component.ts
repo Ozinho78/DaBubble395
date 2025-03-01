@@ -116,6 +116,7 @@ export class DevspaceComponent implements OnInit {
       this.channels = [];
       list.forEach((element) => {
         const singleChannel = element.data() as Channel;
+        singleChannel.docId = element.id;
         this.channels.push(singleChannel);
       });
     });
@@ -171,7 +172,9 @@ export class DevspaceComponent implements OnInit {
     console.log(docId);
   }
 
-
+  selectChannel(docId: string) {
+    console.log(docId);
+  }
 
   
 }

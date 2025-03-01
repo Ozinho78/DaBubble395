@@ -58,12 +58,7 @@ export class AddChannelComponent {
     newChannel.creationDate = new Date();
     newChannel.member = this.memberDocIds;
     this.onSave.emit(newChannel);
-    console.log(newChannel);
-    
-    // this.onSave.emit(this.nameInput);
-    // this.onSave.emit(this.descriptionInput);
-    // this.openMemberInput = false;
-    // this.close();
+    // console.log(newChannel);
   }
 
   save() {
