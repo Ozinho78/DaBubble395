@@ -17,10 +17,12 @@ export class AddMemberComponent {
   @Output() usersUpdated = new EventEmitter<string[]>();
 
   selectedOption: string = ''; // Hier wird die ausgewählte Option gespeichert
+  searchTerm: string = '';
 
-  // Lokale Variable zur Speicherung der Daten
+  // Lokale Variablen zur Speicherung der Daten
   storedUsersFromAddChannel: User[] = [];
   selectedUsersDocId: string[] = [];
+  selectedUsers: User[] = [];
 
 
   constructor() {
@@ -33,6 +35,21 @@ export class AddMemberComponent {
     }
   }
 
+  get filteredUsers(): User[] {
+    return this.usersArrayFromAddChannel.filter(user =>
+      user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  selectUser(user: User): void {
+    if (!this.selectedUsers.includes(user)) {
+      this.selectedUsers.push(user);
+    }
+  }
+
+  removeUser(user: User): void {
+    this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+  }
   
   closeMemberModal() {
     // this.isOpen = false;
@@ -57,9 +74,15 @@ export class AddMemberComponent {
       this.selectAllUsers();
       // console.log(this.selectedUsersDocId);
       this.usersUpdated.emit(updatedUsers);
+      this.closeMemberModal();
+    }
+    if(this.selectedOption == '2'){
+
     }
     // console.log(this.usersArrayFromAddChannel);
-    this.closeMemberModal();
   }
+
+
+  
 
 }

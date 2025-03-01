@@ -97,6 +97,9 @@ button, svg {
 /* radio_button_checked */
 input[type="radio"] {
   accent-color: v.$purple_2; /* Ändert die Farbe des ausgewählten Radio-Buttons */
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 
@@ -135,5 +138,38 @@ input[type="radio"] {
   &:hover {
     transform: scale(1.1);
   }
+}
+
+
+
+
+.select-user-ctn {
+  @include m.flexBox(row, center, flex-start, 60px);
+  padding-top: 10px;
+  h3 {
+    padding-bottom: 10px;
+  }
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.user-list, .selected-users {
+  list-style: none;
+}
+
+.user-item, .selected-item {
+  @include m.flexBox(row, flex-start, center, 15px);
+  @include m.styleFont("Nunito", 14px, 400, 1.36, #000000);
+  img {
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+  }
+  padding-bottom: 10px;
+  cursor: pointer;
 }
 

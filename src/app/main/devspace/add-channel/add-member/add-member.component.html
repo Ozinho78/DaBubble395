@@ -50,10 +50,42 @@
         value="2"
       /><label for="members-single">Bestimmte Leute hinzufügen</label>
     </div>
+
+
     <div *ngIf="selectedOption == '2'" class="member-input3">
-      <input for="single-member-input" type="text" /><label
+      <input
+        [(ngModel)]="searchTerm"
         for="single-member-input"
-      ></label>
+        type="text"
+        placeholder="Benutzer filtern..."
+      /><label for="single-member-input"></label>
+      
+
+      <div class="select-user-ctn">
+        <div>
+          <h3>Verfügbare Benutzer:</h3>
+          <ul class="user-list">
+            <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" class="user-item">
+              <img src="img/avatar/{{ user.avatar }}" alt="" />
+                <span>{{ user.name }}</span>
+            </li>
+          </ul>
+        </div>
+      
+        <div>
+          <h3>Ausgewählte Benutzer:</h3>
+          <ul class="selected-users">
+            <li *ngFor="let user of selectedUsers" class="selected-item">
+              <img src="img/avatar/{{ user.avatar }}" alt="Avatar" class="avatar">
+              {{ user.name }} 
+              <button (click)="removeUser(user)">X</button>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+
     </div>
     <!-- <div><p>{{ selectedOption }}</p></div> -->
     <div class="save-btn">
