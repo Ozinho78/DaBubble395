@@ -166,4 +166,8 @@ export class DevspaceComponent implements OnInit {
     await addDoc(this.channelDatabase, channel.toJson());
     // console.log('Channel saved:', channelName);
   }
+
+  selectUserForDirectMessage(){
+    
+  }
 }

@@ -8,33 +8,39 @@
       <img src="img/edit_square.png" alt="" />
     </div>
 
-    <div>
+    <div class="channel-and-user-list-ctn">
       <div class="channel-list-ctn">
         <div class="channel-header">
           <div class="channel-sub-header">
-            <img (click)="toggleChannelVisibility()" [class.channel-rotate]="!isChannelVisible" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
+            <img
+              (click)="toggleChannelVisibility()"
+              [class.channel-rotate]="!isChannelVisible"
+              src="img/arrow_drop_down.png"
+              alt="Drop Down Arrow"
+            />
             <div>
-              <img src="img/workspaces.png" alt="Workspaces Icon">
+              <img src="img/workspaces.png" alt="Workspaces Icon" />
               <span>Channels</span>
             </div>
           </div>
-          <img (click)="openChannelDialog()" src="img/add.png" alt="Add Icon">
+          <img (click)="openChannelDialog()" src="img/add.png" alt="Add Icon" />
         </div>
 
         <div class="channel-list">
           @for (channel of channels; track $index){
-            <span *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
-            }
+          <span *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
+          }
         </div>
         <div class="add-channel-ctn">
-          <img (click)="openChannelDialog()" src="img/add_circle.png" alt="Add Circle Icon">
+          <img
+            (click)="openChannelDialog()"
+            src="img/add_circle.png"
+            alt="Add Circle Icon"
+          />
           <span>Channel hinzufügen</span>
         </div>
       </div>
-        
-      
 
-      
       <app-add-channel
         (onSave)="saveChannelToFirestore($event)"
       ></app-add-channel>
@@ -43,24 +49,34 @@
 
       <div class="user-list-ctn">
         <div class="user-header">
-          <img (click)="toggleUserVisibility()" [class.channel-rotate]="!isUserVisible" src="img/arrow_drop_down.png" alt="Drop Down Arrow">
+          <img
+            (click)="toggleUserVisibility()"
+            [class.channel-rotate]="!isUserVisible"
+            src="img/arrow_drop_down.png"
+            alt="Drop Down Arrow"
+          />
           <div>
-            <img src="img/account_circle.png" alt="Account Circle Item">
+            <img src="img/account_circle.png" alt="Account Circle Item" />
             <span>Direktnachrichten</span>
           </div>
         </div>
 
         <div class="user-list">
           @for (user of users; track $index) {
-            <div *ngIf="isUserVisible" [@fadeOut] class="avatar-user">
-              <div class="avatar-img-with-name">
-                <img src="img/avatar/{{ user.avatar }}" alt="" />
-                <span>{{ user.name }}</span>
-              </div>
-              <div class="avatar-you">
-                <span *ngIf="userLoggedIn == user.docId" >(Du)</span>
-              </div>
+          <div
+            *ngIf="isUserVisible"
+            [@fadeOut]
+            class="avatar-user"
+            (click)="selectUserForDirectMessage()"
+          >
+            <div class="avatar-img-with-name">
+              <img src="img/avatar/{{ user.avatar }}" alt="" />
+              <span>{{ user.name }}</span>
             </div>
+            <div class="avatar-you">
+              <span *ngIf="userLoggedIn == user.docId">(Du)</span>
+            </div>
+          </div>
           }
         </div>
       </div>
@@ -70,6 +86,5 @@
       <a routerLink="/imprint">Imprint</a><br />
       <a routerLink="/policy">Datenschutz</a>
     </div>
-    
   </div>
 </div>
