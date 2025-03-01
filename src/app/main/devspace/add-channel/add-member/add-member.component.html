@@ -78,7 +78,7 @@
             <li *ngFor="let user of selectedUsers" class="selected-item">
               <img src="img/avatar/{{ user.avatar }}" alt="Avatar" class="avatar">
               {{ user.name }} 
-              <button (click)="removeUser(user)">X</button>
+              <button (click)="removeUser(user)" class="remove-button">X</button>
             </li>
           </ul>
         </div>

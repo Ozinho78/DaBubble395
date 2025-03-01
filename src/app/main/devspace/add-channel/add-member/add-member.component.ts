@@ -25,9 +25,7 @@ export class AddMemberComponent {
   selectedUsers: User[] = [];
 
 
-  constructor() {
-    // this.storedUsersFromAddChannel = this.usersArrayFromAddChannel;
-  }
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['usersArrayFromAddChannel'] && changes['usersArrayFromAddChannel'].currentValue) {
@@ -62,27 +60,41 @@ export class AddMemberComponent {
 
   selectAllUsers(){
     const arrLength = this.storedUsersFromAddChannel.length;
+    this.selectedUsersDocId = [];
     for (let i = 0; i < arrLength; i++) {
       this.selectedUsersDocId.push(this.storedUsersFromAddChannel[i].docId || '');
+    }
+  }
+
+  selectSingleUsers(){
+    const arrLength = this.selectedUsers.length;
+    this.selectedUsersDocId = [];
+    for (let i = 0; i < arrLength; i++) {
+      this.selectedUsersDocId.push(this.selectedUsers[i].docId || '');
     }
   }
 
   submitData() {
     // console.log(this.newChannelName);
     if(this.selectedOption == '1'){
-      const updatedUsers = this.selectedUsersDocId;
+      // const updatedUsers = this.selectedUsersDocId;
       this.selectAllUsers();
       // console.log(this.selectedUsersDocId);
-      this.usersUpdated.emit(updatedUsers);
+      this.usersUpdated.emit(this.selectedUsersDocId);
       this.closeMemberModal();
     }
     if(this.selectedOption == '2'){
-
+      // const updatedUsers = this.selectedUsersDocId;
+      this.selectSingleUsers();
+      // console.log(this.selectedUsers);
+      // console.log(this.selectedUsersDocId);
+      this.usersUpdated.emit(this.selectedUsersDocId);
+      this.closeMemberModal();
     }
     // console.log(this.usersArrayFromAddChannel);
   }
 
 
-  
+
 
 }

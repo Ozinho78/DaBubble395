@@ -151,12 +151,6 @@ input[type="radio"] {
   }
 }
 
-.search-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-}
-
 .user-list, .selected-users {
   list-style: none;
 }
@@ -173,3 +167,6 @@ input[type="radio"] {
   cursor: pointer;
 }
 
+.remove-button {
+  color: rgb(143, 2, 2);
+}
