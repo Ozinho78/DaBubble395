@@ -16,6 +16,7 @@ export class AddChannelComponent {
   openMemberInput = false;
   nameInput = '';
   descriptionInput = '';
+  memberDocIds: string[] = [];
   @Input() usersArrayFromDevSpace: User[] = [];
   @Output() memberModalClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<Channel>();
@@ -23,6 +24,13 @@ export class AddChannelComponent {
 
   // Lokale Variable zur Speicherung der Daten
   storedUsersFromDevSpace: User[] = [];
+
+  updatedUsers: User[] = [];
+
+  handleUsersUpdate(updatedUsers: string[]) {
+    // console.log(updatedUsers);
+    this.memberDocIds = updatedUsers;
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['usersArrayFromDevSpace'] && changes['usersArrayFromDevSpace'].currentValue) {
@@ -48,6 +56,10 @@ export class AddChannelComponent {
     newChannel.name = this.nameInput;
     newChannel.description = this.descriptionInput;
     newChannel.creationDate = new Date();
+    newChannel.member = this.memberDocIds;
+    this.onSave.emit(newChannel);
+    console.log(newChannel);
+    
     // this.onSave.emit(this.nameInput);
     // this.onSave.emit(this.descriptionInput);
     // this.openMemberInput = false;
@@ -56,7 +68,7 @@ export class AddChannelComponent {
 
   save() {
     if (this.nameInput.trim()) {
-      console.log(this.usersArrayFromDevSpace);
+      // console.log(this.usersArrayFromDevSpace);
       this.close();
       this.openMemberInput = true;
     }
@@ -65,7 +77,7 @@ export class AddChannelComponent {
   closeMemberInput() {
     this.memberModalClose.emit();
     this.openMemberInput = false;
+    this.createAndEmitNewChannel();
     this.resetInputs();
-    // this.createAndEmitNewChannel();
   }
 }

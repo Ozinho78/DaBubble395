@@ -14,10 +14,13 @@ export class AddMemberComponent {
   @Input() newChannelName: string = '';
   @Input() usersArrayFromAddChannel: User[] = [];
   @Output() memberModalClosed = new EventEmitter<void>();
+  @Output() usersUpdated = new EventEmitter<string[]>();
+
   selectedOption: string = ''; // Hier wird die ausgewählte Option gespeichert
 
   // Lokale Variable zur Speicherung der Daten
   storedUsersFromAddChannel: User[] = [];
+  selectedUsersDocId: string[] = [];
 
 
   constructor() {
@@ -40,14 +43,23 @@ export class AddMemberComponent {
     // console.log(this.memberModalClosed);
   }
 
+  selectAllUsers(){
+    const arrLength = this.storedUsersFromAddChannel.length;
+    for (let i = 0; i < arrLength; i++) {
+      this.selectedUsersDocId.push(this.storedUsersFromAddChannel[i].docId || '');
+    }
+  }
+
   submitData() {
     // console.log(this.newChannelName);
-    console.log(this.usersArrayFromAddChannel);
+    if(this.selectedOption == '1'){
+      const updatedUsers = this.selectedUsersDocId;
+      this.selectAllUsers();
+      // console.log(this.selectedUsersDocId);
+      this.usersUpdated.emit(updatedUsers);
+    }
+    // console.log(this.usersArrayFromAddChannel);
     this.closeMemberModal();
   }
 
-  showSelectedOption() {
-    let selectedOption = this.selectedOption;
-    console.log(selectedOption);
-  }
 }
