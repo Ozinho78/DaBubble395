@@ -13,6 +13,8 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  emailErrorMessage: string = '';
+  passwordErrorMessage: string = '';
   errorMessage: string = '';
 
   constructor(private router: Router,
@@ -27,9 +29,18 @@ export class LoginComponent {
 
   async login() {
     this.errorMessage = '';
+    this.emailErrorMessage = '';
+    this.passwordErrorMessage = '';
 
-    if (!this.email || !this.password) {
-      this.errorMessage = 'Bitte fülle alle Felder aus.';
+    if (!this.email) {
+      this.emailErrorMessage = 'Bitte E-Mail-Adresse eingeben.';
+    }
+
+    if (!this.password) {
+      this.passwordErrorMessage = 'Bitte Passwort eingeben.';
+    }
+
+    if (this.emailErrorMessage || this.passwordErrorMessage) {
       return;
     }
 
