@@ -23,28 +23,14 @@ export class RegisterComponent {
 
   ngOnInit() {}
 
-  setToken() {
-    localStorage.setItem('token', 'dummy-token');
-  }
-
   async register() {
     this.resetErrors();
-    this.handleRegisterError(Error);
-    if (this.isPrivacyAccepted) {
-      await this.setToken();
-      const avatarFilename = 'default-avatar.png';
-      this.authService.storeUserData(
-        this.name,
-        this.email,
-        this.password,
-        avatarFilename
-      );
-      this.router.navigate(['/avatar-selection']);
-    }
-  }
+    this.validateForm();
 
-  navigateToLogin() {
-    this.router.navigate(['/login']);
+    if (!this.isFormValid()) return;
+
+    await this.createUser();
+    this.router.navigate(['/avatar-selection']);
   }
 
   resetErrors() {
@@ -53,23 +39,41 @@ export class RegisterComponent {
     this.passwordErrorMessage = '';
   }
 
-  handleRegisterError(error: any) {
-    if (!this.name) {
-      this.nameErrorMessage = 'Bitte schreiben Sie einen Namen.';
-    }
+  validateForm() {
+    if (!this.name) this.nameErrorMessage = 'Bitte schreiben Sie einen Namen.';
     if (!this.email) {
       this.emailErrorMessage = 'Bitte E-Mail-Adresse eingeben.';
+    } else if (!this.isValidEmail(this.email)) {
+      this.emailErrorMessage = 'Bitte eine gültige E-Mail-Adresse eingeben.';
     }
-    if (!this.password) {
-      this.passwordErrorMessage = 'Bitte Passwort eingeben.';
-    }
+    if (!this.password) this.passwordErrorMessage = 'Bitte Passwort eingeben.';
+  }
 
-    if (
-      this.nameErrorMessage ||
-      this.emailErrorMessage ||
-      this.passwordErrorMessage
-    ) {
-      return;
-    }
+  isValidEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  }
+
+  isFormValid(): boolean {
+    return (
+      this.isPrivacyAccepted &&
+      !this.nameErrorMessage &&
+      !this.emailErrorMessage &&
+      !this.passwordErrorMessage
+    );
+  }
+
+  async createUser() {
+    this.setToken();
+    const avatarFilename = 'default-avatar.png';
+    await this.authService.storeUserData(this.name, this.email, this.password, avatarFilename);
+  }
+
+  setToken() {
+    localStorage.setItem('token', 'dummy-token');
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
 }
