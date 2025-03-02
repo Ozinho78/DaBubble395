@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   email: string = '';
@@ -17,9 +17,7 @@ export class LoginComponent {
   passwordErrorMessage: string = '';
   errorMessage: string = '';
 
-  constructor(private router: Router,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   guestLogin() {
     localStorage.setItem('token', 'dummy-token');
@@ -37,7 +35,7 @@ export class LoginComponent {
     }
 
     if (!this.password) {
-      this.passwordErrorMessage = 'Bitte Passwort eingeben.';
+      this.passwordErrorMessage = 'Bitte geben Sie ein Passwort ein.';
     }
 
     if (this.emailErrorMessage || this.passwordErrorMessage) {
@@ -48,7 +46,20 @@ export class LoginComponent {
       await this.authService.loginUser(this.email, this.password);
       this.router.navigate(['/main']);
     } catch (error: any) {
-      this.errorMessage = 'Fehler bei der Anmeldung: ' + (error.message || 'Unbekannter Fehler');
+      this.handleLoginError(error);
+    }
+  }
+
+  handleLoginError(error: any) {
+    if (error.code === 'auth/invalid-email') {
+      this.errorMessage =
+        'Diese E-Mail-Adresse ist leider ungültig.';
+    } else if (error.code === 'auth/invalid-credential') {
+      this.errorMessage =
+        'Falsches Passwort oder E-Mail. Bitte noch einmal versuchen.';
+    } else {
+      this.errorMessage =
+        error.message || 'Fehler bei der Anmeldung: Unbekannter Fehler';
     }
   }
 }

@@ -30,6 +30,8 @@
       <div class="error-message" *ngIf="emailErrorMessage">{{ emailErrorMessage }}</div>
       <input type="password" placeholder="Passwort" [(ngModel)]="password" />
       <div class="error-message" *ngIf="passwordErrorMessage">{{ passwordErrorMessage }}</div>
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
       <a href="/request-password-reset">
         <span>Passwort vergessen?</span>
       </a>
