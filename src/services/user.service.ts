@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
-import { Observable, firstValueFrom, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 
@@ -55,7 +55,6 @@ export class UserService {
         console.log('Benutzer erfolgreich in Firestore gespeichert!');
     }
 
-
     /** Holt alle Nutzer aus der Firestore `users`-Sammlung */
     getAllUsers(): Observable<{ name: string, avatar: string, id: string }[]> {
         const usersRef = collection(this.firestore, 'users');
@@ -91,5 +90,9 @@ export class UserService {
         } catch (error) {
             console.error('Fehler beim Abrufen des Users:', error);
         }
+    }
+
+    getCurrentUserId(): string | null {
+        return localStorage.getItem('user-id');
     }
 }
