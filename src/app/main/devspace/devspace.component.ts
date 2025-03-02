@@ -37,7 +37,7 @@ export class DevspaceComponent implements OnInit {
   isUserVisible = true;
   private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
-  userLoggedIn: string = localStorage.getItem('user-id') || '';
+  userLoggedIn: string = '';
 
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
@@ -120,6 +120,7 @@ export class DevspaceComponent implements OnInit {
         this.channels.push(singleChannel);
       });
     });
+    this.userLoggedIn = localStorage.getItem('user-id') || '';
   }
 
   ngOnInit() {
@@ -151,6 +152,7 @@ export class DevspaceComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     this.unsubUserNames();
     this.unsubChannelNames();
+    this.userLoggedIn = '';
   }
 
   openChannelDialog() {
