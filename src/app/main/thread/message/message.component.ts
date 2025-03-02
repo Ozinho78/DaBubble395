@@ -1,13 +1,13 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Firestore } from '@angular/fire/firestore';
+//import { Firestore } from '@angular/fire/firestore';
 import { ReactionsComponent } from '../../reactions/reactions.component';
 import { Message } from '../../../../models/message.class';
 import { Reaction } from '../../../../models/reaction.class';
 import { UserService } from '../../../../services/user.service';
 import { ReactionService } from '../../../../services/reaction.service';
-import { AuthService } from '../../../../services/auth.service';
+//import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-message',
@@ -19,8 +19,8 @@ export class MessageComponent implements OnInit {
   @Input() message!: Message;
   @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
-  currentUserId!: string;
-  currentUserData: any | null = null;
+  currentUserId: string | null = null;
+  //currentUserData: any | null = null;
   currentUser: any;
   userData$!: Observable<{ name: string, avatar: string }>;
   userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
@@ -34,18 +34,20 @@ export class MessageComponent implements OnInit {
   menuOpen: boolean = false; // Menü-Zustand
 
   constructor(
-    private firestore: Firestore,
+    //private firestore: Firestore,
     private userService: UserService,
     private reactionService: ReactionService,
-    private authService: AuthService
+    //private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-
-    this.setUser();
-
-
+    //this.setUser();
     this.userData$ = this.userService.getUserById(this.message.userId);
+    this.currentUserId = this.userService.getCurrentUserId();
+    this.loadReactions();
+  }
+
+  loadReactions() {
     // Lade die Reaktionen
     if (this.message.id) {
       this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
@@ -81,6 +83,7 @@ export class MessageComponent implements OnInit {
     }
   }
 
+  /*
   setUser() {
     this.authService.user$.subscribe(user => {
       if (user) {
@@ -101,6 +104,7 @@ export class MessageComponent implements OnInit {
       }
     });
   }
+  */
 
   getUserData(userId: string): Observable<{ name: string, avatar: string }> {
     if (!this.userCache.has(userId)) {
@@ -134,7 +138,7 @@ export class MessageComponent implements OnInit {
 
   removeMyReaction(emojiType: string): void {
     // Hier entfernen wir die Reaction des aktuellen Benutzers.
-    this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId)
+    this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId!)
       .then(() => {
         console.log('Reaction entfernt!');
         // Optionale UI-Aktualisierung, z. B. Overlay schließen
