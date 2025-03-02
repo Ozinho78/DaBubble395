@@ -6,6 +6,7 @@ import { Message } from '../../../../models/message.class';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserService } from '../../../../services/user.service';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-message-input',
@@ -16,15 +17,53 @@ import { Observable } from 'rxjs';
 })
 export class MessageInputComponent {
   @Input() threadId!: string | null; // Die aktuelle Thread-ID
+  currentUser: any;
   editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
   messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
   showEmojiPicker: boolean = false;
   showMentionList: boolean = false; // Zeigt die Erwähnungsliste an
   filteredUsers: any[] = []; // Gefilterte Benutzerliste für die Erwähnung
   allUsers$: Observable<any[]>; // Alle Nutzer
+  currentUserId: string | null = null;
+  currentUserData: any | null = null;
 
-  constructor(private firestore: Firestore, private userService: UserService) {
+  constructor(
+    private firestore: Firestore,
+    private userService: UserService,
+    private authService: AuthService
+  ) {
     this.allUsers$ = this.userService.getAllUsers();
+
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.currentUser = user;
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.setUser();
+  }
+
+  setUser() {
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.matchAuthUser(user.email);
+      }
+    });
+  }
+
+  matchAuthUser(email: string) {
+    if (!email) return;
+
+    this.userService.getUserByEmail(email).subscribe(userData => {
+      if (userData) {
+        this.currentUserId = userData.uid;
+        this.currentUserData = userData;
+      } else {
+        console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
+      }
+    });
   }
 
   /** Nachricht senden oder bearbeiten */
@@ -41,7 +80,6 @@ export class MessageInputComponent {
     try {
       const messageRef = doc(this.firestore, 'messages', this.editingMessageId);
       await updateDoc(messageRef, { text: this.messageText });
-      debugger;
 
       this.resetInput();
       this.scrollToBottom(); // Nach dem Bearbeiten scrollen
@@ -52,10 +90,12 @@ export class MessageInputComponent {
 
   /** Neue Nachricht in Firestore speichern */
   private async createMessage() {
+    if (!this.messageText.trim() || !this.currentUserId) return; // Verhindere leere Nachrichten und prüfe ob User existiert
+
     try {
       const newMessage = new Message({
         text: this.messageText,
-        userId: 'qdWWqOADh6O1FkGpHlTr', // Temporärer Benutzer
+        userId: this.currentUserId, // Firestore User-ID nutzen
         threadId: this.threadId,
         creationDate: Date.now(),
         reactions: []
@@ -70,7 +110,6 @@ export class MessageInputComponent {
       console.error('Fehler beim Speichern:', error);
     }
   }
-
 
   /** Nachricht für die Bearbeitung setzen */
   editMessage(messageId: string, text: string) {

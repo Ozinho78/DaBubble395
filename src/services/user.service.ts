@@ -1,8 +1,8 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, docData } from '@angular/fire/firestore';
-import { Observable, map } from 'rxjs';
+import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
-import { User } from '../app/models/user.model';
+import { User } from '../models/user.model';
 
 @Injectable({
     providedIn: 'root'
@@ -24,8 +24,16 @@ export class UserService {
         ).pipe(
             map((user: any) => ({
                 name: user?.name || 'Unbekannt',
-                avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
             }))
+        );
+    }
+
+    getUserByEmail(email: string): Observable<any> {
+        const usersRef = collection(this.firestore, 'users'); // Firestore Users Collection
+        const queryRef = query(usersRef, where('email', '==', email));
+        return collectionData(queryRef, { idField: 'uid' }).pipe(
+            map(users => users.length > 0 ? users[0] : null)
         );
     }
 
@@ -34,19 +42,19 @@ export class UserService {
             console.error("Keine Benutzerinformationen gefunden!");
             return;
         }
-    
+
         const { name, email, avatar } = this.authService.userData;
-    
+
         const usersCollectionRef = collection(this.firestore, 'users');
         await addDoc(usersCollectionRef, {
             name,
             email,
             avatar: avatar || 'default.png'
         });
-    
+
         console.log('Benutzer erfolgreich in Firestore gespeichert!');
     }
-    
+
 
     /** Holt alle Nutzer aus der Firestore `users`-Sammlung */
     getAllUsers(): Observable<{ name: string, avatar: string, id: string }[]> {
@@ -59,9 +67,29 @@ export class UserService {
                 users.map(user => ({
                     id: user.id,
                     name: user?.name || 'Unbekannt',
-                    avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                    avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
                 }))
             )
         );
+    }
+
+    async saveUserDocIdByEmail(email: string): Promise<void> {
+        try {
+            const usersCollection = collection(this.firestore, 'users');
+
+            // Query: Suche nach dem User mit der passenden Email
+            const q = query(usersCollection, where('email', '==', email));
+            const snapshot = await getDocs(q);
+
+            if (!snapshot.empty) {
+                const userDoc = snapshot.docs[0];
+                const docId = userDoc.id;
+                localStorage.setItem('user-id', docId);
+            } else {
+                console.error('Kein Benutzer mit dieser E-Mail gefunden.');
+            }
+        } catch (error) {
+            console.error('Fehler beim Abrufen des Users:', error);
+        }
     }
 }

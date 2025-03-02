@@ -21,6 +21,7 @@ export class LoginComponent {
 
   guestLogin() {
     localStorage.setItem('token', 'dummy-token');
+    localStorage.setItem('user-id', '3Ar6MCcSeBN0wMmNaJ4s');
     this.router.navigate(['/main']);
   }
 

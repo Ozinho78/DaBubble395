@@ -21,14 +21,33 @@ svg {
   cursor: pointer;
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: v.$purple_2;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: v.$purple_1;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background-color: v.$purple_4;
+  margin: 30px;
+  border-radius: 5px;
+}
+
 .devspace-wrapper {
-  height: 80vh;
+  height: calc(100dvh - 139px);
   /* Menu 1 - channels + workspaces */
   /* Auto layout */
-  
+  // overflow-y: scroll;
   // position: absolute;
   width: 366px;
-  height: 940px;
+  // height: 940px;
   // left: 20px;
   // top: 115px;
   /* White */
@@ -39,6 +58,7 @@ svg {
 
 .devspace-content {
   width: 100%;
+  height: 100%;
   padding: 32px 30px;
   @include m.flexBox(column, center, flex-start);
   .header {
@@ -54,6 +74,14 @@ svg {
       }
     }
   }
+}
+
+.channel-and-user-list-ctn {
+  width: 100%;
+  height: 100%;
+  // display: block;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .devspace-add-channel {
@@ -77,11 +105,9 @@ svg {
   flex-grow: 0;
 }
 
-
-
 .channel-list-ctn {
   width: 100%;
-  
+
   .channel-header {
     width: 100%;
     width: 306px;
@@ -92,8 +118,8 @@ svg {
     }
 
     .channel-sub-header {
-      @include m.flexBox(row, center, center, 15px); 
-      
+      @include m.flexBox(row, center, center, 15px);
+
       div {
         @include m.flexBox(row, center, center, 10px);
         img {
@@ -110,15 +136,30 @@ svg {
     padding-bottom: 13px;
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
     @include m.flexBox(column, flex-start, flex-start, 13px);
+
+    .single-channel {
+      width: 100%;
+      transition: all 125ms ease-in-out;
+
+      &:hover {
+        background-color: v.$purple_bg;
+        cursor: pointer;
+        border-radius: 20px;
+      }
+
+    }
+    
   }
 
   .add-channel-ctn {
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
     @include m.flexBox(row, center, center, 10px);
     padding: 4px 10px;
+
     img {
       cursor: pointer;
     }
+
   }
 }
 
@@ -138,12 +179,10 @@ svg {
 
     div {
       @include m.flexBox(row, center, center, 10px);
-
       img {
         cursor: default;
       }
     }
-
   }
 
   .user-list {
@@ -154,17 +193,26 @@ svg {
   padding-bottom: 30px;
 }
 
-
 .avatar-user {
-  @include m.flexBox(row, center, center, 15px);
-  img {
-    width: 50px;
-    height: auto;
-    border-radius: 50%;
+  @include m.flexBox(row, flex-start, center, 6px);
+  width: 100%;
+  .avatar-img-with-name {
+    @include m.flexBox(row, center, center, 15px);
+    img {
+      width: 50px;
+      height: auto;
+      border-radius: 50%;
+    }
+  }
+  // .avatar-you {
+  // }
+  transition: all 125ms ease-in-out;
+  &:hover {
+    background-color: v.$purple_bg;
+    cursor: pointer;
+    border-radius: 20px;
   }
 }
-
-
 
 .legal-links {
   width: 306px;
@@ -179,9 +227,6 @@ svg {
 .channel-rotate {
   transform: rotate(-90deg);
 }
-
-
-
 
 // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
 // @include m.flexBox(row, center, center);

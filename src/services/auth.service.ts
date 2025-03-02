@@ -4,19 +4,27 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  user
 } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  user$: Observable<any>;
+
   public userData: any = {};
-  private auth = inject(Auth);
   private injector = inject(Injector);
 
-  constructor(private router: Router) {}
+  constructor(private auth: Auth) {
+    this.user$ = user(auth);
+  }
+
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
 
   storeUserData(name: string, email: string, password: string, avatarFilename: any) {
     this.userData = { name, email, password };
@@ -77,10 +85,17 @@ export class AuthService {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
       await this.setAuthToken(userCredential.user);
+      await this.setUserId(email);
       console.log('Erfolgreich angemeldet:', userCredential.user);
     } catch (error) {
       console.error('Fehler beim Login:', error);
       throw error;
     }
   }
+
+  async setUserId(email: string): Promise<void> {
+    const userService = this.injector.get(UserService);
+    userService.saveUserDocIdByEmail(email);
+  }
+
 }
