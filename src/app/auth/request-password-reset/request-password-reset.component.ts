@@ -36,7 +36,7 @@ export class RequestPasswordResetComponent {
       if (emailExists) {
         await this.authService.sendPasswordResetEmail(this.email);
         this.successMessage =
-          'Eine E-Mail zum Zurücksetzen des Passworts wurde gesendet.';
+          'E-Mail gesendet';
       } else {
         this.emailErrorMessage = 'Diese E-Mail-Adresse ist nicht registriert.';
       }
