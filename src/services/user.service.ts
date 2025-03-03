@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
+import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where, getDoc } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
@@ -11,6 +11,8 @@ export class UserService {
     private firestore = inject(Firestore);
     private injector = inject(Injector);
     private authService = inject(AuthService);
+
+    private currentUser: any = null;
 
     user = new User();
     userData = this.authService.userData;
@@ -94,5 +96,20 @@ export class UserService {
 
     getCurrentUserId(): string | null {
         return localStorage.getItem('user-id');
+    }
+
+    async loadCurrentUser(userId: string) {
+        if (this.currentUser) return this.currentUser;
+
+        const userDocRef = doc(this.firestore, 'users', userId);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+            this.currentUser = userSnap.data();
+            return this.currentUser;
+        } else {
+            console.error('User nicht gefunden.');
+            return null;
+        }
     }
 }

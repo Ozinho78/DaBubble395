@@ -55,7 +55,7 @@
                 <ng-container *ngIf="groupedReactions | keyvalue as reactionGroups">
                     <ng-container *ngFor="let group of reactionGroups">
                         <div class="reaction" [class.liked]="group.value.likedByMe"
-                            (click)="group.value.likedByMe ? removeMyReaction(group.key) : onEmojiSelected(group.key)"
+                            (click)="group.value.likedByMe ? removeMyReaction() : onEmojiSelected(group.key)"
                             (mouseenter)="openReactionTooltip(group.key, group.value.userNames)"
                             (mouseleave)="closeReactionTooltip()">
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">

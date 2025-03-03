@@ -41,9 +41,9 @@ export class MessageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.setUser();
-    this.userData$ = this.userService.getUserById(this.message.userId);
     this.currentUserId = this.userService.getCurrentUserId();
+    this.loadCurrentName();
+    this.userData$ = this.userService.getUserById(this.message.userId);
     this.loadReactions();
   }
 
@@ -106,6 +106,7 @@ export class MessageComponent implements OnInit {
   }
   */
 
+  /*
   getUserData(userId: string): Observable<{ name: string, avatar: string }> {
     if (!this.userCache.has(userId)) {
       const userData$ = this.userService.getUserById(userId);
@@ -113,6 +114,7 @@ export class MessageComponent implements OnInit {
     }
     return this.userCache.get(userId)!;
   }
+  */
 
   toggleReactionsOverlay(): void {
     this.showReactionsOverlay = !this.showReactionsOverlay;
@@ -136,12 +138,10 @@ export class MessageComponent implements OnInit {
     this.showReactionsOverlay = false;
   }
 
-  removeMyReaction(emojiType: string): void {
-    // Hier entfernen wir die Reaction des aktuellen Benutzers.
+  removeMyReaction(): void {
     this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId!)
       .then(() => {
         console.log('Reaction entfernt!');
-        // Optionale UI-Aktualisierung, z. B. Overlay schließen
         this.showReactionsOverlay = false;
       })
       .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
@@ -176,8 +176,16 @@ export class MessageComponent implements OnInit {
     this.showReactionTooltip = false;
   }
 
+  loadCurrentName() {
+    if (this.currentUserId) {
+      this.userService.loadCurrentUser(this.currentUserId).then(user => {
+        this.currentUser = user;
+      });
+    }
+  }
+
   get currentUserName(): string {
-    return this.currentUser?.displayName || 'Unbekannter Nutzer';
+    return this.currentUser?.name || 'Unbekannter Nutzer';
   }
 
   toggleMenu() {
