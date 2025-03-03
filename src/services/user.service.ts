@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
-import { Observable, map } from 'rxjs';
+import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 
@@ -24,7 +24,7 @@ export class UserService {
         ).pipe(
             map((user: any) => ({
                 name: user?.name || 'Unbekannt',
-                avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
             }))
         );
     }
@@ -67,9 +67,29 @@ export class UserService {
                 users.map(user => ({
                     id: user.id,
                     name: user?.name || 'Unbekannt',
-                    avatar: user?.avatar ? `/img/avatar/${user.avatar}` : '/img/avatar/default.png'
+                    avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png'
                 }))
             )
         );
+    }
+
+    async saveUserDocIdByEmail(email: string): Promise<void> {
+        try {
+            const usersCollection = collection(this.firestore, 'users');
+
+            // Query: Suche nach dem User mit der passenden Email
+            const q = query(usersCollection, where('email', '==', email));
+            const snapshot = await getDocs(q);
+
+            if (!snapshot.empty) {
+                const userDoc = snapshot.docs[0];
+                const docId = userDoc.id;
+                localStorage.setItem('user-id', docId);
+            } else {
+                console.error('Kein Benutzer mit dieser E-Mail gefunden.');
+            }
+        } catch (error) {
+            console.error('Fehler beim Abrufen des Users:', error);
+        }
     }
 }

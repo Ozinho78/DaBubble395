@@ -1,0 +1,181 @@
+@use "../../../../../mixins.scss" as m;
+@use "../../../../../variables.scss" as v;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // box-sizing: content-box;
+}
+
+button, svg {
+  border: unset;
+  cursor: pointer;
+}
+
+.member-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include m.styleFont("Nunito");
+  // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+  // @include m.flexBox(row, center, center);
+  z-index: 51;
+}
+
+.member-content {
+  position: relative;
+  width: 710px;
+  // min-height: 279px;
+  background: #FFFFFF;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+  padding: 40px;
+  padding-bottom: 120px;
+  @include m.flexBox(column, flex-start, flex-start, 20px);
+  .header {
+    width: 100%;
+    @include m.flexBox(row, space-between, center);
+    @include m.styleFont("Nunito", 24px, 700, 1.36, #000000);
+  }
+  .member-input1 {
+    input {
+      width: 20px;
+      height: 20px;
+    }
+    span {
+      color: v.$purple_1;
+    }
+    @include m.flexBox(row, center, center, 20px);
+    @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+  }
+  .member-input2 {
+    input {
+      width: 20px;
+      height: 20px;
+    }
+    @include m.flexBox(row, center, center, 20px);
+    @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+  }
+  .member-input3 {
+    width: 100%;
+    input {
+      @include m.flexBox(row, center, flex-start, 20px);    
+      padding: 18px 20px;
+      width: 100%;
+      // width: 792px;
+      // height: 60px;
+  
+      /* Ligth purple (Lines) */
+      border: 1px solid v.$purple_4;
+      border-radius: 40px;
+  
+      /* Inside auto layout */
+      flex: none;
+      order: 1;
+      align-self: stretch;
+      flex-grow: 0;
+      ::placeholder {
+        /* z.B. Kooperationsprojekte */
+        // // width: 205px;
+        // height: 25px;
+        @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
+        /* Text gray */
+        color: v.$grey;
+      }
+    }
+  }
+}
+
+
+/* radio_button_checked */
+input[type="radio"] {
+  accent-color: v.$purple_2; /* Ändert die Farbe des ausgewählten Radio-Buttons */
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+// /* Inside auto layout */
+// flex: none;
+// order: 0;
+// flex-grow: 0;
+
+.save-btn {
+  /* 10. Button primary */
+  position: absolute;
+  right: 40px;
+  bottom: 50px;
+  
+  /* Auto layout */
+  @include m.flexBox(row, center, center);
+  padding: 12px 25px;
+  gap: 10px;
+
+  width: 125px;
+  height: 49px;
+
+  /* Purple 1 */
+  background: v.$purple_1;
+  border-radius: 25px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 4;
+  flex-grow: 0;
+  button {
+    background-color: inherit;
+    @include m.styleFont("Nunito", 18px, 700, 1.36, #FFFFFF);
+    transition: all 175ms ease-in-out;
+    &:enabled:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+    &:disabled {
+      color: #666;             /* Dunkelgraue Schrift */
+      cursor: not-allowed;     /* "Verboten"-Cursor */
+      opacity: 0.8;            /* Etwas transparenter */
+    }
+  }
+}
+
+
+
+
+
+
+.select-user-ctn {
+  @include m.flexBox(row, center, flex-start, 60px);
+  padding-top: 10px;
+  h3 {
+    @include m.styleFont("Nunito", 16px, 700, 1.36, #000000);
+    padding-bottom: 10px;
+  }
+}
+
+.user-list, .selected-users {
+  list-style: none;
+}
+
+.user-item, .selected-item {
+  @include m.flexBox(row, flex-start, center, 15px);
+  @include m.styleFont("Nunito", 14px, 400, 1.36, #000000);
+  img {
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+  }
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+.remove-button {
+  color: rgb(143, 2, 2);
+}
