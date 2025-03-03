@@ -25,12 +25,15 @@
       placeholder="Name und Nachname"
       [(ngModel)]="name"
     />
+    <p class="error-message" *ngIf="nameErrorMessage">{{ nameErrorMessage }}</p>
     <input
       type="email"
       placeholder="beispielname@email.com"
       [(ngModel)]="email"
     />
+    <p class="error-message" *ngIf="emailErrorMessage">{{ emailErrorMessage }}</p>
     <input type="password" placeholder="Passwort" [(ngModel)]="password" />
+    <p class="error-message" *ngIf="passwordErrorMessage">{{ passwordErrorMessage }}</p>
     <div class="privacy">
       <input
         type="checkbox"
