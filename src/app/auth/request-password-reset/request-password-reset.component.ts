@@ -15,7 +15,7 @@ export class RequestPasswordResetComponent {
   emailErrorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService) { }
 
   async requestPasswordReset() {
     this.resetMessages();
@@ -29,7 +29,7 @@ export class RequestPasswordResetComponent {
       this.emailErrorMessage = 'Bitte eine gültige E-Mail-Adresse eingeben.';
       return;
     }
-    await this.checkEmail();    
+    await this.checkEmail();
   }
 
   async checkEmail() {
@@ -38,9 +38,8 @@ export class RequestPasswordResetComponent {
 
       if (emailExists) {
         await this.authService.sendPasswordResetEmail(this.email);
-        this.successMessage =
-          'E-Mail gesendet';
-          setTimeout(() => this.navigateToLogin(), 2000);
+        this.successMessage = 'E-Mail gesendet';
+        setTimeout(() => this.navigateToLogin(), 2000);
       } else {
         this.emailErrorMessage = 'Diese E-Mail-Adresse ist nicht registriert.';
       }
