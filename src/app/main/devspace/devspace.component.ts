@@ -22,11 +22,11 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     trigger('fadeOut', [
       state('void', style({ opacity: 0, height: 0, overflow: 'hidden' })),
       transition(':leave', [
-        animate('500ms ease-out', style({ opacity: 0, height: 0 }))
+        animate('250ms ease-out', style({ opacity: 0, height: 0 }))
       ]),
       transition(':enter', [
         style({ opacity: 0, height: '0px' }),
-        animate('500ms ease-in', style({ opacity: 1, height: '*' }))
+        animate('250ms ease-in', style({ opacity: 1, height: '*' }))
       ])
     ])
   ]
@@ -37,7 +37,7 @@ export class DevspaceComponent implements OnInit {
   isUserVisible = true;
   private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
-  userLoggedIn: string = localStorage.getItem('user-id') || '';
+  userLoggedIn: string = '';
 
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
@@ -120,13 +120,16 @@ export class DevspaceComponent implements OnInit {
         this.channels.push(singleChannel);
       });
     });
+    setTimeout(() => {
+      this.userLoggedIn = localStorage.getItem('user-id') || '';
+    }, 500);
   }
+
 
   ngOnInit() {
     this.subscription = this.visibleService.visibleState$.subscribe(value => {
       this.isVisible = value;
     });
-    
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
@@ -151,6 +154,7 @@ export class DevspaceComponent implements OnInit {
     //Add 'implements OnDestroy' to the class.
     this.unsubUserNames();
     this.unsubChannelNames();
+    this.userLoggedIn = '';
   }
 
   openChannelDialog() {
