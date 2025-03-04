@@ -16,17 +16,47 @@
         [src]="'/img/avatar/' + users[0]?.avatar"
         alt="Profilepicture-detail-view"
       />
-      <div class="detail-name">
-        <span>{{ users[0]?.name }}</span>
-        <div class="edit">Bearbeiten</div>
-      </div>
-      <div>Aktiv</div>
-      <div class="email">
-        <div>
-          <img src="/img/header-img/header-mail.png" alt="" />
-          <span>E-Mail-Adresse</span>
+
+      <div class="user-info" *ngIf="!isEditing">
+        <div class="user-wrapper">
+          <div class="detail-name">
+            <span>{{ users[0]?.name }}</span>
+            <div (click)="editUsername()" class="edit">Bearbeiten</div>
+          </div>
+          <div>Aktiv</div>
         </div>
-        <span class="user-email">{{ users[0]?.mail }}</span>
+
+        <div class="email">
+          <div>
+            <img src="/img/header-img/header-mail.png" alt="" />
+            <span>E-Mail-Adresse</span>
+          </div>
+          <span class="user-email">{{ users[0]?.mail }}</span>
+        </div>
+      </div>
+
+      <div class="edit-username" *ngIf="isEditing">
+        <div class="edit-username-headline">
+          <img src="/img/header-img/account-circle.png" alt="" />
+          <span>Vollständiger Name</span>
+        </div>
+        <div class="edit-username-input">
+          <input
+            type="text"
+            [(ngModel)]="updatedName"
+            placeholder="{{ users[0]?.name }}"
+          />
+        </div>
+        <div class="edit-username-buttons">
+          <button class="btn-1" (click)="cancelEdit()">Abbrechen</button>
+          <button
+            class="btn-2"
+            (click)="saveUsername()"
+            [disabled]="!updatedName || updatedName.trim().length === 0"
+          >
+            Speichern
+          </button>
+        </div>
       </div>
     </ng-container>
   </div>

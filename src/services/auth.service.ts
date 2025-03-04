@@ -5,9 +5,9 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   user,
-  fetchSignInMethodsForEmail,
   sendPasswordResetEmail,
 } from '@angular/fire/auth';
+import { Firestore, collection, collectionData, doc, getDocs, query, where } from '@angular/fire/firestore';
 import { UserService } from './user.service';
 import { Observable } from 'rxjs';
 
@@ -18,6 +18,7 @@ export class AuthService {
   user$: Observable<any>;
 
   public userData: any = {};
+  private firestore = inject(Firestore);
   private injector = inject(Injector);
 
   constructor(private auth: Auth) {
@@ -104,10 +105,13 @@ export class AuthService {
 
   async checkIfEmailExists(email: string): Promise<boolean> {
     try {
-      const signInMethods = await fetchSignInMethodsForEmail(this.auth, email);
-      return signInMethods.length > 0;
+      const userRef = collection(this.firestore, 'users');
+      const q = query(userRef, where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+  
+      return !querySnapshot.empty;
     } catch (error) {
-      console.error('Fehler bei der E-Mail-Überprüfung:', error);
+      console.error('Fehler beim Überprüfen der E-Mail:', error);
       return false;
     }
   }
