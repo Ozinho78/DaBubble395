@@ -147,32 +147,35 @@ export class MessageComponent implements OnInit {
       .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
   }
 
-  groupAccHasName(
+  /*groupAccHasName(
     acc: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } },
     reactionType: string,
     name: string
   ): boolean {
     return acc[reactionType]?.userNames.includes(name);
-  }
+  }*/
 
-  openReactionTooltip(emoji: string, userNames: string[]): void {
+  openReactionTooltip(emoji: string, userNames: string[]) {
     this.tooltipEmoji = emoji;
     const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
 
     if (names.length === 1) {
-      if (names[0] === 'Du') {
-        this.tooltipText = 'Du hast reagiert';
-      } else {
-        this.tooltipText = `${names[0]} hat reagiert`;
-      }
+      // Fall: Nur eine Person hat reagiert
+      this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
+    } else if (names.length === 2) {
+      // Fall: Zwei Personen haben reagiert
+      this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
     } else {
-      this.tooltipText = `${names.join(' und ')} haben reagiert`;
+      // Fall: Drei oder mehr Personen haben reagiert
+      const allButLast = names.slice(0, -1).join(', '); // Alle außer den letzten mit Komma trennen
+      const last = names[names.length - 1]; // Letzter Name
+      this.tooltipText = `${allButLast} und ${last} haben reagiert`;
     }
 
     this.showReactionTooltip = true;
   }
 
-  closeReactionTooltip(): void {
+  closeReactionTooltip() {
     this.showReactionTooltip = false;
   }
 
