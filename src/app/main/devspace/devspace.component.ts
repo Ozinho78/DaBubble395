@@ -4,7 +4,6 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../../models/user.model';
 import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
 import { Subscription } from 'rxjs';
@@ -177,7 +176,7 @@ export class DevspaceComponent implements OnInit {
     // console.log('Channel saved:', channelName);
   }
 
-  
+
   selectUserForDirectMessage(user: User) {
     this.docIdService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
