@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where } from '@angular/fire/firestore';
-import { Observable, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 
@@ -11,9 +11,14 @@ export class UserService {
     private firestore = inject(Firestore);
     private injector = inject(Injector);
     private authService = inject(AuthService);
+    private docIdFromDevSpace = new BehaviorSubject<string | null>(null);
+    private channelIdFromDevSpace = new BehaviorSubject<string | null>(null);
+    currentDocIdFromDevSpace = this.docIdFromDevSpace.asObservable();
+    currentChannelIdFromDevSpace = this.channelIdFromDevSpace.asObservable();
 
     user = new User();
     userData = this.authService.userData;
+
 
     /** Holt einen einzelnen Nutzer anhand der ID */
     getUserById(userId: string): Observable<{ name: string, avatar: string }> {
@@ -91,5 +96,17 @@ export class UserService {
         } catch (error) {
             console.error('Fehler beim Abrufen des Users:', error);
         }
+    }
+
+
+    
+    // aktualisiert die gespeicherte docId aus DevSpace
+    // next(id) setzt einen neuen Wert, wodurch alle abonnierten Komponenten automatisch informiert werden
+    setDocIdFromDevSpace(id: string) {
+        this.docIdFromDevSpace.next(id);
+    }
+
+    setChannelIdFromDevSpace(id: string) {
+        this.channelIdFromDevSpace.next(id);
     }
 }

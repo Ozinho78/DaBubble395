@@ -28,7 +28,7 @@
 
         <div class="channel-list">
           @for (channel of channels; track $index){
-          <span (click)="selectChannel(channel.docId || '')" class="single-channel" *ngIf="isChannelVisible" [@fadeOut]
+          <span (click)="selectChannel(channel)" class="single-channel" *ngIf="isChannelVisible" [@fadeOut]
             >#{{ channel.name }}</span
           >
           }
@@ -70,7 +70,7 @@
             *ngIf="isUserVisible"
             [@fadeOut]
             class="avatar-user"
-            (click)="selectUserForDirectMessage(user.docId || '')"
+            (click)="selectUserForDirectMessage(user)"
           >
             <div class="avatar-img-with-name">
               <img src="img/avatar/{{ user.avatar }}" alt="" />
