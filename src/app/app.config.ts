@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
         apiKey: env.FIREBASE_API_KEY,
         authDomain: env.FIREBASE_AUTH_DOMAIN,
         messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
-        databaseURL: env.FIREBASE_DATABASE_URL,
+        //databaseURL: env.FIREBASE_DATABASE_URL,
       })
     ),
     provideAuth(() => getAuth()),
