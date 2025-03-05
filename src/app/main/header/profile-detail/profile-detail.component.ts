@@ -53,7 +53,6 @@ export class ProfileDetailComponent {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     updateDoc(userDocRef, { name: this.updatedName })
       .then(() => {
-        console.log('Username erfolgreich aktualisiert');
         if (this.userName) {
           this.userName.name = this.updatedName;
         }
