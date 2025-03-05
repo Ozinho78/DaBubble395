@@ -24,20 +24,26 @@
             <div (click)="editUsername()" class="edit">Bearbeiten</div>
           </div>
           <div class="status">
-            <ng-container *ngIf="onlineStatus$ | async as online">
-              <div [class.online]="online" [class.offline]="!online">
+            <ng-container *ngIf="onlineStatus$ | async; else offlineTemplate">
+              <div class="online">
                 <img
-                  [src]="
-                    online
-                      ? '/img/header-img/online.png'
-                      : '/img/header-img/away.png'
-                  "
+                  src="/img/header-img/online.png"
                   alt="Status Icon"
                   class="status-icon"
                 />
-                {{ online ? "Aktiv" : "Abwesend" }}
+                Aktiv
               </div>
             </ng-container>
+            <ng-template #offlineTemplate>
+              <div class="offline">
+                <img
+                  src="/img/header-img/away.png"
+                  alt="Status Icon"
+                  class="status-icon"
+                />
+                Abwesend
+              </div>
+            </ng-template>
           </div>
         </div>
 
