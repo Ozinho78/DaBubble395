@@ -19,7 +19,6 @@
         </ng-container>
       </div>
     </ng-container>
-
     <div class="arrow-wrapper">
       <img class="arrow-default" src="/img/header-img/arrow-down.png" alt="" />
       <img
@@ -30,13 +29,11 @@
     </div>
   </div>
 </header>
-
 <div class="overlayer" *ngIf="menuOpen" (click)="menuOpen = false">
   <div class="menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
     <p (click)="toggleProfileEdit()" class="profile">Profil</p>
     <p (click)="logout()" class="log-out">Log out</p>
   </div>
-
   <app-profile-detail
     *ngIf="profileEditOpen"
     [userName]="userName$ | async"
