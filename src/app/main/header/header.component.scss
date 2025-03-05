@@ -43,10 +43,20 @@ header {
   gap: 20px;
   cursor: pointer;
 
-  .profile-pic {
-    height: 70px;
-    width: 70px;
-    border-radius: 50%;
+  .profile-pic-wrapper {
+    position: relative;
+
+    .profile-pic {
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+    }
+
+    .profile-pic-online {
+      position: absolute;
+      right: 0;
+      bottom: 2px;
+    }
   }
 
   span {
@@ -94,6 +104,7 @@ header {
   width: 100%;
   position: absolute;
   top: 0px;
+  z-index: 999;
 }
 
 .menu {

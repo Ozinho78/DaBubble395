@@ -10,23 +10,76 @@
         alt="Schließen"
       />
     </div>
-    <ng-container *ngIf="userName | async as users">
+    <ng-container *ngIf="userName as user">
       <img
         class="profile-pic-detail"
-        [src]="'/img/avatar/' + users[0]?.avatar"
+        [src]="user.avatar"
         alt="Profilepicture-detail-view"
       />
-      <div class="detail-name">
-        <span>{{ users[0]?.name }}</span>
-        <div class="edit">Bearbeiten</div>
-      </div>
-      <div>Aktiv</div>
-      <div class="email">
-        <div>
-          <img src="/img/header-img/header-mail.png" alt="" />
-          <span>E-Mail-Adresse</span>
+
+      <div class="user-info" *ngIf="!isEditing">
+        <div class="user-wrapper">
+          <div class="detail-name">
+            <span>{{ user.name }}</span>
+            <div (click)="editUsername()" class="edit">Bearbeiten</div>
+          </div>
+          <div class="status">
+            <ng-container *ngIf="onlineStatus$ | async; else offlineTemplate">
+              <div class="online">
+                <img
+                  src="/img/header-img/online.png"
+                  alt="Status Icon"
+                  class="status-icon"
+                />
+                Aktiv
+              </div>
+            </ng-container>
+            <ng-template #offlineTemplate>
+              <div class="offline">
+                <img
+                  src="/img/header-img/away.png"
+                  alt="Status Icon"
+                  class="status-icon"
+                />
+                Abwesend
+              </div>
+            </ng-template>
+          </div>
         </div>
-        <span class="user-email">{{ users[0]?.mail }}</span>
+
+        <div class="email">
+          <div>
+            <img src="/img/header-img/header-mail.png" alt="" />
+            <span>E-Mail-Adresse</span>
+          </div>
+          <a class="user-email" href="mailto:{{ user.email }}">{{
+            user.email
+          }}</a>
+        </div>
+      </div>
+
+      <div class="edit-username" *ngIf="isEditing">
+        <div class="edit-username-headline">
+          <img src="/img/header-img/account-circle.png" alt="" />
+          <span>Vollständiger Name</span>
+        </div>
+        <div class="edit-username-input">
+          <input
+            type="text"
+            [(ngModel)]="updatedName"
+            placeholder="{{ user.name }}"
+          />
+        </div>
+        <div class="edit-username-buttons">
+          <button class="btn-1" (click)="cancelEdit()">Abbrechen</button>
+          <button
+            class="btn-2"
+            (click)="saveUsername()"
+            [disabled]="!updatedName || updatedName.trim().length === 0"
+          >
+            Speichern
+          </button>
+        </div>
       </div>
     </ng-container>
   </div>

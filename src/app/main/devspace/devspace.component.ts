@@ -4,18 +4,18 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../../models/user.model';
 import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
 import { Subscription } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { UserService } from '../../../services/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, RouterLink, CommonModule],
+  imports: [AddChannelComponent, CommonModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
   animations: [
@@ -44,6 +44,8 @@ export class DevspaceComponent implements OnInit {
   users: User[] = [];
   userJson: [{}] = [{}];
   channels: Channel[] = [];
+  docId: string | null = null;
+  channelId: string | null = null;
 
 
   toggleChannelVisibility() {
@@ -99,7 +101,7 @@ export class DevspaceComponent implements OnInit {
   unsubUserNames;
   unsubChannelNames;
 
-  constructor(private visibleService: VisibleService) {
+  constructor(private visibleService: VisibleService, private docIdService: UserService, private dataService: UserService, private channelIdService: UserService, private channelService: UserService) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
       list.forEach((element) => {
@@ -130,6 +132,8 @@ export class DevspaceComponent implements OnInit {
     this.subscription = this.visibleService.visibleState$.subscribe(value => {
       this.isVisible = value;
     });
+    this.dataService.currentDocIdFromDevSpace.subscribe((id) => (this.docId = id));
+    this.channelService.currentChannelIdFromDevSpace.subscribe((id) => (this.channelId = id));
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
@@ -172,13 +176,25 @@ export class DevspaceComponent implements OnInit {
     // console.log('Channel saved:', channelName);
   }
 
-  selectUserForDirectMessage(docId: string) {
-    console.log(docId);
+
+  selectUserForDirectMessage(user: User) {
+    this.docIdService.setDocIdFromDevSpace(user.docId!);
+    console.log(this.docId);
   }
 
-  selectChannel(docId: string) {
-    console.log(docId);
+  selectChannel(channel: Channel) {
+    this.channelIdService.setChannelIdFromDevSpace(channel.docId!);
+    console.log(this.channelId);
   }
 
-  
+
+
+  selectUser(user: User) {
+    // this.selectUserForDirectMessage(user);
+    // console.log(this.docIdService.setDocIdFromDevSpace(user.docId!));
+    this.docIdService.setDocIdFromDevSpace(user.docId!);
+    setTimeout(() => {
+      console.log(this.docId); 
+    }, 1000);
+  }
 }

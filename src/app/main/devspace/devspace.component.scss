@@ -222,10 +222,53 @@ svg {
 
 .hidden {
   transform: translateX(-150%);
+  // display: none;
+  // animation: slideOut 0.5s forwards;
+  // animation: slideOutSmooth 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation: slideOutDelay 0.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;;
+  animation-delay: 225ms;
+}
+
+@keyframes slideOutDelay {
+  from {
+    // opacity: 1;
+  }
+  to {
+    display: none;
+  }
 }
 
 .channel-rotate {
   transform: rotate(-90deg);
+}
+
+@keyframes slideOutSmooth {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  60% {
+    transform: translateX(-120%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-150%);
+    opacity: 0;
+    display: none;
+  }
+}
+
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-150%);
+    opacity: 0;
+    display: none;
+  }
 }
 
 // @include m.styleFont("Nunito", 90px, 700, 1.5, white);

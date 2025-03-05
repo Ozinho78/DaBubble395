@@ -6,15 +6,19 @@
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
   </div>
   <div class="header-profile" (click)="toggleMenu()">
-    <ng-container *ngIf="userName | async as users">
-      <span>{{ users[0]?.name }}</span>
-      <img
-        class="profile-pic"
-        [src]="'/img/avatar/' + users[0]?.avatar"
-        alt="Profilepicture"
-      />
+    <ng-container *ngIf="userName$ | async as user">
+      <span>{{ user.name }}</span>
+      <div class="profile-pic-wrapper">
+        <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
+        <ng-container *ngIf="onlineStatus$ | async">
+          <img
+            class="profile-pic-online"
+            src="/img/header-img/profile-pic-online.png"
+            alt="Online Indicator"
+          />
+        </ng-container>
+      </div>
     </ng-container>
-
     <div class="arrow-wrapper">
       <img class="arrow-default" src="/img/header-img/arrow-down.png" alt="" />
       <img
@@ -25,16 +29,14 @@
     </div>
   </div>
 </header>
-
 <div class="overlayer" *ngIf="menuOpen" (click)="menuOpen = false">
   <div class="menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
     <p (click)="toggleProfileEdit()" class="profile">Profil</p>
     <p (click)="logout()" class="log-out">Log out</p>
   </div>
-
   <app-profile-detail
     *ngIf="profileEditOpen"
-    [userName]="userName"
-    (close)="close()"
+    [userName]="userName$ | async"
+    (close)="closeProfile()"
   ></app-profile-detail>
 </div>
