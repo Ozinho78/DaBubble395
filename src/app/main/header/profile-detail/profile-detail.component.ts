@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { PresenceService } from '../../../../services/presence.service';
 
 @Component({
   selector: 'app-profile-detail',
@@ -11,12 +13,26 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./profile-detail.component.scss'],
 })
 export class ProfileDetailComponent {
-  @Input() userName!: Observable<any[]>;
+  @Input() userName!: { name: string; avatar: string; email?: string } | null;
   @Output() close = new EventEmitter<void>();
 
   closeImgSrc: string = '/img/header-img/close.png';
   isEditing: boolean = false;
   updatedName: string = '';
+
+  onlineStatus$: Observable<boolean> = of(false);
+
+  constructor(
+    private firestore: Firestore,
+    private presenceService: PresenceService
+  ) {}
+
+  ngOnInit(): void {
+    const userId = localStorage.getItem('user-id');
+    if (userId) {
+      this.onlineStatus$ = this.presenceService.getUserPresence(userId);
+    }
+  }
 
   onMouseEnterClose(): void {
     this.closeImgSrc = '/img/header-img/close-hover.png';
@@ -38,5 +54,25 @@ export class ProfileDetailComponent {
     this.isEditing = false;
   }
 
-  saveUsername(): void {}
+  saveUsername(): void {
+    if (!this.updatedName.trim()) {
+      return;
+    }
+    const userId = localStorage.getItem('user-id');
+    if (!userId) {
+      console.error('User-ID nicht gefunden');
+      return;
+    }
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    updateDoc(userDocRef, { name: this.updatedName })
+      .then(() => {
+        if (this.userName) {
+          this.userName.name = this.updatedName;
+        }
+        this.isEditing = false;
+      })
+      .catch((error) => {
+        console.error('Fehler beim Aktualisieren des Usernamens: ', error);
+      });
+  }
 }

@@ -96,6 +96,7 @@
         font-size: 18px;
         line-height: 21.6px;
         letter-spacing: 0%;
+        text-decoration: none;
       }
     }
   }
@@ -213,4 +214,30 @@
     background-color: #686868;
     border: 1px solid #686868;
   }
+}
+
+.status div.online {
+  @include m.flexBox(row, start, center, 15px);
+
+  color: #686868;
+  font-family: Nunito;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 27.28px;
+  letter-spacing: 0%;
+}
+
+.status div.offline {
+  @include m.flexBox(row, start, center, 15px);
+  color: #686868;
+  font-family: Nunito;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 27.28px;
+  letter-spacing: 0%;
+}
+
+.status-icon {
+  height: 16px;
+  width: 16px;
 }
