@@ -24,6 +24,7 @@ export class ThreadComponent implements OnInit {
   thread: Thread | null = null;
   newMessageText: string = '';
   threadId: string = '6DGHEdX29kIHBFTtGrSr'; // Beispiel, später dynamisch setzen
+  threadVisible: boolean = true;
 
   constructor(
     private threadService: ThreadService
@@ -87,4 +88,11 @@ export class ThreadComponent implements OnInit {
   handleEditRequest(event: { id: string, text: string }) {
     this.messageInput.editMessage(event.id, event.text);
   }
+
+  toggleThreadVisibility(){
+    this.threadVisible = !this.threadVisible;
+  }
+
 }
+
+
