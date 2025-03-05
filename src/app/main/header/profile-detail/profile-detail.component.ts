@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { PresenceService } from '../../../../services/presence.service';
 
 @Component({
   selector: 'app-profile-detail',
@@ -19,7 +20,19 @@ export class ProfileDetailComponent {
   isEditing: boolean = false;
   updatedName: string = '';
 
-  constructor(private firestore: Firestore) {}
+  onlineStatus$: Observable<boolean> = of(false);
+
+  constructor(
+    private firestore: Firestore,
+    private presenceService: PresenceService
+  ) {}
+
+  ngOnInit(): void {
+    const userId = localStorage.getItem('user-id');
+    if (userId) {
+      this.onlineStatus$ = this.presenceService.getUserPresence(userId);
+    }
+  }
 
   onMouseEnterClose(): void {
     this.closeImgSrc = '/img/header-img/close-hover.png';

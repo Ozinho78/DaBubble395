@@ -31,6 +31,6 @@
   <app-profile-detail
     *ngIf="profileEditOpen"
     [userName]="userName$ | async"
-    (close)="close()"
+    (close)="closeProfile()"
   ></app-profile-detail>
 </div>
