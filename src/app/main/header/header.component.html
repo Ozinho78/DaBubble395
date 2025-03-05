@@ -8,7 +8,16 @@
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">
       <span>{{ user.name }}</span>
-      <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
+      <div class="profile-pic-wrapper">
+        <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
+        <ng-container *ngIf="onlineStatus$ | async">
+          <img
+            class="profile-pic-online"
+            src="/img/header-img/profile-pic-online.png"
+            alt="Online Indicator"
+          />
+        </ng-container>
+      </div>
     </ng-container>
 
     <div class="arrow-wrapper">

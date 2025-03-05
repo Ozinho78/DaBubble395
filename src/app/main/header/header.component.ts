@@ -22,6 +22,7 @@ export class HeaderComponent {
     avatar: '',
   });
   closeImgSrc: string = '/img/header-img/close.png';
+  onlineStatus$: Observable<boolean> = of(false);
 
   constructor(
     private firestore: Firestore,
@@ -36,6 +37,7 @@ export class HeaderComponent {
     if (userId) {
       this.userName$ = this.userService.getUserById(userId);
       this.presenceService.setUserPresence(userId);
+      this.onlineStatus$ = this.presenceService.getUserPresence(userId); // Hier onlineStatus$ setzen
     } else {
       this.userName$ = of({ name: 'Unbekannt', avatar: 'default.png' });
     }
