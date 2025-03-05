@@ -23,7 +23,22 @@
             <span>{{ user.name }}</span>
             <div (click)="editUsername()" class="edit">Bearbeiten</div>
           </div>
-          <div>Aktiv</div>
+          <div class="status">
+            <ng-container *ngIf="onlineStatus$ | async as online">
+              <div [class.online]="online" [class.offline]="!online">
+                <img
+                  [src]="
+                    online
+                      ? '/img/header-img/online.png'
+                      : '/img/header-img/away.png'
+                  "
+                  alt="Status Icon"
+                  class="status-icon"
+                />
+                {{ online ? "Aktiv" : "Abwesend" }}
+              </div>
+            </ng-container>
+          </div>
         </div>
 
         <div class="email">
