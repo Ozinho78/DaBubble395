@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./profile-detail.component.scss'],
 })
 export class ProfileDetailComponent {
-  @Input() userName!: Observable<any[]>;
+  @Input() userName!: { name: string; avatar: string; email?: string } | null;
   @Output() close = new EventEmitter<void>();
 
   closeImgSrc: string = '/img/header-img/close.png';

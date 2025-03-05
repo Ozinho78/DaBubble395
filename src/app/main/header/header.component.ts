@@ -2,9 +2,10 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { Auth, signOut } from '@angular/fire/auth';
+import { Observable, of, switchMap } from 'rxjs';
+import { authState, Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -15,18 +16,28 @@ import { ProfileDetailComponent } from './profile-detail/profile-detail.componen
 export class HeaderComponent {
   menuOpen: boolean = false;
   profileEditOpen: boolean = false;
-  userName!: Observable<any[]>;
+  userName$: Observable<{ name: string; avatar: string }> = of({
+    name: '',
+    avatar: '',
+  });
   closeImgSrc: string = '/img/header-img/close.png';
 
   constructor(
     private firestore: Firestore,
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    const itemsRef = collection(this.firestore, 'users');
-    this.userName = collectionData(itemsRef);
+    // Hole die Benutzer-ID aus localStorage (diese muss vorher gespeichert worden sein)
+    const userId = localStorage.getItem('user-id');
+    if (userId) {
+      this.userName$ = this.userService.getUserById(userId);
+    } else {
+      // Falls keine ID gefunden wird, zeige Standardwerte an
+      this.userName$ = of({ name: 'Unbekannt', avatar: 'default.png' });
+    }
   }
 
   toggleMenu(): void {

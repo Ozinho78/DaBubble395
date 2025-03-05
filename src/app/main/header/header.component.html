@@ -6,13 +6,9 @@
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
   </div>
   <div class="header-profile" (click)="toggleMenu()">
-    <ng-container *ngIf="userName | async as users">
-      <span>{{ users[0]?.name }}</span>
-      <img
-        class="profile-pic"
-        [src]="'/img/avatar/' + users[0]?.avatar"
-        alt="Profilepicture"
-      />
+    <ng-container *ngIf="userName$ | async as user">
+      <span>{{ user.name }}</span>
+      <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
     </ng-container>
 
     <div class="arrow-wrapper">
@@ -34,7 +30,7 @@
 
   <app-profile-detail
     *ngIf="profileEditOpen"
-    [userName]="userName"
+    [userName]="userName$ | async"
     (close)="close()"
   ></app-profile-detail>
 </div>

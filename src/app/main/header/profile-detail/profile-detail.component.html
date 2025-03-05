@@ -10,17 +10,17 @@
         alt="Schließen"
       />
     </div>
-    <ng-container *ngIf="userName | async as users">
+    <ng-container *ngIf="userName as user">
       <img
         class="profile-pic-detail"
-        [src]="'/img/avatar/' + users[0]?.avatar"
+        [src]="user.avatar"
         alt="Profilepicture-detail-view"
       />
 
       <div class="user-info" *ngIf="!isEditing">
         <div class="user-wrapper">
           <div class="detail-name">
-            <span>{{ users[0]?.name }}</span>
+            <span>{{ user.name }}</span>
             <div (click)="editUsername()" class="edit">Bearbeiten</div>
           </div>
           <div>Aktiv</div>
@@ -31,7 +31,9 @@
             <img src="/img/header-img/header-mail.png" alt="" />
             <span>E-Mail-Adresse</span>
           </div>
-          <span class="user-email">{{ users[0]?.mail }}</span>
+          <a class="user-email" href="mailto:{{ user.email }}">{{
+            user.email
+          }}</a>
         </div>
       </div>
 
@@ -44,7 +46,7 @@
           <input
             type="text"
             [(ngModel)]="updatedName"
-            placeholder="{{ users[0]?.name }}"
+            placeholder="{{ user.name }}"
           />
         </div>
         <div class="edit-username-buttons">
