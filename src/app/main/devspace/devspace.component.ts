@@ -101,7 +101,7 @@ export class DevspaceComponent implements OnInit {
   unsubUserNames;
   unsubChannelNames;
 
-  constructor(private visibleService: VisibleService, private docIdService: UserService, private dataService: UserService, private channelIdService: UserService, private channelService: UserService) {
+  constructor(private visibleService: VisibleService, private userService: UserService) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
       list.forEach((element) => {
@@ -132,8 +132,8 @@ export class DevspaceComponent implements OnInit {
     this.subscription = this.visibleService.visibleState$.subscribe(value => {
       this.isVisible = value;
     });
-    this.dataService.currentDocIdFromDevSpace.subscribe((id) => (this.docId = id));
-    this.channelService.currentChannelIdFromDevSpace.subscribe((id) => (this.channelId = id));
+    this.userService.currentDocIdFromDevSpace.subscribe((id) => (this.docId = id));
+    this.userService.currentChannelIdFromDevSpace.subscribe((id) => (this.channelId = id));
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
@@ -178,23 +178,27 @@ export class DevspaceComponent implements OnInit {
 
 
   selectUserForDirectMessage(user: User) {
-    this.docIdService.setDocIdFromDevSpace(user.docId!);
+    this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
+    this.showComponent('directMessages');
   }
 
   selectChannel(channel: Channel) {
-    this.channelIdService.setChannelIdFromDevSpace(channel.docId!);
+    this.userService.setChannelIdFromDevSpace(channel.docId!);
     console.log(this.channelId);
   }
-
-
 
   selectUser(user: User) {
     // this.selectUserForDirectMessage(user);
     // console.log(this.docIdService.setDocIdFromDevSpace(user.docId!));
-    this.docIdService.setDocIdFromDevSpace(user.docId!);
+    this.userService.setDocIdFromDevSpace(user.docId!);
     setTimeout(() => {
       console.log(this.docId); 
     }, 1000);
   }
+
+  showComponent(component: string) {
+    this.visibleService.setVisibleComponent(component);
+  }
+
 }
