@@ -33,3 +33,7 @@ h2 {
     @include m.flexBox(column, normal, normal);
     @include m.styleFont();
 }
+
+.hidden {
+  display: none;
+}
