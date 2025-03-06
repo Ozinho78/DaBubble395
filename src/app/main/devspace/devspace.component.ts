@@ -180,6 +180,7 @@ export class DevspaceComponent implements OnInit {
   selectUserForDirectMessage(user: User) {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
+    this.showComponent('directMessages');
   }
 
   selectChannel(channel: Channel) {
