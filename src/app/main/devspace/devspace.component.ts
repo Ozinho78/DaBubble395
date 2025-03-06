@@ -35,7 +35,7 @@ export class DevspaceComponent implements OnInit {
   isVisible = true;
   isChannelVisible = true;
   isUserVisible = true;
-  private subscription!: Subscription;
+  // private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
   userLoggedIn: string = '';
 
@@ -129,7 +129,10 @@ export class DevspaceComponent implements OnInit {
 
 
   ngOnInit() {
-    this.subscription = this.visibleService.visibleState$.subscribe(value => {
+    // this.subscription = this.visibleService.visibleState$.subscribe(value => {
+    //   this.isVisible = value;
+    // });
+    this.visibleService.visibleState$.subscribe(value => {
       this.isVisible = value;
     });
     this.userService.currentDocIdFromDevSpace.subscribe((id) => (this.docId = id));
