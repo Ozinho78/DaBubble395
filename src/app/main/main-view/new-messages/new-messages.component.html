@@ -42,8 +42,35 @@
       </div>
     </div>
     
-    <!-- <app-new-messages-input class="input-bottom"></app-new-messages-input> -->
+    
+
+
+<!-- <app-new-messages-input class="input-bottom"></app-new-messages-input> -->
+
+<!-- 
+als Observable
+<h2>Users</h2>
+<ul>
+  <li *ngFor="let user of users$ | async">{{ user.id }} - {{ user.docId }}</li>
+</ul>
+
+<h2>Channels</h2>
+<ul>
+  <li *ngFor="let channel of channels$ | async">{{ channel.docId }}</li>
+</ul> -->
+
+
+<!-- 
+als Array
+<h2>Users (via Array)</h2>
+<ul>
+  <li *ngFor="let user of users">{{ user.id }} - {{ user.docId }}</li>
+</ul>
+
+<h2>Channels (via Array)</h2>
+<ul>
+  <li *ngFor="let channel of channels">{{ channel.docId }}</li>
+</ul>
 
   </div>
-</div>
-
+</div> -->
