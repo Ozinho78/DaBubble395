@@ -39,10 +39,21 @@
             </svg>
             
         </div>
+      
+      
+      
       </div>
     </div>
     
-    
+    <h2>Users</h2>
+<ul>
+  <li *ngFor="let user of users">{{ user.name }} - {{ user.docId }}</li>
+</ul>
+
+  </div>
+</div>
+
+
 
 
 <!-- <app-new-messages-input class="input-bottom"></app-new-messages-input> -->
@@ -71,6 +82,4 @@ als Array
 <ul>
   <li *ngFor="let channel of channels">{{ channel.docId }}</li>
 </ul>
-
-  </div>
-</div> -->
+-->
