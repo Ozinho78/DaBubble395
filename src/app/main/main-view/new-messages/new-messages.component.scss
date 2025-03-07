@@ -47,6 +47,10 @@
     align-self: stretch;
     flex-grow: 0;
 
+    &:focus {
+      outline: none;
+    }
+
     ::placeholder {
       // width: 1364px;
       width: 100%;
