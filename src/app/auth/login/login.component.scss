@@ -3,6 +3,10 @@
 
 .login-main {
   height: 100vh;
+  
+  @media (max-width: 435px) {
+    padding: 0 20px;
+  }
 
   .login-intro {
     @include m.dNone;
@@ -108,7 +112,7 @@
 
       @media (max-width: 435px) {
         width: 100%;
-        padding: 50px 20px;
+        padding: 30px 20px;
       }
 
       h2 {
@@ -217,6 +221,10 @@
         margin: 40px 0;
         transition: 75ms;
 
+        @media (max-width: 435px) {
+          height: 50px;
+        }
+
         img {
           margin-right: 20px;
         }
@@ -236,6 +244,11 @@
         @include m.flexBox(row, center, center);
         width: 100%;
         margin-bottom: 28px;
+
+        @media (max-width: 435px) {
+          height: 50px;
+          margin-bottom: 20px;
+        }
 
         .login-btn-register,
         .login-btn-guest {
