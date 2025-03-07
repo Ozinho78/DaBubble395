@@ -14,7 +14,7 @@ import { Observable, of } from 'rxjs';
 })
 export class DirectMessagesComponent implements OnInit {
   onlineStatus$: Observable<boolean> = of(false);
-  userName$: Observable<{ name: string; avatar: string }> = of({
+  user$: Observable<{ name: string; avatar: string }> = of({
     name: '',
     avatar: '',
   });
@@ -28,11 +28,11 @@ export class DirectMessagesComponent implements OnInit {
   ngOnInit(): void {
     this.userService.currentDocIdFromDevSpace.subscribe((selectedUserId) => {
       if (selectedUserId) {
-        this.userName$ = this.userService.getUserById(selectedUserId);
+        this.user$ = this.userService.getUserById(selectedUserId);
         this.onlineStatus$ =
           this.presenceService.getUserPresence(selectedUserId);
       } else {
-        this.userName$ = of({ name: 'Unbekannt', avatar: 'default.png' });
+        this.user$ = of({ name: 'Unbekannt', avatar: 'default.png' });
       }
     });
   }

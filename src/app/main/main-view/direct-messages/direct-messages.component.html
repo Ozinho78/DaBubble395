@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header">
     <div class="header-label">
-      <ng-container *ngIf="userName$ | async as user">
+      <ng-container *ngIf="user$ | async as user">
         <div class="profile-pic-wrapper">
           <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
           <ng-container
@@ -28,7 +28,7 @@
 
   <div class="shadow"></div>
 
-  <div id="chat-container" class="chat-container">
+  <!-- <div id="chat-container" class="chat-container">
     <div class="replies">
       <div class="date-header">
         <div class="date">14.01.2025</div>
@@ -53,8 +53,23 @@
         </div>
       </div>
     </div>
+  </div> -->
+  <div class="chat-container">
+    <ng-container *ngIf="user$ | async as user">
+      <div class="info">
+        <div class="info-user">
+          <img [src]="user.avatar" alt="" />
+          <span> {{ user.name }}</span>
+        </div>
+        <div class="info-about-chat">
+          <span class="info-text">
+            Diese Unterhaltung findet nur zwischen
+          </span>
+          <span class="info-name"> &#64;{{ user.name }} </span>
+          <span class="info-text">und dir statt.</span>
+        </div>
+      </div>
+    </ng-container>
+    <app-message-input></app-message-input>
   </div>
-
-  <!-- Nachrichteneingabe -->
-  <app-message-input></app-message-input>
 </div>
