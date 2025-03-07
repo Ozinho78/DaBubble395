@@ -38,12 +38,21 @@
       position: fixed;
       top: 0;
 
+      @media (max-width: 435px) {
+        justify-content: center;
+        margin-left: 0;
+      }
+
       .login-left {
         @include m.flexBox(row, flex-start, center);
-        margin-left: 75px;
 
         .logo {
           @include m.flexBox(row, flex-start, center);
+          margin-left: 75px;
+
+          @media (max-width: 435px) {
+            margin-left: 0;
+          }
 
           .logo-logo {
             width: 70px;
@@ -65,6 +74,10 @@
         @include m.flexBox(column, center, flex-end);
         @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
         margin-right: 50px;
+
+        @media (max-width: 435px) {
+          display: none;
+        }
 
         a {
           margin-top: 12px;
@@ -93,14 +106,29 @@
       box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
       padding: 50px 60px;
 
+      @media (max-width: 435px) {
+        width: 100%;
+        padding: 50px 20px;
+      }
+
       h2 {
         @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
         margin: 0;
+
+        @media (max-width: 435px) {
+          font-size: 32px;
+          line-height: 1.2;
+        }
       }
 
       p {
         @include m.styleFont("Nunito", 20px, 400, 24px, black);
         text-align: center;
+
+        @media (max-width: 435px) {
+          font-size: 17px;
+          line-height: 1.2;
+        }
       }
 
       input {
@@ -112,6 +140,10 @@
         box-sizing: border-box;
         padding: 30px;
         margin-top: 21px;
+
+        @media (max-width: 435px) {
+          height: 50px;
+        }
 
         &::placeholder {
           @include m.styleFont("Nunito", 18px, 500, 21.6px, v.$grey);
@@ -143,6 +175,10 @@
         padding: 6px 12px;
         border-radius: 100px;
         transition: 125ms;
+
+        @media (max-width: 435px) {
+          font-weight: 17px;
+        }
 
         &:hover {
           font-weight: 600;
