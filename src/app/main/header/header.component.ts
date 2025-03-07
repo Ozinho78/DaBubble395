@@ -1,9 +1,9 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
-import { Observable, of, switchMap } from 'rxjs';
-import { authState, Auth, signOut } from '@angular/fire/auth';
+import { Firestore } from '@angular/fire/firestore';
+import { Observable, of } from 'rxjs';
+import { Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 import { UserService } from '../../../services/user.service';
 import { PresenceService } from '../../../services/presence.service';
@@ -25,7 +25,6 @@ export class HeaderComponent {
   onlineStatus$: Observable<boolean> = of(false);
 
   constructor(
-    private firestore: Firestore,
     private auth: Auth,
     private router: Router,
     private userService: UserService,

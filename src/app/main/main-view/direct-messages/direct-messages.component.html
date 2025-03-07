@@ -1,1 +1,75 @@
-<p>direct-messages works!</p>
+<div class="container">
+  <div class="header">
+    <div class="header-label">
+      <ng-container *ngIf="user$ | async as user">
+        <div class="profile-pic-wrapper">
+          <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
+          <ng-container
+            *ngIf="onlineStatus$ | async as online; else offlineBlock"
+          >
+            <img
+              class="profile-pic-online"
+              src="/img/direct-messages-img/online.png"
+              alt="Online Indicator"
+            />
+          </ng-container>
+          <ng-template #offlineBlock>
+            <img
+              class="profile-pic-offline"
+              src="/img/direct-messages-img/offline.png"
+              alt="Offline Indicator"
+            />
+          </ng-template>
+        </div>
+        <h2>{{ user.name }}</h2>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="shadow"></div>
+
+  <!-- <div id="chat-container" class="chat-container">
+    <div class="replies">
+      <div class="date-header">
+        <div class="date">14.01.2025</div>
+      </div>
+
+      <div class="reply-container">
+        <div class="reply">
+          <img src="img/avatar/avatar4.png" alt="Avatar" class="avatar" />
+          <div class="message">
+            <div class="message-info">
+              <div class="message-info-name">Noah Braun</div>
+              <div class="message-info-time">14:25 Uhr</div>
+            </div>
+            <div class="message-text">
+              Welche Version ist aktuell von Angular?
+            </div>
+            <div class="answer-info">
+              <div class="answers">2 Antworten</div>
+              <div class="last-answer">Letzte Antwort 14:56</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="chat-container">
+    <ng-container *ngIf="user$ | async as user">
+      <div class="info">
+        <div class="info-user">
+          <img [src]="user.avatar" alt="" />
+          <span> {{ user.name }}</span>
+        </div>
+        <div class="info-about-chat">
+          <span class="info-text">
+            Diese Unterhaltung findet nur zwischen
+          </span>
+          <span class="info-name"> &#64;{{ user.name }} </span>
+          <span class="info-text">und dir statt.</span>
+        </div>
+      </div>
+    </ng-container>
+    <app-message-input></app-message-input>
+  </div>
+</div>
