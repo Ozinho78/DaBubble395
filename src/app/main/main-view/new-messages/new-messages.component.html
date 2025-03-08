@@ -2,11 +2,11 @@
   <div class="new-msg-content">
     <div class="new-msg-header">
       <span>Neue Nachricht</span>
-      <input type="text" placeholder="An: #channel oder @jemand oder E-Mail-Adresse">
+      <input type="text" [formControl]="inputControl" placeholder="An: #channel oder @jemand oder E-Mail-Adresse">
     </div>
 
     <div class="input-bottom-ctn">
-      <input class="input-bottom" [formControl]="inputControl" type="text" placeholder="Starte eine neue Nachricht">
+      <input class="input-bottom" type="text" placeholder="Starte eine neue Nachricht">
       <div class="icon-container">
         <div class="icons-left">
           <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,27 +46,32 @@
     </div>
 
     
-<!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
-<div *ngIf="showUsers && filteredUsers.length > 0">
-  <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
-    &#64;{{ user.name }}
-  </div>
-</div>
+    <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
+    <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
+      <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
+        &#64;{{ user.name }}
+      </div>
+    </div>
 
-<!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
-<div *ngIf="showChannels && filteredChannels.length > 0">
-  <div *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
-    #{{ channel.name }}
-  </div>
-</div>
+    <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
+    <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">
+      <div *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
+        #{{ channel.name }}
+      </div>
+    </div>
 
 
 
 
     <!-- Check der vorhandenen User im Array -->
-    <ul>
+    <!-- <ul>
       <li *ngFor="let user of users">{{ user.name }} - {{ user.docId }}</li>
-    </ul>
+    </ul> -->
+
+    <!-- Check der vorhandenen Channel im Array -->
+    <!-- <ul>
+      <li *ngFor="let channel of channels">{{ channel.name }} - {{ channel.docId }}</li>
+    </ul> -->
 
   <!-- new-msg-content -->
   </div>

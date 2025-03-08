@@ -107,6 +107,24 @@
   }
 }
 
+.filtered-users-list, .filtered-channels-list {
+  // width: 100%;
+  @include m.flexBox(column, center, flex-start);
+  padding-top: 10px;
+  padding-left: 30%;
+  div {
+    // width: 100%;
+    // text-align: left;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    transition: all 125ms ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+      background-color: v.$purple_4;
+    }
+  }
+}
 
 
 

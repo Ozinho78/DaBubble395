@@ -43,6 +43,7 @@ export class NewMessagesComponent implements OnInit {
 
     // Filterung bei jeder Eingabe auslösen
     this.inputControl.valueChanges.subscribe(value => {
+      console.log('Eingegebener Wert:', value); // Debugging
       this.filterUsers(value || '');
       this.filterChannels(value || '');
     });
