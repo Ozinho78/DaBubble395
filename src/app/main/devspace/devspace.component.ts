@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
+import { PresenceService } from '../../../services/presence.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,6 @@ export class DevspaceComponent implements OnInit {
   isVisible = true;
   isChannelVisible = true;
   isUserVisible = true;
-  // private subscription!: Subscription;
   firestore: Firestore = inject(Firestore);
   userLoggedIn: string = '';
 
@@ -55,7 +55,9 @@ export class DevspaceComponent implements OnInit {
   unsubUserNames;
   unsubChannelNames;
 
-  constructor(private dataService: FirestoreService, private visibleService: VisibleService, private userService: UserService){
+  // *ngIf="userPresence.getUserPresence(user.docId)"
+
+  constructor(private dataService: FirestoreService, private visibleService: VisibleService, private userService: UserService, private userPresence: PresenceService){
       this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
       list.forEach((element) => {
@@ -83,9 +85,6 @@ export class DevspaceComponent implements OnInit {
 
 
   ngOnInit() {
-    // this.subscription = this.visibleService.visibleState$.subscribe(value => {
-    //   this.isVisible = value;
-    // });
     this.users$ = this.dataService.users$;
     this.channels$ = this.dataService.channels$;
     this.users = this.dataService.getUsers();
@@ -135,14 +134,7 @@ export class DevspaceComponent implements OnInit {
   }
 
   async saveChannelToFirestore(channel: Channel) {
-    // let newChannel = new Channel;
-    // newChannel.name = channelName;
-    // newChannel.description = description;
-    // newChannel.creationDate = new Date();
-    // await addDoc(this.channelDatabase, { name: newChannel.name, creationDate: newChannel.creationDate, description: newChannel.description });
-    // await addDoc(this.channelDatabase, newChannel.toJson());
     await addDoc(this.channelDatabase, channel.toJson());
-    // console.log('Channel saved:', channelName);
   }
 
 
