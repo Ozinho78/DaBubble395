@@ -98,6 +98,7 @@ export class NewMessagesComponent implements OnInit {
   // Kanalname einfügen und Liste ausblenden
   insertChannel(channel: Channel) {
     const currentValue = this.inputControl.value || '';
+    this.findAndSaveTargetChannel();
     this.inputControl.setValue(
       currentValue.replace(/#\w*$/, `#${channel.name} `)
     );
@@ -106,13 +107,12 @@ export class NewMessagesComponent implements OnInit {
 
   findAndSaveTargetUser() {
     this.inputControl.valueChanges.subscribe((value) => {
-      console.log('Eingegebener Wert:', value); // Debugging
-
+      console.log('Eingegebener Wert:', value);
       this.filterUsers(value || '');
-      this.filterChannels(value || '');
 
       // Null-Sicherheit hinzufügen (falls value null ist, wird ein leerer String verwendet)
       const trimmedValue = value?.trim() || '';
+      // const trimmedValue = this.inputControl.value?.trim() || '';
 
       // Falls ein User mit genau diesem Namen existiert, speichern
       const foundUser = this.users.find(
@@ -127,13 +127,23 @@ export class NewMessagesComponent implements OnInit {
     });
   }
 
+  findAndSaveTargetChannel() {
+    this.inputControl.valueChanges.subscribe((value) => {
+      // console.log('Eingegebener Wert:', value);
+      this.filterChannels(value || '');
+      const trimmedValue = value?.trim() || '';
+
+      // Falls ein Channel mit genau diesem Namen existiert, speichern
+      const foundChannel = this.channels.find(
+        (channel) => `#${channel.name}` === trimmedValue
+      );
+      this.targetChannel = foundChannel || null;
+      console.log('Gefundener Channel:', this.targetChannel);
+    });
+  }
+
   async saveChannelToFirestore(channel: Channel) {
     await addDoc(this.channelDatabase, channel.toJson());
     // console.log('Channel saved:', channelName);
   }
-
-
-
-
-
 }
