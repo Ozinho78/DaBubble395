@@ -1,15 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../../../models/user.model';
 import { Channel } from '../../../../models/channel.model';
-import { map, Observable, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FirestoreService } from '../../../../services/firestore.service';
 import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { Thread } from '../../../../models/thread.class';
 
 @Component({
   selector: 'app-new-messages',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './new-messages.component.html',
   styleUrl: './new-messages.component.scss',
 })
@@ -17,6 +18,7 @@ export class NewMessagesComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
+  threadsDatabase = collection(this.firestore, 'threads');
 
   users$!: Observable<User[]>;
   channels$!: Observable<Channel[]>;
@@ -34,6 +36,25 @@ export class NewMessagesComponent implements OnInit {
 
   targetUser: User | null = null;
   targetChannel: Channel | null = null;
+
+  enableInputBottom: Boolean = false;
+  inputBottomValue: string = '';
+
+  newThread: Thread | null = null;
+  // newThread = new Thread({});
+  // newThread!: Thread;
+  // newThread: Thread = {
+  //   id: '',
+  //   channelId: '',
+  //   creationDate: null,
+  //   reactions: [],
+  //   thread: '',
+  //   userId: '',
+  //   toJSON: function (): { channelId: string; creationDate: number | null; reactions: string[]; thread: string; userId: string; } {
+  //     throw new Error('Function not implemented.');
+  //   }
+  // };
+
 
   constructor(private dataService: FirestoreService) {}
 
@@ -119,6 +140,7 @@ export class NewMessagesComponent implements OnInit {
         (user) => `@${user.name}` === trimmedValue
       );
       this.targetUser = foundUser || null;
+      if(foundUser != null){this.toggleInputBottom();}
 
       // für Teilmatches
       // const foundUser = this.users.find(user => user.name.toLowerCase().includes (value.replace('@', '').toLowerCase()));
@@ -138,12 +160,43 @@ export class NewMessagesComponent implements OnInit {
         (channel) => `#${channel.name}` === trimmedValue
       );
       this.targetChannel = foundChannel || null;
+      if(foundChannel != null){this.toggleInputBottom();}
       console.log('Gefundener Channel:', this.targetChannel);
     });
   }
 
-  async saveChannelToFirestore(channel: Channel) {
-    await addDoc(this.channelDatabase, channel.toJson());
-    // console.log('Channel saved:', channelName);
+  toggleInputBottom(){
+    this.enableInputBottom = !this.enableInputBottom;
   }
+
+  addInput(){
+    if(this.inputBottomValue.trim() != ''){
+      const date = new Date();
+      this.newThread = new Thread({
+        id: '1',
+        channelId: this.targetChannel?.docId || '',
+        creationDate: date.getTime(),
+        reactions: [],
+        thread: this.inputBottomValue,
+        userId: this.targetUser?.docId || ''
+      });
+      this.saveInputToThreads(this.newThread);
+    }
+    // this.toggleInputBottom();
+  }
+
+  async saveInputToThreads(thread: Thread) {
+    try {
+      const threadsCollection = collection(this.firestore, 'threads'); // Sicherstellen, dass du die Collection hast
+      await addDoc(threadsCollection, thread.toJSON());
+      console.log('Thread saved:', thread);
+    } catch (error) {
+      console.error('Fehler beim Speichern des Threads:', error);
+    }
+  }
+
+  // async saveInputToThreads(thread: Thread) {
+  //   await addDoc(this.threadsDatabase, thread.toJSON());
+  //   console.log('Thread saved:', thread);
+  // }
 }
