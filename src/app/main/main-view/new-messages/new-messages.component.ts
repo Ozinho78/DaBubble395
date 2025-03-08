@@ -19,6 +19,7 @@ export class NewMessagesComponent implements OnInit {
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
   threadsDatabase = collection(this.firestore, 'threads');
+  userLoggedIn: string = '';
 
   users$!: Observable<User[]>;
   channels$!: Observable<Channel[]>;
@@ -56,7 +57,11 @@ export class NewMessagesComponent implements OnInit {
   // };
 
 
-  constructor(private dataService: FirestoreService) {}
+  constructor(private dataService: FirestoreService) {
+    setTimeout(() => {
+      this.userLoggedIn = localStorage.getItem('user-id') || '';
+    }, 500);
+  }
 
   ngOnInit() {
     // Streams für die Firestore-Daten
@@ -178,7 +183,7 @@ export class NewMessagesComponent implements OnInit {
         creationDate: date.getTime(),
         reactions: [],
         thread: this.inputBottomValue,
-        userId: this.targetUser?.docId || ''
+        userId: this.userLoggedIn || ''
       });
       this.saveInputToThreads(this.newThread);
     }
