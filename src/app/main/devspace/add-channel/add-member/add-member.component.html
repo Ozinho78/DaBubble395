@@ -65,7 +65,8 @@
         <div>
           <h3>Verfügbare Benutzer:</h3>
           <ul class="user-list">
-            <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" class="user-item">
+            <!-- <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" class="user-item"> -->
+              <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" class="user-item">
               <img src="img/avatar/{{ user.avatar }}" alt="" />
                 <span>{{ user.name }}</span>
             </li>

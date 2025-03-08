@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../../../../models/user.model';
+import { Observable } from 'rxjs';
+import { Channel } from '../../../../../models/channel.model';
+import { FirestoreService } from '../../../../../services/firestore.service';
 
 
 @Component({
@@ -10,7 +13,9 @@ import { User } from '../../../../../models/user.model';
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.scss',
 })
-export class AddMemberComponent {
+export class AddMemberComponent implements OnInit {
+  users$!: Observable<User[]>;
+  channels$!: Observable<Channel[]>;
   @Input() newChannelName: string = '';
   @Input() usersArrayFromAddChannel: User[] = [];
   @Output() memberModalClosed = new EventEmitter<void>();
@@ -26,19 +31,37 @@ export class AddMemberComponent {
   selectedUsersDocId: string[] = [];
   selectedUsers: User[] = [];
 
+  users: User[] = [];
+  channels: Channel[] = [];
 
-  constructor() {}
+
+  constructor(private dataService: FirestoreService) {}
+
+  ngOnInit(): void {
+    this.users$ = this.dataService.users$;
+    this.channels$ = this.dataService.channels$;
+    this.users = this.dataService.getUsers();
+    // this.channels = this.dataService.getChannels(); 
+    this.storedUsersFromAddChannel = this.users;
+
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['usersArrayFromAddChannel'] && changes['usersArrayFromAddChannel'].currentValue) {
       this.storedUsersFromAddChannel = [...changes['usersArrayFromAddChannel'].currentValue];
     }
+    // if (changes['users'] && changes['users'].currentValue) {
+    //   this.storedUsersFromAddChannel = [...changes['users'].currentValue];
+    // }
   }
 
   get filteredUsers(): User[] {
     return this.usersArrayFromAddChannel.filter(user =>
       user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+    // return this.users.filter(user =>
+    //   user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    // );
   }
 
   selectUser(user: User): void {

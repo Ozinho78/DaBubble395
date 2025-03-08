@@ -52,10 +52,30 @@ export class DevspaceComponent implements OnInit {
 
   @ViewChild(AddChannelComponent) channelDialog!: AddChannelComponent;
 
-  // unsubUserNames;
-  // unsubChannelNames;
+  unsubUserNames;
+  unsubChannelNames;
 
   constructor(private dataService: FirestoreService, private visibleService: VisibleService, private userService: UserService){
+      this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
+      this.users = [];
+      list.forEach((element) => {
+        // this.users[element.id] = element.data();
+        let singleUser = element.data() as User;
+        let str = singleUser.avatar;
+        singleUser.id = parseInt(str.match(/\d+/)?.[0] || '0', 10);
+        singleUser.docId = element.id;
+        this.users.push(singleUser);
+        // console.log(element.data());
+      });
+    });
+    this.unsubChannelNames = onSnapshot(this.channelDatabase, (list) => {
+      this.channels = [];
+      list.forEach((element) => {
+        const singleChannel = element.data() as Channel;
+        singleChannel.docId = element.id;
+        this.channels.push(singleChannel);
+      });
+    });
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
     }, 500);
@@ -105,8 +125,8 @@ export class DevspaceComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    // this.unsubUserNames();
-    // this.unsubChannelNames();
+    this.unsubUserNames();
+    this.unsubChannelNames();
     this.userLoggedIn = '';
   }
 
