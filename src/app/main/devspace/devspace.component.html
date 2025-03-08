@@ -75,12 +75,11 @@
             <div class="avatar-img-with-name">
               <img src="img/avatar/{{ user.avatar }}" alt="" />
               <span>{{ user.name }}</span>
+              <div class="online-status" [class.green]="(this.userPresence.getUserPresence(user.docId!) | async)"></div>
             </div>
             <div class="avatar-you">
               <span *ngIf="userLoggedIn == user.docId">(Du)</span>
             </div>
-            <div *ngIf="(this.userPresence.getUserPresence(user.docId!) | async)" class="presence">online</div>
-            <!-- <div *ngIf="user.active" class="presence">online</div> -->
           </div>
           }
         </div>
