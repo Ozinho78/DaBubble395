@@ -107,7 +107,11 @@ export class ReactionService {
         this.showReactionsOverlaySubject.next(!this.showReactionsOverlaySubject.value);
     }
 
-    get showReactionsOverlay$(): Observable<boolean> {
+    closeReactionsOverlay() {
+        this.showReactionsOverlaySubject.closed = false;
+    }
+
+    get showReactionsOverlay$() {
         return this.showReactionsOverlaySubject.asObservable();
     }
 
@@ -117,11 +121,12 @@ export class ReactionService {
             type: emojiType,
             timestamp: Date.now()
         });
-
+        //debugger;
         this.addReaction(collectionName, documentId, reaction)
             .then(() => {
                 console.log('Reaction hinzugefügt!');
-                this.toggleReactionsOverlay();
+                //this.closeReactionsOverlay();
+                this.closeReactionTooltip();
             })
             .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
     }
