@@ -3,8 +3,7 @@
     <!-- add reactions -->
     <div class="add-reactions-container" [ngClass]="{'own-message': message.userId === currentUserId}">
         <div class="add-reactions">
-
-            <div class="svg-container" (click)="toggleReactionsOverlay()">
+            <div class="svg-container" (click)="reactionService.toggleReactionsOverlay()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_1823_21494" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                         width="24" height="24">
@@ -38,7 +37,6 @@
             </div>
 
         </div>
-
     </div>
 
     <div class="reply">
@@ -56,25 +54,25 @@
                     <ng-container *ngFor="let group of reactionGroups">
                         <div class="reaction" [class.liked]="group.value.likedByMe"
                             (click)="group.value.likedByMe ? removeMyReaction() : onEmojiSelected(group.key)"
-                            (mouseenter)="openReactionTooltip(group.key, group.value.userNames)"
-                            (mouseleave)="closeReactionTooltip()">
+                            (mouseenter)="reactionService.openReactionTooltip(group.key, group.value.userNames, userName)"
+                            (mouseleave)="reactionService.closeReactionTooltip()">
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
 
-                            <!-- Tooltip-Overlay, das beim Hover angezeigt wird -->
-                            <div class="reaction-tooltip" *ngIf="showReactionTooltip && tooltipEmoji === group.key">
+                            <!-- Tooltip -->
+                            <div class="reaction-tooltip" *ngIf="showReactionTooltip$ | async">
                                 <div class="tooltip-content">
-                                    <img [src]="'img/emojis/' + tooltipEmoji + '.svg'" alt="{{ tooltipEmoji }}"
-                                        class="tooltip-emoji">
-                                    <div class="tooltip-names">{{ tooltipText }}</div>
+                                    <img [src]="'img/emojis/' + (tooltipEmoji$ | async) + '.svg'"
+                                        alt="{{ tooltipEmoji$ | async }}" class="tooltip-emoji">
+                                    <div class="tooltip-names">{{ tooltipText$ | async }}</div>
                                 </div>
                             </div>
-
                         </div>
                     </ng-container>
 
-                    <!-- add reactions -->
-                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn" (click)="toggleReactionsOverlay()">
+                    <!-- Add reactions button -->
+                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn"
+                        (click)="reactionService.toggleReactionsOverlay()">
                         <div class="svg-container">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -99,6 +97,7 @@
 
 </div>
 
-<!-- Reactions Overlay einblenden -->
-<app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
+<!-- Reactions Overlay -->
+<app-reactions *ngIf="showReactionsOverlay$ | async" (emojiSelected)="onEmojiSelected($event)"
+    (closed)="reactionService.toggleReactionsOverlay()">
 </app-reactions>
