@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ThreadService } from '../../../services/thread.service';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageComponent } from "./message/message.component";
 import { ThreadMessageComponent } from "./thread-message/thread-message.component";
 import { MessageInputComponent } from "./message-input/message-input.component";
 import { map } from 'rxjs/operators';
+import { VisibleService } from '../../../services/visible.service';
 
 @Component({
   selector: 'app-thread',
@@ -24,13 +25,19 @@ export class ThreadComponent implements OnInit {
   thread: Thread | null = null;
   newMessageText: string = '';
   threadId: string = '6DGHEdX29kIHBFTtGrSr'; // Beispiel, später dynamisch setzen
-  threadVisible: boolean = true;
+  threadVisibility!: boolean;
+  private subscription!: Subscription;
 
   constructor(
-    private threadService: ThreadService
+    private threadService: ThreadService,
+    private visibleService: VisibleService
   ) { }
 
   ngOnInit() {
+    this.subscription = this.visibleService.threadSubject$.subscribe(value => {
+      this.threadVisibility = value;
+    });
+
     this.threadService.getThreadById(this.threadId).subscribe(threadData => {
       this.thread = new Thread(threadData);
       this.thread.id = this.threadId;
@@ -75,6 +82,12 @@ export class ThreadComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe(); // Wichtig: Speicherlecks vermeiden!
+  }
+
   /** Scrollt den Chat nach unten */
   scrollToBottom() {
     setTimeout(() => {
@@ -89,10 +102,9 @@ export class ThreadComponent implements OnInit {
     this.messageInput.editMessage(event.id, event.text);
   }
 
-  toggleThreadVisibility(){
-    this.threadVisible = !this.threadVisible;
+  toggleVisibility() {
+    this.visibleService.setThreadVisibility(false); // Oder true setzen
   }
-
 }
 
 
