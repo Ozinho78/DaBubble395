@@ -28,6 +28,7 @@ export class ThreadMessageComponent implements OnInit {
   showReactionTooltip: boolean = false;
   tooltipEmoji: string = '';
   tooltipText: string = '';
+  activeTooltip: string | null = null;
 
   showReactionsOverlay$!: Observable<boolean>;
   showReactionTooltip$!: Observable<boolean>;

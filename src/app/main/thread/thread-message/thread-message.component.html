@@ -41,18 +41,19 @@
                             (click)="group.value.likedByMe ? removeMyReaction() : onEmojiSelected(group.key)"
                             (mouseenter)="reactionService.openReactionTooltip(group.key, group.value.userNames, currentUserName)"
                             (mouseleave)="reactionService.closeReactionTooltip()">
+
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
 
-                            <!-- Tooltip -->
-                            <div class="reaction-tooltip" *ngIf="showReactionTooltip$ | async">
+                            <!-- Tooltip nur anzeigen, wenn genau dieses Emoji aktiv ist -->
+                            <div class="reaction-tooltip"
+                                *ngIf="(reactionService.showReactionTooltip$ | async) && (reactionService.tooltipEmoji$ | async) === group.key">
                                 <div class="tooltip-content">
-                                    <img [src]="'img/emojis/' + (tooltipEmoji$ | async) + '.svg'"
-                                        alt="{{ tooltipEmoji$ | async }}" class="tooltip-emoji">
-                                    <div class="tooltip-names">{{ tooltipText$ | async }}</div>
+                                    <img [src]="'img/emojis/' + (reactionService.tooltipEmoji$ | async) + '.svg'"
+                                        alt="{{ reactionService.tooltipEmoji$ | async }}" class="tooltip-emoji">
+                                    <div class="tooltip-names">{{ reactionService.tooltipText$ | async }}</div>
                                 </div>
                             </div>
-
                         </div>
                     </ng-container>
 

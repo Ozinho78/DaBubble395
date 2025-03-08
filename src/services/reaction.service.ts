@@ -12,9 +12,16 @@ export class ReactionService {
     private userNamesCache: { [userId: string]: string } = {};
 
     private showReactionsOverlaySubject = new BehaviorSubject<boolean>(false);
+    showReactionsOverlaySubject$ = this.showReactionsOverlaySubject.asObservable();
+
     private showReactionTooltipSubject = new BehaviorSubject<boolean>(false);
+    showReactionTooltip$ = this.showReactionTooltipSubject.asObservable();
+
     private tooltipEmojiSubject = new BehaviorSubject<string>('');
+    tooltipEmoji$ = this.tooltipEmojiSubject.asObservable();
+
     private tooltipTextSubject = new BehaviorSubject<string>('');
+    tooltipText$ = this.tooltipTextSubject.asObservable();
 
     constructor(
         private firestore: Firestore,
@@ -142,18 +149,7 @@ export class ReactionService {
     }
 
     closeReactionTooltip() {
+        this.tooltipEmojiSubject.next('');
         this.showReactionTooltipSubject.next(false);
-    }
-
-    get showReactionTooltip$() {
-        return this.showReactionTooltipSubject.asObservable();
-    }
-
-    get tooltipEmoji$() {
-        return this.tooltipEmojiSubject.asObservable();
-    }
-
-    get tooltipText$() {
-        return this.tooltipTextSubject.asObservable();
     }
 }
