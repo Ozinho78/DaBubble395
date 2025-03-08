@@ -79,7 +79,8 @@
             <div class="avatar-you">
               <span *ngIf="userLoggedIn == user.docId">(Du)</span>
             </div>
-            <div *ngIf="user.active" class="presence">online</div>
+            <div *ngIf="(this.userPresence.getUserPresence(user.docId!) | async)" class="presence">online</div>
+            <!-- <div *ngIf="user.active" class="presence">online</div> -->
           </div>
           }
         </div>

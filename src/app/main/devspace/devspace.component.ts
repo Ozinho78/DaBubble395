@@ -1,4 +1,10 @@
-import { Component, inject, Injectable, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  Injectable,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { addDoc, Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../../models/user.model';
@@ -6,8 +12,14 @@ import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
-import { Observable } from 'rxjs';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Observable, of, take } from 'rxjs';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
@@ -24,18 +36,20 @@ import { PresenceService } from '../../../services/presence.service';
     trigger('fadeOut', [
       state('void', style({ opacity: 0, height: 0, overflow: 'hidden' })),
       transition(':leave', [
-        animate('250ms ease-out', style({ opacity: 0, height: 0 }))
+        animate('250ms ease-out', style({ opacity: 0, height: 0 })),
       ]),
       transition(':enter', [
         style({ opacity: 0, height: '0px' }),
-        animate('250ms ease-in', style({ opacity: 1, height: '*' }))
-      ])
-    ])
-  ]
+        animate('250ms ease-in', style({ opacity: 1, height: '*' })),
+      ]),
+    ]),
+  ],
 })
 export class DevspaceComponent implements OnInit {
   users$!: Observable<User[]>;
   channels$!: Observable<Channel[]>;
+  onlineStatus$: Observable<boolean> = of(false);
+  onlineStatus: boolean = false;
   isVisible = true;
   isChannelVisible = true;
   isUserVisible = true;
@@ -57,8 +71,13 @@ export class DevspaceComponent implements OnInit {
 
   // *ngIf="userPresence.getUserPresence(user.docId)"
 
-  constructor(private dataService: FirestoreService, private visibleService: VisibleService, private userService: UserService, private userPresence: PresenceService){
-      this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
+  constructor(
+    private dataService: FirestoreService,
+    private visibleService: VisibleService,
+    private userService: UserService,
+    public userPresence: PresenceService
+  ) {
+    this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
       list.forEach((element) => {
         // this.users[element.id] = element.data();
@@ -66,6 +85,14 @@ export class DevspaceComponent implements OnInit {
         let str = singleUser.avatar;
         singleUser.id = parseInt(str.match(/\d+/)?.[0] || '0', 10);
         singleUser.docId = element.id;
+        // this.onlineStatus$ = this.userPresence.getUserPresence(element.id);
+        // singleUser.active = this.onlineStatus;
+
+        // Online-Status holen und setzen
+        // this.onlineStatus$ = this.userPresence.getUserPresence(element.id);
+        // this.onlineStatus$.pipe(take(1)).subscribe((status) => {
+        //   singleUser.active = status;
+        // });
         this.users.push(singleUser);
         // console.log(element.data());
       });
@@ -83,21 +110,24 @@ export class DevspaceComponent implements OnInit {
     }, 500);
   }
 
-
   ngOnInit() {
     this.users$ = this.dataService.users$;
     this.channels$ = this.dataService.channels$;
     this.users = this.dataService.getUsers();
     this.channels = this.dataService.getChannels();
-    this.visibleService.visibleState$.subscribe(value => {
+    this.visibleService.visibleState$.subscribe((value) => {
       this.isVisible = value;
     });
-    this.userService.currentDocIdFromDevSpace.subscribe((id) => (this.docId = id));
-    this.userService.currentChannelIdFromDevSpace.subscribe((id) => (this.channelId = id));
+    this.userService.currentDocIdFromDevSpace.subscribe(
+      (id) => (this.docId = id)
+    );
+    this.userService.currentChannelIdFromDevSpace.subscribe(
+      (id) => (this.channelId = id)
+    );
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
-    
+
     // this.users.sort((a, b) => a.avatar.localeCompare(b.avatar));
 
     // this.userJson.sort(
@@ -109,8 +139,8 @@ export class DevspaceComponent implements OnInit {
     this.isChannelVisible = !this.isChannelVisible;
   }
 
-  toggleUserVisibility(){
-   this.isUserVisible = !this.isUserVisible;
+  toggleUserVisibility() {
+    this.isUserVisible = !this.isUserVisible;
   }
 
   sortUsersByAvatar() {
@@ -137,7 +167,6 @@ export class DevspaceComponent implements OnInit {
     await addDoc(this.channelDatabase, channel.toJson());
   }
 
-
   selectUserForDirectMessage(user: User) {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
@@ -154,18 +183,14 @@ export class DevspaceComponent implements OnInit {
     // console.log(this.docIdService.setDocIdFromDevSpace(user.docId!));
     this.userService.setDocIdFromDevSpace(user.docId!);
     setTimeout(() => {
-      console.log(this.docId); 
+      console.log(this.docId);
     }, 1000);
   }
 
   showComponent(component: string) {
     this.visibleService.setVisibleComponent(component);
   }
-
 }
-
-
-
 
 // alter Constructor ohne FirestoreService
 // constructor(private dataService: FirestoreService, private visibleService: VisibleService, private userService: UserService) {
@@ -193,8 +218,6 @@ export class DevspaceComponent implements OnInit {
 //     this.userLoggedIn = localStorage.getItem('user-id') || '';
 //   }, 500);
 // }
-
-
 
 // testData = [
 //   {
@@ -234,4 +257,3 @@ export class DevspaceComponent implements OnInit {
 //     name: 'Elias Neumann',
 //   },
 // ];
-
