@@ -79,6 +79,9 @@ button, svg {
     order: 1;
     align-self: stretch;
     flex-grow: 0;
+    &:focus {
+      outline: none;
+    }
     ::placeholder {
       /* z.B. Kooperationsprojekte */
       // // width: 205px;

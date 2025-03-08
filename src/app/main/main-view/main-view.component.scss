@@ -32,4 +32,12 @@ h2 {
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
     @include m.styleFont();
+    .new-messages {
+      height: 100%;
+      width: 100%;
+    }
+}
+
+.hidden {
+  display: none;
 }

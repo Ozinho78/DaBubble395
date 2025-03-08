@@ -34,14 +34,14 @@
     .login-header {
       @include m.flexBox(row, space-between, center);
       width: 100%;
-      margin-top: 75px;
+      margin-top: 50px;
 
       .login-left {
         @include m.flexBox(row, flex-start, center);
-        margin-left: 50px;
 
         .logo {
           @include m.flexBox(row, flex-start, center);
+          margin-left: 50px;
 
           .logo-logo {
             width: 70px;
@@ -83,7 +83,7 @@
 
     .login-dialog {
       @include m.flexBox(column, center, center);
-      height: 769px;
+      height: auto;
       width: 606px;
       background-color: white;
       border-radius: 30px;
@@ -93,6 +93,7 @@
 
       h2 {
         @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
+        margin: 0;
       }
 
       p {
@@ -108,7 +109,7 @@
         border-radius: 100px;
         box-sizing: border-box;
         padding: 30px;
-        margin-top: 36px;
+        margin-top: 21px;
 
         &::placeholder {
           @include m.styleFont("Nunito", 18px, 500, 21.6px, v.$grey);
@@ -150,7 +151,7 @@
 
       .login-border {
         width: 100%;
-        margin-top: 40px;
+        margin-top: 20px;
         border: 1px solid v.$purple_4;
       }
 
@@ -196,7 +197,7 @@
       .login-btn {
         @include m.flexBox(row, center, center);
         width: 100%;
-        margin-bottom: 32px;
+        margin-bottom: 28px;
 
         .login-btn-register,
         .login-btn-guest {

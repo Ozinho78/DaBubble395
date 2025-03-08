@@ -5,7 +5,7 @@
         <img src="img/workspacelogo.png" alt="" />
         <span>Devspace</span>
       </div>
-      <img src="img/edit_square.png" alt="" />
+      <img class="new-messages-icon" (click)="showComponent('newMessages')" src="img/edit_square.png" alt="" />
     </div>
 
     <div class="channel-and-user-list-ctn">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="channel-list">
-          @for (channel of channels; track $index){
+          @for (channel of channels$ | async; track $index){
           <span (click)="selectChannel(channel)" class="single-channel" *ngIf="isChannelVisible" [@fadeOut]
             >#{{ channel.name }}</span
           >
@@ -65,7 +65,7 @@
         </div>
 
         <div class="user-list">
-          @for (user of users; track $index) {
+          @for (user of users$ | async; track $index) {
           <div
             *ngIf="isUserVisible"
             [@fadeOut]

@@ -1,3 +1,5 @@
 <div class="container">
-    <app-threads></app-threads>
+    <app-direct-messages *ngIf="visibleComponent === 'directMessages'"></app-direct-messages>
+    <app-new-messages class="new-messages" *ngIf="visibleComponent === 'newMessages'"></app-new-messages>
+    <app-threads *ngIf="visibleComponent === 'threads'"></app-threads>
 </div>

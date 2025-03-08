@@ -1,0 +1,29 @@
+@use "../../../../../mixins.scss" as m;
+@use "../../../../../variables.scss" as v;
+
+.container {
+  // width: 100%;
+
+}
+
+input {
+    /* 61. Message box main */
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 40px;
+  
+   
+  
+    /* White */
+    background: #FFFFFF;
+    /* Ligth purple (Lines) */
+    border: 1px solid #ADB0D9;
+    border-radius: 20px;
+  
+}
