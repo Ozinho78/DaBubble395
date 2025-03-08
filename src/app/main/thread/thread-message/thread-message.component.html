@@ -45,7 +45,7 @@
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
 
-                            <!-- Tooltip nur anzeigen, wenn genau dieses Emoji aktiv ist -->
+                            <!-- Tooltip -->
                             <div class="reaction-tooltip"
                                 *ngIf="(reactionService.showReactionTooltip$ | async) && (reactionService.tooltipEmoji$ | async) === group.key">
                                 <div class="tooltip-content">
