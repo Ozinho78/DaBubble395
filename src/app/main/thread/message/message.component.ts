@@ -1,13 +1,10 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-//import { Firestore } from '@angular/fire/firestore';
-import { ReactionsComponent } from '../../reactions/reactions.component';
 import { Message } from '../../../../models/message.class';
-import { Reaction } from '../../../../models/reaction.class';
 import { UserService } from '../../../../services/user.service';
 import { ReactionService } from '../../../../services/reaction.service';
-//import { AuthService } from '../../../../services/auth.service';
+import { ReactionsComponent } from '../../reactions/reactions.component';
 
 @Component({
   selector: 'app-message',
@@ -16,28 +13,33 @@ import { ReactionService } from '../../../../services/reaction.service';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
-  @Input() message!: Message;
+  @Input() message!: Message & { id: string };
   @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
   currentUserId: string | null = null;
-  //currentUserData: any | null = null;
   currentUser: any;
+  userName: string = '';
   userData$!: Observable<{ name: string, avatar: string }>;
-  userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   userNamesCache: { [userId: string]: string } = {};
-  reactions$!: Observable<Reaction[]>;
+
+  reactions$!: Observable<any>;
   groupedReactions: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } = {};
   showReactionsOverlay: boolean = false;
   showReactionTooltip: boolean = false;
   tooltipEmoji: string = '';
   tooltipText: string = '';
+  activeTooltip: string | null = null;
+
+  showReactionsOverlay$!: Observable<boolean>;
+  showReactionTooltip$!: Observable<boolean>;
+  tooltipEmoji$!: Observable<string>;
+  tooltipText$!: Observable<string>;
+
   menuOpen: boolean = false; // Menü-Zustand
 
   constructor(
-    //private firestore: Firestore,
     private userService: UserService,
-    private reactionService: ReactionService,
-    //private authService: AuthService
+    public reactionService: ReactionService
   ) { }
 
   ngOnInit(): void {
@@ -45,41 +47,17 @@ export class MessageComponent implements OnInit {
     this.loadCurrentName();
     this.userData$ = this.userService.getUserById(this.message.userId);
     this.loadReactions();
+
+    this.showReactionsOverlay$ = this.reactionService.showReactionsOverlay$;
+    this.showReactionTooltip$ = this.reactionService.showReactionTooltip$;
+    this.tooltipEmoji$ = this.reactionService.tooltipEmoji$;
+    this.tooltipText$ = this.reactionService.tooltipText$;
   }
 
   loadReactions() {
-    // Lade die Reaktionen
-    if (this.message.id) {
-      this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
-
-      this.reactions$.subscribe(reactions => {
-        const groups = reactions.reduce((acc, reaction) => {
-          if (!acc[reaction.type]) {
-            acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
-          }
-          acc[reaction.type].count++;
-
-          // Aktualisiere nur die Gruppe für den aktuellen Reaction-Typ
-          if (!this.userNamesCache[reaction.userId]) {
-            this.userService.getUserById(reaction.userId).subscribe(userData => {
-              this.userNamesCache[reaction.userId] = userData.name;
-              if (acc[reaction.type].userNames.indexOf(userData.name) === -1) {
-                acc[reaction.type].userNames.push(userData.name);
-              }
-            });
-          } else {
-            const name = this.userNamesCache[reaction.userId];
-            if (acc[reaction.type].userNames.indexOf(name) === -1) {
-              acc[reaction.type].userNames.push(name);
-            }
-          }
-          if (reaction.userId === this.currentUserId) {
-            acc[reaction.type].likedByMe = true;
-          }
-          return acc;
-        }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
-        this.groupedReactions = groups;
-      });
+    if (this.message?.id && this.currentUserId) {
+      this.reactions$ = this.reactionService.loadReactions('messages', this.message.id, this.currentUserId);
+      this.reactions$.subscribe(groups => this.groupedReactions = groups);
     }
   }
 
@@ -121,30 +99,23 @@ export class MessageComponent implements OnInit {
   }
 
   onEmojiSelected(emojiType: string): void {
-    const reaction = new Reaction({
-      userId: this.currentUserId,
-      type: emojiType,
-      timestamp: Date.now()
-    });
-    this.reactionService.addReaction('messages', this.message.id!, reaction)
-      .then(() => {
-        console.log('Reaction hinzugefügt!');
-        this.showReactionsOverlay = false;
-      })
-      .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
+    if (this.currentUserId) {
+      this.reactionService.addEmojiReaction('messages', this.message.id, this.currentUserId, emojiType);
+    }
   }
+
+  /*
 
   onOverlayClosed(): void {
     this.showReactionsOverlay = false;
   }
 
+  */
+
   removeMyReaction(): void {
-    this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId!)
-      .then(() => {
-        console.log('Reaction entfernt!');
-        this.showReactionsOverlay = false;
-      })
-      .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
+    if (this.currentUserId) {
+      this.reactionService.removeUserReaction('messages', this.message.id, this.currentUserId);
+    }
   }
 
   /*groupAccHasName(
@@ -155,29 +126,31 @@ export class MessageComponent implements OnInit {
     return acc[reactionType]?.userNames.includes(name);
   }*/
 
-  openReactionTooltip(emoji: string, userNames: string[]) {
-    this.tooltipEmoji = emoji;
-    const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
+  /*
+openReactionTooltip(emoji: string, userNames: string[]) {
+  this.tooltipEmoji = emoji;
+  const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
 
-    if (names.length === 1) {
-      // Fall: Nur eine Person hat reagiert
-      this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
-    } else if (names.length === 2) {
-      // Fall: Zwei Personen haben reagiert
-      this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
-    } else {
-      // Fall: Drei oder mehr Personen haben reagiert
-      const allButLast = names.slice(0, -1).join(', '); // Alle außer den letzten mit Komma trennen
-      const last = names[names.length - 1]; // Letzter Name
-      this.tooltipText = `${allButLast} und ${last} haben reagiert`;
-    }
-
-    this.showReactionTooltip = true;
+  if (names.length === 1) {
+    // Fall: Nur eine Person hat reagiert
+    this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
+  } else if (names.length === 2) {
+    // Fall: Zwei Personen haben reagiert
+    this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
+  } else {
+    // Fall: Drei oder mehr Personen haben reagiert
+    const allButLast = names.slice(0, -1).join(', '); // Alle außer den letzten mit Komma trennen
+    const last = names[names.length - 1]; // Letzter Name
+    this.tooltipText = `${allButLast} und ${last} haben reagiert`;
   }
 
-  closeReactionTooltip() {
-    this.showReactionTooltip = false;
-  }
+  this.showReactionTooltip = true;
+}
+
+closeReactionTooltip() {
+  this.showReactionTooltip = false;
+}
+  */
 
   loadCurrentName() {
     if (this.currentUserId) {
@@ -202,4 +175,5 @@ export class MessageComponent implements OnInit {
   closeMenu() {
     this.menuOpen = false;
   }
+
 }
