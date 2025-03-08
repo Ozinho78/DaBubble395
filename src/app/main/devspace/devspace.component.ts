@@ -1,4 +1,4 @@
-import { Component, inject, Injectable, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Injectable, OnInit, ViewChild } from '@angular/core';
 import { addDoc, Firestore } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../../models/user.model';
@@ -6,7 +6,7 @@ import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
