@@ -171,6 +171,7 @@ export class DevspaceComponent implements OnInit {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
     this.showComponent('directMessages');
+    this.visibleService.setThreadVisibility(false);
   }
 
   selectChannel(channel: Channel) {
