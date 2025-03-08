@@ -5,6 +5,7 @@ export class User {
   public name: string = '';
   public email: string = '';
   public password: string = '';
+  public active: boolean = false;
 
 
   public toJson(){
@@ -14,7 +15,8 @@ export class User {
       avatar: this.avatar,
       name: this.name,
       email: this.email,
-      password: this.password
+      password: this.password,
+      active: this.active
     }
   }
 

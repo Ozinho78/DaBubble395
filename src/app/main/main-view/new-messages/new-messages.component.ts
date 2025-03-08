@@ -42,20 +42,6 @@ export class NewMessagesComponent implements OnInit {
   inputBottomValue: string = '';
 
   newThread: Thread | null = null;
-  // newThread = new Thread({});
-  // newThread!: Thread;
-  // newThread: Thread = {
-  //   id: '',
-  //   channelId: '',
-  //   creationDate: null,
-  //   reactions: [],
-  //   thread: '',
-  //   userId: '',
-  //   toJSON: function (): { channelId: string; creationDate: number | null; reactions: string[]; thread: string; userId: string; } {
-  //     throw new Error('Function not implemented.');
-  //   }
-  // };
-
 
   constructor(private dataService: FirestoreService) {
     setTimeout(() => {
@@ -200,8 +186,6 @@ export class NewMessagesComponent implements OnInit {
     }
   }
 
-  // async saveInputToThreads(thread: Thread) {
-  //   await addDoc(this.threadsDatabase, thread.toJSON());
-  //   console.log('Thread saved:', thread);
-  // }
+
+
 }
