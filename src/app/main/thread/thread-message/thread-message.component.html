@@ -3,12 +3,12 @@
     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
 </div>
 
-<div class="reply-container" [ngClass]="{'own-message': thread.userId === currentUserId}">
+<div class="reply-container" [ngClass]="{'own-message': thread.userId === 'qdWWqOADh6O1FkGpHlTr'}">
 
-    <!-- Add reactions -->
-    <div class="add-reactions-container" [ngClass]="{'own-message': thread.userId === currentUserId}">
+    <!-- add reactions -->
+    <div class="add-reactions-container" [ngClass]="{'own-message': thread.userId === 'qdWWqOADh6O1FkGpHlTr'}">
         <div class="add-reactions">
-            <div class="svg-container" (click)="reactionService.toggleReactionsOverlay()">
+            <div class="svg-container" (click)="toggleReactionsOverlay()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_1823_21494" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                         width="24" height="24">
@@ -33,31 +33,31 @@
             </div>
             <div class="message-text">{{ thread.thread }}</div>
 
-            <!-- Reactions -->
+            <!-- reactions -->
             <div class="message-reactions">
                 <ng-container *ngIf="groupedReactions | keyvalue as reactionGroups">
                     <ng-container *ngFor="let group of reactionGroups">
                         <div class="reaction" [class.liked]="group.value.likedByMe"
-                            (click)="group.value.likedByMe ? removeMyReaction() : onEmojiSelected(group.key)"
-                            (mouseenter)="reactionService.openReactionTooltip(group.key, group.value.userNames, userName)"
-                            (mouseleave)="reactionService.closeReactionTooltip()">
+                            (click)="group.value.likedByMe ? removeMyReaction(group.key) : onEmojiSelected(group.key)"
+                            (mouseenter)="openReactionTooltip(group.key, group.value.userNames)"
+                            (mouseleave)="closeReactionTooltip()">
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
 
-                            <!-- Tooltip -->
-                            <div class="reaction-tooltip" *ngIf="showReactionTooltip$ | async">
+                            <!-- Tooltip-Overlay, das beim Hover angezeigt wird -->
+                            <div class="reaction-tooltip" *ngIf="showReactionTooltip && tooltipEmoji === group.key">
                                 <div class="tooltip-content">
-                                    <img [src]="'img/emojis/' + (tooltipEmoji$ | async) + '.svg'"
-                                        alt="{{ tooltipEmoji$ | async }}" class="tooltip-emoji">
-                                    <div class="tooltip-names">{{ tooltipText$ | async }}</div>
+                                    <img [src]="'img/emojis/' + tooltipEmoji + '.svg'" alt="{{ tooltipEmoji }}"
+                                        class="tooltip-emoji">
+                                    <div class="tooltip-names">{{ tooltipText }}</div>
                                 </div>
                             </div>
+
                         </div>
                     </ng-container>
 
-                    <!-- Add reactions button -->
-                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn"
-                        (click)="reactionService.toggleReactionsOverlay()">
+                    <!-- add reactions -->
+                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn" (click)="toggleReactionsOverlay()">
                         <div class="svg-container">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +80,6 @@
     </div>
 </div>
 
-<!-- Reactions Overlay -->
-<app-reactions *ngIf="showReactionsOverlay$ | async" (emojiSelected)="onEmojiSelected($event)"
-    (closed)="reactionService.toggleReactionsOverlay()">
+<!-- Reactions Overlay einblenden -->
+<app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
 </app-reactions>
