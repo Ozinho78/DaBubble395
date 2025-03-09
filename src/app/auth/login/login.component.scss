@@ -14,19 +14,29 @@
     position: relative;
     background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
 
-    img {
+    .login-intro-logo {
+      width: 696px;
+      height: 184px;
       position: absolute;
+      left: 50%;
+      top: 50%;
       z-index: 2;
-      animation: moveLeft 1s ease-in-out forwards;
+      img {
+        animation: moveLeft 1s ease-in-out forwards;
+      }
     }
 
-    span {
-      @include m.styleFont("Nunito", 90px, 700, 1.5, white);
-      position: absolute;
-      left: 50px;
+    .login-intro-txt {
+      width: 696px;
+      height: 184px;
       z-index: 1;
-      opacity: 0;
-      animation: flyOut 1s ease-in-out 1s forwards;
+      span {
+        @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+        animation: flyOut 1s ease-in-out 1s forwards;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+      }
     }
   }
 
@@ -312,20 +322,19 @@
 
 @keyframes flyOut {
   0% {
-    transform: translateX(0);
-    opacity: 0;
+    transform: translateX(-50%);
   }
   100% {
-    transform: translateX(120%);
+    transform: translateX(50%);
     opacity: 1;
   }
 }
 
 @keyframes moveLeft {
   0% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(0);
   }
 }
