@@ -1,5 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../../../models/message.class';
@@ -7,17 +13,19 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserService } from '../../../../services/user.service';
 import { Observable } from 'rxjs';
 //import { AuthService } from '../../../../services/auth.service';
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-message-input',
   standalone: true,
   imports: [CommonModule, FormsModule, PickerComponent],
   templateUrl: './message-input.component.html',
-  styleUrl: './message-input.component.scss'
+  styleUrl: './message-input.component.scss',
 })
 export class MessageInputComponent {
   @Input() threadId!: string | null; // Die aktuelle Thread-ID
-
+  @Input() isDirectMessage: boolean = false;
+  @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
   //currentUser: any;
   editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
   messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
@@ -30,8 +38,7 @@ export class MessageInputComponent {
 
   constructor(
     private firestore: Firestore,
-    private userService: UserService,
-    //private authService: AuthService
+    private userService: UserService //private authService: AuthService
   ) {
     this.allUsers$ = this.userService.getAllUsers();
     this.currentUserId = this.userService.getCurrentUserId();
@@ -72,9 +79,23 @@ export class MessageInputComponent {
 
   /** Nachricht senden oder bearbeiten */
   sendMessage() {
-    if (!this.messageText.trim() || !this.threadId) return;
+    if (!this.messageText.trim()) return;
+    if (this.isDirectMessage) {
+      this.sendDirectMessage();
+    } else {
+      if (!this.threadId) return;
+      this.editingMessageId ? this.updateMessage() : this.createMessage();
+    }
+  }
 
-    this.editingMessageId ? this.updateMessage() : this.createMessage();
+  sendDirectMessage() {
+    if (!this.messageText.trim()) return;
+    // Hier kannst du entscheiden: entweder
+    //  a) den Text an den Parent senden:
+    this.newDirectMessage.emit(this.messageText);
+    //  b) oder direkt über einen ChatService senden, falls du das hier machen möchtest.
+    // Beispiel für Option (a):
+    this.messageText = '';
   }
 
   /** Nachricht in Firestore aktualisieren */
@@ -102,7 +123,7 @@ export class MessageInputComponent {
         userId: this.currentUserId, // Firestore User-ID nutzen
         threadId: this.threadId,
         creationDate: Date.now(),
-        reactions: []
+        reactions: [],
       });
 
       const messagesRef = collection(this.firestore, 'messages');
@@ -161,8 +182,8 @@ export class MessageInputComponent {
 
   /** Nutzer für Erwähnung filtern */
   filterUsers(searchName: string) {
-    this.allUsers$.subscribe(users => {
-      this.filteredUsers = users.filter(user =>
+    this.allUsers$.subscribe((users) => {
+      this.filteredUsers = users.filter((user) =>
         user.name.toLowerCase().includes(searchName)
       );
     });
