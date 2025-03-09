@@ -14,6 +14,7 @@ import {
   docData,
   query,
   where,
+  getDoc,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
@@ -30,6 +31,8 @@ export class UserService {
   private channelIdFromDevSpace = new BehaviorSubject<string | null>(null);
   currentDocIdFromDevSpace = this.docIdFromDevSpace.asObservable();
   currentChannelIdFromDevSpace = this.channelIdFromDevSpace.asObservable();
+
+  private currentUser: any = null;
 
   user = new User();
   userData = this.authService.userData;
@@ -114,6 +117,25 @@ export class UserService {
       }
     } catch (error) {
       console.error('Fehler beim Abrufen des Users:', error);
+    }
+  }
+
+  getCurrentUserId(): string | null {
+    return localStorage.getItem('user-id');
+  }
+
+  async loadCurrentUser(userId: string) {
+    if (this.currentUser) return this.currentUser;
+
+    const userDocRef = doc(this.firestore, 'users', userId);
+    const userSnap = await getDoc(userDocRef);
+
+    if (userSnap.exists()) {
+      this.currentUser = userSnap.data();
+      return this.currentUser;
+    } else {
+      console.error('User nicht gefunden.');
+      return null;
     }
   }
 

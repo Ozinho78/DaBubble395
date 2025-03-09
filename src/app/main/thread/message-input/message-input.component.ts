@@ -6,7 +6,7 @@ import { Message } from '../../../../models/message.class';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserService } from '../../../../services/user.service';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../../../services/auth.service';
+//import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-message-input',
@@ -17,7 +17,8 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class MessageInputComponent {
   @Input() threadId!: string | null; // Die aktuelle Thread-ID
-  currentUser: any;
+
+  //currentUser: any;
   editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
   messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
   showEmojiPicker: boolean = false;
@@ -25,26 +26,28 @@ export class MessageInputComponent {
   filteredUsers: any[] = []; // Gefilterte Benutzerliste für die Erwähnung
   allUsers$: Observable<any[]>; // Alle Nutzer
   currentUserId: string | null = null;
-  currentUserData: any | null = null;
+  //currentUserData: any | null = null;
 
   constructor(
     private firestore: Firestore,
     private userService: UserService,
-    private authService: AuthService
+    //private authService: AuthService
   ) {
     this.allUsers$ = this.userService.getAllUsers();
-
+    this.currentUserId = this.userService.getCurrentUserId();
+    /*
     this.authService.user$.subscribe(user => {
       if (user) {
         this.currentUser = user;
       }
-    });
+    });*/
   }
 
   ngOnInit() {
-    this.setUser();
+    //this.setUser();
   }
 
+  /*
   setUser() {
     this.authService.user$.subscribe(user => {
       if (user) {
@@ -65,6 +68,7 @@ export class MessageInputComponent {
       }
     });
   }
+  */
 
   /** Nachricht senden oder bearbeiten */
   sendMessage() {

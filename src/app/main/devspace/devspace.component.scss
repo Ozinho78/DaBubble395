@@ -76,6 +76,10 @@ svg {
   }
 }
 
+.new-messages-icon {
+  cursor: pointer;
+}
+
 .channel-and-user-list-ctn {
   width: 100%;
   height: 100%;
@@ -194,6 +198,7 @@ svg {
 }
 
 .avatar-user {
+  position: relative;
   @include m.flexBox(row, flex-start, center, 6px);
   width: 100%;
   .avatar-img-with-name {
@@ -211,6 +216,23 @@ svg {
     background-color: v.$purple_bg;
     cursor: pointer;
     border-radius: 20px;
+  }
+  .online-status {
+    position: absolute;
+    left: 38px;
+    bottom: 0px;
+    width: 12px;
+    height: 12px;
+    /* Text gray */
+    background: #686868;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    border-radius: 50%;
+  }
+  .green {
+    background: #92C83E;
   }
 }
 

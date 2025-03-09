@@ -5,7 +5,7 @@
         <img src="img/workspacelogo.png" alt="" />
         <span>Devspace</span>
       </div>
-      <img (click)="showComponent('newMessages')" src="img/edit_square.png" alt="" />
+      <img class="new-messages-icon" (click)="showComponent('newMessages')" src="img/edit_square.png" alt="" />
     </div>
 
     <div class="channel-and-user-list-ctn">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="channel-list">
-          @for (channel of channels; track $index){
+          @for (channel of channels$ | async; track $index){
           <span (click)="selectChannel(channel)" class="single-channel" *ngIf="isChannelVisible" [@fadeOut]
             >#{{ channel.name }}</span
           >
@@ -65,7 +65,7 @@
         </div>
 
         <div class="user-list">
-          @for (user of users; track $index) {
+          @for (user of users$ | async; track $index) {
           <div
             *ngIf="isUserVisible"
             [@fadeOut]
@@ -75,6 +75,7 @@
             <div class="avatar-img-with-name">
               <img src="img/avatar/{{ user.avatar }}" alt="" />
               <span>{{ user.name }}</span>
+              <div class="online-status" [class.green]="(this.userPresence.getUserPresence(user.docId!) | async)"></div>
             </div>
             <div class="avatar-you">
               <span *ngIf="userLoggedIn == user.docId">(Du)</span>

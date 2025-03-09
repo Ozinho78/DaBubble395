@@ -48,6 +48,9 @@ button, svg {
     input {
       width: 20px;
       height: 20px;
+      &:focus {
+        outline: none;
+      }
     }
     span {
       color: v.$purple_1;
@@ -59,6 +62,9 @@ button, svg {
     input {
       width: 20px;
       height: 20px;
+      &:focus {
+        outline: none;
+      }
     }
     @include m.flexBox(row, center, center, 20px);
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
@@ -81,6 +87,9 @@ button, svg {
       order: 1;
       align-self: stretch;
       flex-grow: 0;
+      &:focus {
+        outline: none;
+      }
       ::placeholder {
         /* z.B. Kooperationsprojekte */
         // // width: 205px;
