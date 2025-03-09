@@ -35,6 +35,13 @@ h2 {
 }
 
 .chat-container {
+  overflow-y: visible;
+  overflow-x: hidden;
+  padding: 5px 0 0 0;
+  flex-grow: 1;
+}
+
+.input-container {
   position: absolute;
   bottom: 0px;
   width: 100%;
