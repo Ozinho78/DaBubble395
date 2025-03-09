@@ -52,7 +52,7 @@
 
         .logo {
           @include m.flexBox(row, flex-start, center);
-          margin-left: 75px;
+          margin-left: 50px;
 
           @media (max-width: 435px) {
             margin-left: 0;
