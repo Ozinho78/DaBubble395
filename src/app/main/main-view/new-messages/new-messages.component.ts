@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { Thread } from '../../../../models/thread.class';
+import { Message } from '../../../../models/message.class';
 
 @Component({
   selector: 'app-new-messages',
@@ -42,6 +43,7 @@ export class NewMessagesComponent implements OnInit {
   inputBottomValue: string = '';
 
   newThread: Thread | null = null;
+  newMessage: Message | null = null;
 
   constructor(private dataService: FirestoreService) {
     setTimeout(() => {
@@ -131,7 +133,9 @@ export class NewMessagesComponent implements OnInit {
         (user) => `@${user.name}` === trimmedValue
       );
       this.targetUser = foundUser || null;
-      if(foundUser != null){this.toggleInputBottom();}
+      if (foundUser != null) {
+        this.toggleInputBottom();
+      }
 
       // für Teilmatches
       // const foundUser = this.users.find(user => user.name.toLowerCase().includes (value.replace('@', '').toLowerCase()));
@@ -151,27 +155,55 @@ export class NewMessagesComponent implements OnInit {
         (channel) => `#${channel.name}` === trimmedValue
       );
       this.targetChannel = foundChannel || null;
-      if(foundChannel != null){this.toggleInputBottom();}
+      if (foundChannel != null) {
+        this.toggleInputBottom();
+      }
       console.log('Gefundener Channel:', this.targetChannel);
     });
   }
 
-  toggleInputBottom(){
+  toggleInputBottom() {
     this.enableInputBottom = !this.enableInputBottom;
   }
 
-  addInput(){
-    if(this.inputBottomValue.trim() != ''){
-      const date = new Date();
-      this.newThread = new Thread({
-        id: '1',
-        channelId: this.targetChannel?.docId || '',
-        creationDate: date.getTime(),
-        reactions: [],
-        thread: this.inputBottomValue,
-        userId: this.userLoggedIn || ''
-      });
-      this.saveInputToThreads(this.newThread);
+  createNewThread() {
+    const date = new Date();
+    this.newThread = new Thread({
+      id: '1',
+      channelId: this.targetChannel?.docId || '',
+      creationDate: date.getTime(),
+      reactions: [],
+      thread: this.inputBottomValue,
+      userId: this.userLoggedIn || '',
+    });
+  }
+
+  createNewMessage() {
+    const date = new Date();
+    // userLoggedIn ermitteln
+    const senderUser = this.users.find((user) => user.docId);
+    // console.log(senderUser);
+    this.newMessage = new Message({
+      id: '1',
+      creationDate: date.getTime(),
+      reactions: [],
+      text: this.inputBottomValue,
+      threadId: '',
+      userId: this.targetUser?.docId,
+      senderName: this.userLoggedIn || '',
+      senderAvatar: senderUser?.avatar,
+    });
+    this.saveInputToMessages(this.newMessage);
+  }
+
+  addInput() {
+    if (this.inputBottomValue.trim() != '') {
+      if (this.targetChannel != null) {
+        this.createNewThread();
+      }
+      if (this.targetUser != null) {
+        this.createNewMessage();
+      }
     }
     // this.toggleInputBottom();
   }
@@ -186,6 +218,13 @@ export class NewMessagesComponent implements OnInit {
     }
   }
 
-
-
+  async saveInputToMessages(message: Message) {
+    try {
+      const messageCollection = collection(this.firestore, 'messages'); // Sicherstellen, dass du die Collection hast
+      await addDoc(messageCollection, message.toJSON());
+      console.log('Message saved:', message);
+    } catch (error) {
+      console.error('Fehler beim Speichern der Message:', error);
+    }
+  }
 }
