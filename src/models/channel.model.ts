@@ -4,7 +4,7 @@ export class Channel {
 		public name: string,                    // Name des Channels
 		public description: string,             // Beschreibung des Channels
 		public member: string[] = [],           // Mitglieder des Channels
-		public creationDate: string,            // Erstellungsdatum des Channels
+		public creationDate: number,            // Erstellungsdatum des Channels
 		public userId: string                   // Ersteller des Channels; Eindeutige DocID des users
 	) { }
 

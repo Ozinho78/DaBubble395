@@ -53,16 +53,19 @@ export class AddChannelComponent {
     this.descriptionInput = '';
   }
 
-  // TEST - Alexander Riedel 09.03.2025
-  /*createAndEmitNewChannel() {
-    let newChannel = new Channel();
-    newChannel.name = this.nameInput;
-    newChannel.description = this.descriptionInput;
-    newChannel.creationDate = new Date();
-    newChannel.member = this.memberDocIds;
+  createAndEmitNewChannel() {
+    let newChannel = new Channel(
+      '',
+      this.nameInput,
+      this.descriptionInput,
+      this.memberDocIds,
+      Date.now(),
+      'userId_placeholder' // 🔥 Hier solltest du die aktuelle User-ID setzen
+    );
+
     this.onSave.emit(newChannel);
-    // console.log(newChannel);
-  }*/
+    console.log('📌 Neuer Channel erstellt:', newChannel);
+  }
 
   save() {
     if (this.nameInput.trim()) {
@@ -81,8 +84,7 @@ export class AddChannelComponent {
   closeMemberInput() {
     this.memberModalClose.emit();
     this.openMemberInput = false;
-    // TEST - Alexander Riedel 09.03.2025
-    //this.createAndEmitNewChannel();
+    this.createAndEmitNewChannel();
     this.resetInputs();
   }
 }
