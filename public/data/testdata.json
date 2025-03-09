@@ -1,0 +1,38 @@
+[
+  {
+    "password": "6Boh2tS3saxHDWswwuGX",
+    "avatar": "avatar1.png",
+    "name": "Steffen Hoffmann",
+    "mail": "steffen.hoffmann@hotmail.com"
+  },
+  {
+    "avatar": "avatar3.png",
+    "password": "Tng55pMIXGbUfhOqkU63",
+    "mail": "elise.roth@da-akademie.com",
+    "name": "Elise Roth"
+  },
+  {
+    "password": "4081752b278a47a544ed7afc0d738b02",
+    "mail": "sofia.mueller@offline.gov",
+    "name": "Sofia Müller",
+    "avatar": "avatar5.png"
+  },
+  {
+    "name": "Noah Braun",
+    "mail": "noah.braun@example.com",
+    "avatar": "avatar4.png",
+    "password": "5f4dcc3b5aa765d61d8327deb882cf99"
+  },
+  {
+    "name": "Frederik Beck",
+    "mail": "fred.beck@email.com",
+    "password": "c581a959b6972b909d6e4cec06670c08",
+    "avatar": "avatar6.png"
+  },
+  {
+    "mail": "elias.neumann@gmail.com",
+    "avatar": "avatar2.png",
+    "password": "zW8U5VZ5wbrb8Ng8RfKE",
+    "name": "Elias Neumann"
+  }
+]
