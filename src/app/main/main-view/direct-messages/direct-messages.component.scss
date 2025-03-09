@@ -161,8 +161,9 @@ h2 {
 
 .info {
   @include m.flexBox(column, normal, normal, 24px);
-  padding: 0px 0px 60px 45px;
-
+  padding-left: 45px;
+  position: absolute;
+  bottom: 245px;
   .info-user {
     img {
       height: 100px;
