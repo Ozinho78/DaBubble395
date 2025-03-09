@@ -203,8 +203,9 @@ export class NewMessagesComponent implements OnInit {
   addInput() {
     if (this.inputBottomValue.trim() != '') {
       if (this.targetChannel != null) {this.createNewThread();}
-      if (this.targetUser != null) {this.createNewMessage();}
-    }
+      else if (this.targetUser != null) {this.createNewMessage();}
+      else {alert("Ungültiger Channel oder User");}
+    } else {alert("Bitte mal was eingeben, Junge!");}
     this.sendMessagesArray.push(this.inputBottomValue);
     // console.log(this.sendMessagesArray);
     this.inputBottomValue = ""; // Eingabe leeren
