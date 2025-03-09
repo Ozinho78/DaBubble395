@@ -126,6 +126,10 @@
   }
 }
 
+.send-messages-list {
+  @include m.flexBox(column, center, flex-start);
+}
+
 
 
 

@@ -45,6 +45,8 @@ export class NewMessagesComponent implements OnInit {
   newThread: Thread | null = null;
   newMessage: Message | null = null;
 
+  sendMessagesArray: string[] = [];
+
   constructor(private dataService: FirestoreService) {
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
@@ -176,7 +178,9 @@ export class NewMessagesComponent implements OnInit {
       thread: this.inputBottomValue,
       userId: this.userLoggedIn || '',
     });
+    this.saveInputToThreads(this.newThread);
   }
+  
 
   createNewMessage() {
     const date = new Date();
@@ -198,13 +202,12 @@ export class NewMessagesComponent implements OnInit {
 
   addInput() {
     if (this.inputBottomValue.trim() != '') {
-      if (this.targetChannel != null) {
-        this.createNewThread();
-      }
-      if (this.targetUser != null) {
-        this.createNewMessage();
-      }
+      if (this.targetChannel != null) {this.createNewThread();}
+      if (this.targetUser != null) {this.createNewMessage();}
     }
+    this.sendMessagesArray.push(this.inputBottomValue);
+    // console.log(this.sendMessagesArray);
+    this.inputBottomValue = ""; // Eingabe leeren
     // this.toggleInputBottom();
   }
 
@@ -216,6 +219,7 @@ export class NewMessagesComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Speichern des Threads:', error);
     }
+    this.targetChannel = null;
   }
 
   async saveInputToMessages(message: Message) {
@@ -226,5 +230,13 @@ export class NewMessagesComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Speichern der Message:', error);
     }
+    this.targetUser = null;
   }
+
+
+
+
+
+
+
 }

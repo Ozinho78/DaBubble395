@@ -6,7 +6,7 @@
     </div>
 
     <div class="input-bottom-ctn">
-      <input [(ngModel)]="inputBottomValue" class="input-bottom" type="text" placeholder="Starte eine neue Nachricht">
+      <input [(ngModel)]="inputBottomValue" class="input-bottom" type="text" placeholder="Starte eine neue Nachricht" (keydown.enter)="addInput()">
       <div class="icon-container">
         <div class="icons-left">
           <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +58,10 @@
       <div *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
         #{{ channel.name }}
       </div>
+    </div>
+
+    <div class="send-messages-list" *ngFor="let message of sendMessagesArray">
+      <span>{{ message }}</span>
     </div>
 
 
