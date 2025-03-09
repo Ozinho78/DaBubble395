@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="shadow"></div>
-  <ng-container *ngIf="messages$ | async as msgs">
+  <ng-container *ngIf="directMessages$ | async as msgs">
     <ng-container *ngIf="(msgs?.length ?? 0) > 0; else infoBlock">
       <div id="chat-container" class="chat-container">
         <div id="replies" class="replies">

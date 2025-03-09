@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Firestore } from '@angular/fire/firestore';
-import { Thread } from '../../../../models/thread.class';
+import { Thread } from '../../../../models/thread.model';
 import { UserService } from '../../../../services/user.service';
-import { Reaction } from '../../../../models/reaction.class';
+import { Reaction } from '../../../../models/reaction.model';
 import { ReactionService } from '../../../../services/reaction.service';
 import { ReactionsComponent } from '../../reactions/reactions.component';
 

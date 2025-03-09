@@ -1,4 +1,4 @@
-export class Message {
+export class DirectMessage {
   id?: string;
   creationDate: number | null = null;
   reactions: string[] = [];

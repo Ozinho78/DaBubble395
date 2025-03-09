@@ -20,14 +20,14 @@ export class AddChannelComponent {
   @Input() usersArrayFromDevSpace: User[] = [];
   @Output() memberModalClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<Channel>();
-  
-  
+
+
   // Lokale Variable zur Speicherung der Daten
   storedUsersFromDevSpace: User[] = [];
 
   updatedUsers: User[] = [];
 
-  constructor(){}
+  constructor() { }
 
   handleUsersUpdate(updatedUsers: string[]) {
     // console.log(updatedUsers);
@@ -53,7 +53,8 @@ export class AddChannelComponent {
     this.descriptionInput = '';
   }
 
-  createAndEmitNewChannel() {
+  // TEST - Alexander Riedel 09.03.2025
+  /*createAndEmitNewChannel() {
     let newChannel = new Channel();
     newChannel.name = this.nameInput;
     newChannel.description = this.descriptionInput;
@@ -61,7 +62,7 @@ export class AddChannelComponent {
     newChannel.member = this.memberDocIds;
     this.onSave.emit(newChannel);
     // console.log(newChannel);
-  }
+  }*/
 
   save() {
     if (this.nameInput.trim()) {
@@ -71,7 +72,7 @@ export class AddChannelComponent {
     }
   }
 
-  cancelMemberInput(){
+  cancelMemberInput() {
     this.memberModalClose.emit();
     this.openMemberInput = false;
     this.resetInputs();
@@ -80,7 +81,8 @@ export class AddChannelComponent {
   closeMemberInput() {
     this.memberModalClose.emit();
     this.openMemberInput = false;
-    this.createAndEmitNewChannel();
+    // TEST - Alexander Riedel 09.03.2025
+    //this.createAndEmitNewChannel();
     this.resetInputs();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ThreadService } from '../../../services/thread.service';
-import { Message } from '../../../models/message.class';
-import { Thread } from '../../../models/thread.class';
+import { Message } from '../../../models/message.model';
+import { Thread } from '../../../models/thread.model';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,9 +38,10 @@ export class ThreadComponent implements OnInit {
       this.threadVisibility = value;
     });
 
+    
     this.threadService.getThreadById(this.threadId).subscribe(threadData => {
-      this.thread = new Thread(threadData);
-      this.thread.id = this.threadId;
+      this.thread = new Thread('','','','','');
+      this.thread.docId = this.threadId;
     });
 
     this.channelName$ = this.threadService.getChannelName(this.threadId);

@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 //import { Firestore } from '@angular/fire/firestore';
 import { ReactionsComponent } from '../../reactions/reactions.component';
-import { Message } from '../../../../models/message.class';
-import { Reaction } from '../../../../models/reaction.class';
+import { Message } from '../../../../models/message.model';
+import { Reaction } from '../../../../models/reaction.model';
 import { UserService } from '../../../../services/user.service';
 import { ReactionService } from '../../../../services/reaction.service';
 //import { AuthService } from '../../../../services/auth.service';
@@ -49,8 +49,8 @@ export class MessageComponent implements OnInit {
 
   loadReactions() {
     // Lade die Reaktionen
-    if (this.message.id) {
-      this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
+    if (this.message.docId) {
+      this.reactions$ = this.reactionService.getReactions('messages', this.message.docId);
 
       this.reactions$.subscribe(reactions => {
         const groups = reactions.reduce((acc, reaction) => {
@@ -126,7 +126,7 @@ export class MessageComponent implements OnInit {
       type: emojiType,
       timestamp: Date.now()
     });
-    this.reactionService.addReaction('messages', this.message.id!, reaction)
+    this.reactionService.addReaction('messages', this.message.docId!, reaction)
       .then(() => {
         console.log('Reaction hinzugefügt!');
         this.showReactionsOverlay = false;
@@ -139,7 +139,7 @@ export class MessageComponent implements OnInit {
   }
 
   removeMyReaction(): void {
-    this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId!)
+    this.reactionService.removeReaction('messages', this.message.docId!, this.currentUserId!)
       .then(() => {
         console.log('Reaction entfernt!');
         this.showReactionsOverlay = false;
@@ -196,7 +196,7 @@ export class MessageComponent implements OnInit {
   }
 
   requestEdit() {
-    this.editRequest.emit({ id: this.message.id!, text: this.message.text });
+    this.editRequest.emit({ id: this.message.docId!, text: this.message.text });
   }
 
   closeMenu() {

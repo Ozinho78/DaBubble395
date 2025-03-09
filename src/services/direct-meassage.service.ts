@@ -11,13 +11,13 @@ import {
   orderBy,
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { Message } from '../models/message.class';
+import { DirectMessage } from '../models/direct-message.class';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   // Ermittelt, ob bereits ein Chat zwischen zwei Usern existiert und gibt ihn zurück,
   // ansonsten wird ein neuer Chat erstellt.
@@ -39,16 +39,16 @@ export class ChatService {
   }
 
   // Nachrichten aus einem Chat laden (als Beispiel – du kannst die Gruppierung auch analog zu Threads implementieren)
-  getMessages(chatId: string): Observable<Message[]> {
+  getMessages(chatId: string): Observable<DirectMessage[]> {
     const messagesRef = collection(this.firestore, `chats/${chatId}/messages`);
     const q = query(messagesRef, orderBy('creationDate', 'asc'));
-    return collectionData(q, { idField: 'id' }) as Observable<Message[]>;
+    return collectionData(q, { idField: 'id' }) as Observable<DirectMessage[]>;
   }
 
   // Neue Nachricht in einem Chat speichern
-  async sendMessage(chatId: string, message: Message): Promise<void> {
+  async sendMessage(chatId: string, message: DirectMessage): Promise<void> {
     const messagesRef = collection(this.firestore, `chats/${chatId}/messages`);
-    await addDoc(messagesRef, message.toJSON());
+    await addDoc(messagesRef, message.toJSON()); 
     // Optional: Aktualisiere im Chat-Dokument z. B. das Feld lastMessage
     const chatDocRef = doc(this.firestore, 'chats', chatId);
     await setDoc(chatDocRef, { lastMessage: message.text }, { merge: true });

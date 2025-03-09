@@ -1,22 +1,31 @@
 export class Channel {
-  public docId?: string = '';
-  public creationDate: Date = new Date();
-  public name: string = '';
-  public description: string = '';
-  public member: string[] = [];
-  public reactions: string[] = [];
-  public userId: string = '';
+	constructor(
+		public docId: string,                   // Eindeutige DocID des Channels
+		public name: string,                    // Name des Channels
+		public description: string,             // Beschreibung des Channels
+		public member: string[] = [],           // Mitglieder des Channels
+		public creationDate: string,            // Erstellungsdatum des Channels
+		public userId: string                   // Ersteller des Channels; Eindeutige DocID des users
+	) { }
 
-  public toJson(){
-    return {
-      docId: this.docId,
-      // creationDate: this.creationDate.toISOString(),
-      creationDate: this.creationDate,
-      name: this.name,
-      description: this.description,
-      member: this.member,
-      reactions: this.reactions,
-      userId: this.userId
-    }
-  }
+	toJson() {
+		return {
+			name: this.name,
+			description: this.description,
+			member: this.member,
+			creationDate: this.creationDate,
+			userId: this.userId
+		};
+	}
+
+	static fromFirestore(docId: string, data: any): Channel {
+		return new Channel(
+			docId,
+			data.name,
+			data.description,
+			data.member || [],
+			data.creationDate,
+			data.userId
+		);
+	}
 }

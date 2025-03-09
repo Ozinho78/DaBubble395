@@ -31,7 +31,7 @@
                 <div class="message-info-name">{{ (userData$ | async)?.name }}</div>
                 <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
             </div>
-            <div class="message-text">{{ thread.thread }}</div>
+            <div class="message-text">{{ thread.title }}</div>
 
             <!-- reactions -->
             <div class="message-reactions">

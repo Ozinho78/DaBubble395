@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, doc, setDoc, collection, collectionData, deleteDoc } from '@angular/fire/firestore';
-import { Reaction } from '../models/reaction.class';
+import { Reaction } from '../models/reaction.model';
 import { Observable } from 'rxjs';
 
 @Injectable({

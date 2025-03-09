@@ -6,7 +6,7 @@ import { PresenceService } from '../../../../services/presence.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, firstValueFrom } from 'rxjs';
 import { ChatService } from '../../../../services/direct-meassage.service';
-import { Message } from '../../../../models/message.class';
+import { DirectMessage } from '../../../../models/direct-message.class';
 
 @Component({
   selector: 'app-direct-messages',
@@ -21,14 +21,14 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     avatar: '',
   });
   chatId: string = '';
-  messages$: Observable<Message[]> = of([]);
+  directMessages$: Observable<DirectMessage[]> = of([]);
 
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
     private presenceService: PresenceService,
     private chatService: ChatService
-  ) {}
+  ) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -48,7 +48,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
               loggedInUserId,
               selectedUserId
             );
-            this.messages$ = this.chatService.getMessages(this.chatId);
+            this.directMessages$ = this.chatService.getMessages(this.chatId);
           }
         } else {
           this.user$ = of({ name: 'Unbekannt', avatar: 'default.png' });
@@ -67,7 +67,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       this.userService.getUserById(loggedInUserId)
     );
 
-    const newMessage = new Message({
+    const newMessage = new DirectMessage({
       creationDate: Date.now(),
       reactions: [],
       text: newText,

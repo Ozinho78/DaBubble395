@@ -1,8 +1,8 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Firestore, collection, query, where, orderBy, collectionData, doc, docData, getDoc } from '@angular/fire/firestore';
 import { Observable, from, map, switchMap } from 'rxjs';
-import { Message } from '../models/message.class';
-import { Thread } from '../models/thread.class';
+import { Message } from '../models/message.model';
+import { Thread } from '../models/thread.model';
 
 @Injectable({
     providedIn: 'root'
@@ -14,9 +14,9 @@ export class ThreadService {
     getThreadById(threadId: string): Observable<Thread> {
         const threadDocRef = doc(this.firestore, 'threads', threadId);
         return runInInjectionContext(this.injector, () =>
-            docData(threadDocRef, { idField: 'id' }) as Observable<Thread> // <== Typisierung
+            docData(threadDocRef, { idField: 'docId' }) as Observable<Thread> // <== Typisierung
         ).pipe(
-            map(data => new Thread(data))
+            map(data => new Thread('','','','',''))
         );
     }
 
@@ -31,7 +31,7 @@ export class ThreadService {
         return runInInjectionContext(this.injector, () =>
             collectionData(q, { idField: 'id' }) as Observable<any[]> // Typisierung
         ).pipe(
-            map(messages => messages.map(data => new Message(data)))
+            map(messages => messages.map(data => new Message('','','','','')))
         );
     }
 

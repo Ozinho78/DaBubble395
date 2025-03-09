@@ -1,7 +1,7 @@
 <div class="container">
     <div class="header">
         <div class="header-label">
-            <h2># Entwicklerteam</h2>
+            <h2 *ngIf="channel"># {{ channel.name }}</h2>
         </div>
         <div class="close-btn-container">
             <div>

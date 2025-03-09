@@ -8,11 +8,11 @@ import {
 } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Message } from '../../../../models/message.class';
+import { DirectMessage } from '../../../../models/direct-message.class';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserService } from '../../../../services/user.service';
 import { Observable } from 'rxjs';
-//import { AuthService } from '../../../../services/auth.service';
+import { AuthService } from '../../../../services/auth.service';
 import { EventEmitter, Output } from '@angular/core';
 
 @Component({
@@ -118,7 +118,7 @@ export class MessageInputComponent {
     if (!this.messageText.trim() || !this.currentUserId) return; // Verhindere leere Nachrichten und prüfe ob User existiert
 
     try {
-      const newMessage = new Message({
+      const newMessage = new DirectMessage({
         text: this.messageText,
         userId: this.currentUserId, // Firestore User-ID nutzen
         threadId: this.threadId,

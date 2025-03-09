@@ -24,12 +24,15 @@ import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
 
+// TEST - Alexander Riedel 09.03.2025
+import { RouterModule, Router } from '@angular/router';
+
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, CommonModule],
+  imports: [AddChannelComponent, CommonModule, RouterModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
   animations: [
@@ -121,9 +124,16 @@ export class DevspaceComponent implements OnInit {
     this.userService.currentDocIdFromDevSpace.subscribe(
       (id) => (this.docId = id)
     );
+
+
+    // TEST - Alexander Riedel 09.03.2025
+    /*
     this.userService.currentChannelIdFromDevSpace.subscribe(
       (id) => (this.channelId = id)
-    );
+    );*/
+    // TEST ENDE
+
+
     // this.users.sort(
     //   (start: User, end: User) => (end?.id || 0) - (start?.id || 0)
     // );
@@ -174,10 +184,15 @@ export class DevspaceComponent implements OnInit {
     this.visibleService.setThreadVisibility(false);
   }
 
-  selectChannel(channel: Channel) {
+  // TEST - Alexander Riedel 09.03.2025
+  async selectChannel(channel: Channel) {
     this.userService.setChannelIdFromDevSpace(channel.docId!);
-    console.log(this.channelId);
+    //console.log('📌 Devspace: Channel-ID gesetzt:', channel.docId!);
+
+    this.showComponent('threads');
+    this.visibleService.setThreadVisibility(false);
   }
+  // TEST ENDE
 
   selectUser(user: User) {
     // this.selectUserForDirectMessage(user);

@@ -17,10 +17,11 @@
   <div class="shadow"></div>
   <div id="chat-container" class="chat-container">
 
-    <!-- Thread Header -->
+    <!-- Thread Header
     <div class="replies">
       <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
     </div>
+     -->
 
     <div *ngIf="groupedMessages$ | async as groupedMessages">
 
@@ -47,7 +48,8 @@
     </div>
   </div>
 
-  <!-- Nachrichteneingabe -->
+  <!-- Nachrichteneingabe 
   <app-message-input [threadId]="thread?.id ?? null" #messageInput></app-message-input>
+  -->
 
 </div>
