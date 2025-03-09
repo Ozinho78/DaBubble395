@@ -25,51 +25,55 @@
       </ng-container>
     </div>
   </div>
-
   <div class="shadow"></div>
-
-  <!-- <div id="chat-container" class="chat-container">
-    <div class="replies">
-      <div class="date-header">
-        <div class="date">14.01.2025</div>
-      </div>
-
-      <div class="reply-container">
-        <div class="reply">
-          <img src="img/avatar/avatar4.png" alt="Avatar" class="avatar" />
-          <div class="message">
-            <div class="message-info">
-              <div class="message-info-name">Noah Braun</div>
-              <div class="message-info-time">14:25 Uhr</div>
-            </div>
-            <div class="message-text">
-              Welche Version ist aktuell von Angular?
-            </div>
-            <div class="answer-info">
-              <div class="answers">2 Antworten</div>
-              <div class="last-answer">Letzte Antwort 14:56</div>
+  <ng-container *ngIf="messages$ | async as msgs">
+    <ng-container *ngIf="(msgs?.length ?? 0) > 0; else infoBlock">
+      <div id="chat-container" class="chat-container">
+        <div class="replies">
+          <div class="reply-container" *ngFor="let msg of msgs">
+            <div class="reply">
+              <img
+                [src]="msg?.senderAvatar || '/img/avatar/default.png'"
+                alt="Avatar"
+                class="avatar"
+              />
+              <div class="message">
+                <div class="message-info">
+                  <div class="message-info-name">
+                    {{ msg?.senderName || "Unbekannt" }}
+                  </div>
+                  <div class="message-info-time">
+                    {{ msg?.creationDate | date : "shortTime" }}
+                  </div>
+                </div>
+                <div class="message-text">
+                  {{ msg?.text }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div> -->
-  <div class="chat-container">
-    <ng-container *ngIf="user$ | async as user">
-      <div class="info">
+    </ng-container>
+  </ng-container>
+  <ng-template #infoBlock>
+    <div class="info">
+      <ng-container *ngIf="user$ | async as user">
         <div class="info-user">
-          <img [src]="user.avatar" alt="" />
-          <span> {{ user.name }}</span>
+          <img [src]="user.avatar" alt="Avatar" />
+          <span>{{ user.name }}</span>
         </div>
         <div class="info-about-chat">
-          <span class="info-text">
-            Diese Unterhaltung findet nur zwischen
-          </span>
+          <span class="info-text">Diese Unterhaltung findet nur zwischen</span>
           <span class="info-name"> &#64;{{ user.name }} </span>
           <span class="info-text">und dir statt.</span>
         </div>
-      </div>
-    </ng-container>
-    <app-message-input></app-message-input>
+      </ng-container>
+    </div>
+  </ng-template>
+  <div class="input-container">
+    <app-message-input
+      (newDirectMessage)="onNewMessage($event)"
+    ></app-message-input>
   </div>
 </div>
