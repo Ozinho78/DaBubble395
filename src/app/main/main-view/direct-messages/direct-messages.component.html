@@ -29,14 +29,14 @@
   <ng-container *ngIf="messages$ | async as msgs">
     <ng-container *ngIf="(msgs?.length ?? 0) > 0; else infoBlock">
       <div id="chat-container" class="chat-container">
-        <div class="replies">
+        <div id="replies" class="replies">
           <div class="reply-container" *ngFor="let msg of msgs">
             <div class="reply" *ngIf="user$ | async as user">
-              <img [src]="user.avatar" alt="Avatar" class="avatar" />
+              <img [src]="msg?.senderAvatar" alt="Avatar" class="avatar" />
               <div class="message">
                 <div class="message-info">
                   <div class="message-info-name">
-                    {{ user.name }}
+                    {{ msg?.senderName || msg?.userId }}
                   </div>
                   <div class="message-info-time">
                     {{ msg?.creationDate | date : "shortTime" }}
@@ -52,7 +52,6 @@
       </div>
     </ng-container>
   </ng-container>
-
   <ng-template #infoBlock>
     <div class="info">
       <ng-container *ngIf="user$ | async as user">
@@ -69,6 +68,9 @@
     </div>
   </ng-template>
   <div class="input-container">
-    <app-message-input></app-message-input>
+    <app-message-input
+      [isDirectMessage]="true"
+      (newDirectMessage)="onNewMessage($event)"
+    ></app-message-input>
   </div>
 </div>

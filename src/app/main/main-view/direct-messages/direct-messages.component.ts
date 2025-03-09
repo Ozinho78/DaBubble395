@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
@@ -14,7 +14,7 @@ import { Message } from '../../../../models/message.class';
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
 })
-export class DirectMessagesComponent implements OnInit {
+export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   onlineStatus$: Observable<boolean> = of(false);
   user$: Observable<{ name: string; avatar: string }> = of({
     name: '',
@@ -30,8 +30,11 @@ export class DirectMessagesComponent implements OnInit {
     private chatService: ChatService
   ) {}
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   ngOnInit(): void {
-    // Statt einen Routenparameter zu verwenden, abonnierst du hier das Observable für den ausgewählten User
     this.userService.currentDocIdFromDevSpace.subscribe(
       async (selectedUserId) => {
         if (selectedUserId) {
@@ -39,15 +42,12 @@ export class DirectMessagesComponent implements OnInit {
           this.onlineStatus$ =
             this.presenceService.getUserPresence(selectedUserId);
 
-          // Hole die ID des eingeloggten Users, z. B. aus localStorage
           const loggedInUserId = localStorage.getItem('user-id');
           if (loggedInUserId) {
-            // Erstelle oder lade den Chat zwischen dem eingeloggten User und dem ausgewählten User
             this.chatId = await this.chatService.getOrCreateChat(
               loggedInUserId,
               selectedUserId
             );
-            // Abonniere die Nachrichten aus diesem Chat
             this.messages$ = this.chatService.getMessages(this.chatId);
           }
         } else {
@@ -63,12 +63,10 @@ export class DirectMessagesComponent implements OnInit {
       console.error('Kein eingeloggter User gefunden.');
       return;
     }
-    // Konvertiere das Observable in ein Promise, um den aktuellen User abzurufen
     const currentUser = await firstValueFrom(
       this.userService.getUserById(loggedInUserId)
     );
 
-    // Erstelle eine neue Nachricht als Instanz der Message-Klasse
     const newMessage = new Message({
       creationDate: Date.now(),
       reactions: [],
@@ -80,5 +78,12 @@ export class DirectMessagesComponent implements OnInit {
     });
 
     await this.chatService.sendMessage(this.chatId, newMessage);
+  }
+
+  scrollToBottom() {
+    const replies = document.getElementById('replies');
+    if (replies) {
+      replies.scrollTop = replies.scrollHeight;
+    }
   }
 }
