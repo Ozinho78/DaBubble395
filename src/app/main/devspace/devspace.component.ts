@@ -86,7 +86,11 @@ export class DevspaceComponent implements OnInit {
         // this.users[element.id] = element.data();
         let singleUser = element.data() as User;
         let str = singleUser.avatar;
-        singleUser.id = parseInt(str.match(/\d+/)?.[0] || '0', 10);
+
+        // TEST - Alexander Riedel 09.03.2025
+        //singleUser.docId = parseInt(str.match(/\d+/)?.[0] || '0', 10);
+        // TEST ENDE
+
         singleUser.docId = element.id;
         // this.onlineStatus$ = this.userPresence.getUserPresence(element.id);
         // singleUser.active = this.onlineStatus;

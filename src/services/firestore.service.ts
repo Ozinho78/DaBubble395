@@ -36,7 +36,11 @@ export class FirestoreService implements OnDestroy {
         this.unsubUserNames = onSnapshot(userDatabase, (snapshot) => {
             this.users = snapshot.docs.map((doc) => {
                 const user = doc.data() as User;
-                user.id = parseInt(user.avatar.match(/\d+/)?.[0] || '0', 10);
+
+                // TEST - Alexander Riedel 09.03.2025
+                //user.id = parseInt(user.avatar.match(/\d+/)?.[0] || '0', 10);
+                // TEST ENDE
+
                 user.docId = doc.id;
                 return user;
             });

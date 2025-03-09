@@ -6,14 +6,17 @@ import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageComponent } from "./message/message.component";
-import { ThreadMessageComponent } from "./thread-message/thread-message.component";
+//import { ThreadMessageComponent } from "./thread-message/thread-message.component";
 import { MessageInputComponent } from "./message-input/message-input.component";
 import { map } from 'rxjs/operators';
 import { VisibleService } from '../../../services/visible.service';
 
 @Component({
   selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MessageComponent, ThreadMessageComponent, MessageInputComponent],
+  imports: [CommonModule, FormsModule, MessageComponent,
+    //ThreadMessageComponent, 
+    //MessageInputComponent
+  ],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -38,9 +41,9 @@ export class ThreadComponent implements OnInit {
       this.threadVisibility = value;
     });
 
-    
+
     this.threadService.getThreadById(this.threadId).subscribe(threadData => {
-      this.thread = new Thread('','','','','');
+      this.thread = new Thread('', '', '', 0, '', '', '', 0, 0);
       this.thread.docId = this.threadId;
     });
 

@@ -29,16 +29,20 @@
 
                 <div class="reply-container">
                     <div class="reply">
-                        <img src="img/avatar/avatar4.png" alt="Avatar" class="avatar">
+                        <img src="img/avatar/{{ thread.userAvatar }}" alt="Avatar" class="avatar">
                         <div class="message">
                             <div class="message-info">
-                                <div class="message-info-name">{{ thread.userId }}</div>
+                                <div class="message-info-name">{{ thread.userName }}</div>
                                 <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
                             </div>
                             <div class="message-text">{{ thread.title }}</div>
                             <div class="answer-info">
-                                <div class="answers">2 Antworten</div>
-                                <div class="last-answer">Letzte Antwort 14:56</div>
+                                <div class="answers">{{ thread?.answerCount }} Antworten</div>
+                                <div class="last-answer">
+                                    <span *ngIf="thread.lastAnswer > 0">Letzte Antwort {{ thread?.lastAnswer |
+                                        date:'dd.MM.yyyy HH:mm'}}</span>
+                                    <span *ngIf="thread.lastAnswer === 0"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

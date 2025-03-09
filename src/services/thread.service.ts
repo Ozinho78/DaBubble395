@@ -16,7 +16,7 @@ export class ThreadService {
         return runInInjectionContext(this.injector, () =>
             docData(threadDocRef, { idField: 'docId' }) as Observable<Thread> // <== Typisierung
         ).pipe(
-            map(data => new Thread('','','','',''))
+            map(data => new Thread('', '', '', 0, '', '', '', 0, 0))
         );
     }
 
@@ -31,7 +31,7 @@ export class ThreadService {
         return runInInjectionContext(this.injector, () =>
             collectionData(q, { idField: 'id' }) as Observable<any[]> // Typisierung
         ).pipe(
-            map(messages => messages.map(data => new Message('','','','','')))
+            map(messages => messages.map(data => new Message('', '', '', '', '')))
         );
     }
 

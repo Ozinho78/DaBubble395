@@ -19,6 +19,7 @@ import {
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
+import { FirestoreService } from './firestore.service';
 
 @Injectable({
     providedIn: 'root',
@@ -33,12 +34,17 @@ export class UserService {
     // TEST - Alexander Riedel 09.03.2025
     //private channelIdFromDevSpace = new BehaviorSubject<string | null>(null);
     //currentChannelIdFromDevSpace = this.channelIdFromDevSpace.asObservable();
+    //user = new User();
     private channelId: string | null = null;
+    private users: User[] = [];
     // TEST ENDE
 
     private currentUser: any = null;
 
-    user = new User();
+    constructor(private firestoreService: FirestoreService) {
+        this.loadUsers();
+    }
+
     userData = this.authService.userData;
 
     /** Holt einen einzelnen Nutzer anhand der ID */
@@ -149,11 +155,39 @@ export class UserService {
         this.docIdFromDevSpace.next(id);
     }
 
-
+    ///////////////////////////////////////////////////////////////////////
     // TEST - Alexander Riedel 09.03.2025
     /*setChannelIdFromDevSpace(id: string) {
       this.channelIdFromDevSpace.next(id);
     }*/
+
+    /**
+    * Lädt alle User aus Firestore und speichert sie lokal.
+    */
+    async loadUsers() {
+        try {
+            this.users = await this.firestoreService.getData<User>('users');
+            console.log('Alle User geladen:', this.users);
+        } catch (error) {
+            console.error('❌ Fehler beim Laden der User:', error);
+        }
+    }
+
+    /**
+     * Gibt den Namen eines Users anhand der `userId` zurück.
+     * Falls der User nicht existiert, wird `"Unbekannter Benutzer"` zurückgegeben.
+     * @param userId Die Firestore-User-ID
+     * @returns Der Benutzername oder `"Unbekannter Benutzer"`
+     */
+    getUserNameById(userId: string) {
+        const user = this.users.find(u => u.docId === userId);
+        return user ? user.name : 'Unbekannter Benutzer';
+    }
+
+    getUserAvatarById(userId: string) {
+        const user = this.users.find(u => u.docId === userId);
+        return user ? user.avatar : 'Unbekannter Avatar';
+    }
 
     setChannelIdFromDevSpace(channelId: string) {
         this.channelId = channelId;

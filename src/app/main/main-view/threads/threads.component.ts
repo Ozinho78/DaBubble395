@@ -5,6 +5,8 @@ import { MessageInputComponent } from "../../thread/message-input/message-input.
 import { Thread } from '../../../../models/thread.model';
 import { Channel } from '../../../../models/channel.model';
 import { FirestoreService } from '../../../../services/firestore.service';
+import { UserService } from '../../../../services/user.service';
+import { MessageService } from '../../../../services/message.service';
 
 @Component({
     selector: 'app-threads',
@@ -19,7 +21,9 @@ export class ThreadsComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private firestoreService: FirestoreService
+        private firestoreService: FirestoreService,
+        private userService: UserService,
+        private messageService: MessageService
     ) { }
 
     ngOnInit() {
@@ -52,8 +56,8 @@ export class ThreadsComponent implements OnInit {
 
     async loadThreads() {
         try {
-            this.threads = await this.firestoreService.getDataByField<Thread>('threads', 'channelId', this.channelId);
-            console.log(this.threads);
+            const rawThreads = await this.firestoreService.getDataByField<Thread>('threads', 'channelId', this.channelId);
+            this.threads = rawThreads.map(th => Thread.fromFirestore(th.docId, th, this.userService, this.messageService));
         } catch (error) {
             console.error('❌ Fehler beim Laden der Threads:', error);
         }
