@@ -1,11 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Thread } from '../../../../models/thread.class';
-import { UserService } from '../../../../services/user.service';
-//import { Reaction } from '../../../../models/reaction.class';
-import { ReactionService } from '../../../../services/reaction.service';
+
 import { ReactionsComponent } from '../../reactions/reactions.component';
+
+import { Thread } from '../../../../models/thread.class';
+
+import { UserService } from '../../../../services/user.service';
+import { ReactionService } from '../../../../services/reaction.service';
 
 @Component({
   selector: 'app-thread-message',
@@ -19,9 +21,9 @@ export class ThreadMessageComponent implements OnInit {
   currentUserId: string | null = null;
   currentUser: any;
   userName: string = '';
-
   userData$!: Observable<{ name: string, avatar: string }>;
   userNamesCache: { [userId: string]: string } = {};
+
   reactions$!: Observable<any>;
   groupedReactions: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } = {};
   showReactionsOverlay: boolean = false;

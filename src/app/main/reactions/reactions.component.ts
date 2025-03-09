@@ -19,6 +19,7 @@ export class ReactionsComponent {
   ];
 
   selectEmoji(emoji: string): void {
+    debugger;
     this.emojiSelected.emit(emoji);
   }
 

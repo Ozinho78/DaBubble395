@@ -123,7 +123,7 @@ export class ReactionService {
         });
         this.addReaction(collectionName, documentId, reaction)
             .then(() => {
-                console.log('Reaction hinzugefügt!');
+                console.log('Reaction hinzugefügt! Test');
                 this.closeReactionsOverlay();
                 this.closeReactionTooltip();
             })

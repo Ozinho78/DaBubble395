@@ -4,7 +4,7 @@
     <div class="add-reactions-container" [ngClass]="{'own-message': message.userId === currentUserId}">
         <div class="add-reactions">
 
-            <div class="svg-container" (click)="toggleReactionsOverlay()">
+            <div class="svg-container" (click)="reactionService.toggleReactionsOverlay()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="mask0_1823_21494" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                         width="24" height="24">
@@ -74,7 +74,8 @@
                     </ng-container>
 
                     <!-- add reactions -->
-                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn" (click)="toggleReactionsOverlay()">
+                    <div *ngIf="reactionGroups.length > 0" class="reaction-btn"
+                        (click)="reactionService.toggleReactionsOverlay()">
                         <div class="svg-container">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -100,5 +101,6 @@
 </div>
 
 <!-- Reactions Overlay einblenden -->
-<app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
+<app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)"
+    (closed)="reactionService.toggleReactionsOverlay()">
 </app-reactions>
