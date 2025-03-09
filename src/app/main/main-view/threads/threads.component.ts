@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
 import { MessageInputComponent } from "../../thread/message-input/message-input.component";
+
 import { Thread } from '../../../../models/thread.model';
 import { Channel } from '../../../../models/channel.model';
+
 import { FirestoreService } from '../../../../services/firestore.service';
 import { UserService } from '../../../../services/user.service';
 import { MessageService } from '../../../../services/message.service';
 
 @Component({
     selector: 'app-threads',
-    imports: [CommonModule, MessageInputComponent],
+    imports: [CommonModule, MessageInputComponent, MatProgressBarModule],
     templateUrl: './threads.component.html',
     styleUrl: './threads.component.scss'
 })
@@ -18,6 +23,8 @@ export class ThreadsComponent implements OnInit {
     channelId!: string;
     channel!: Channel | null;
     threads: Thread[] = [];
+
+    isLoading: boolean = true;
 
     constructor(
         private route: ActivatedRoute,
@@ -55,11 +62,15 @@ export class ThreadsComponent implements OnInit {
     }
 
     async loadThreads() {
+        this.isLoading = true;
+
         try {
             const rawThreads = await this.firestoreService.getDataByField<Thread>('threads', 'channelId', this.channelId);
             this.threads = rawThreads.map(th => Thread.fromFirestore(th.docId, th, this.userService, this.messageService));
         } catch (error) {
             console.error('❌ Fehler beim Laden der Threads:', error);
+        } finally {
+            this.isLoading = false;
         }
     }
 
