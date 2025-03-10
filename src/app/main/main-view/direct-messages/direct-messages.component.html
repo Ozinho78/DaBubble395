@@ -35,7 +35,10 @@
               <img [src]="msg?.senderAvatar" alt="Avatar" class="avatar" />
               <div class="message">
                 <div class="message-info">
-                  <div class="message-info-name">
+                  <div
+                    (click)="msg?.userId ? showProfile(msg.userId) : null"
+                    class="message-info-name"
+                  >
                     {{ msg?.senderName || msg?.userId }}
                   </div>
                   <div class="message-info-time">
@@ -74,3 +77,10 @@
     ></app-message-input>
   </div>
 </div>
+
+<app-profile-view
+  *ngIf="profileViewOpen && selectedProfile"
+  [userName]="selectedProfile"
+  [onlineStatus$]="selectedProfilePresence$"
+  (close)="closeProfile()"
+></app-profile-view>
