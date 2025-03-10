@@ -1,0 +1,156 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.overlayer {
+  @include m.flexBox(normal, center, center);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+.edit-container {
+  @include m.flexBox(column, center, center);
+  width: 420px;
+  background-color: #fff;
+  padding: 45px 40px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+
+  .profile-detail-headline {
+    @include m.flexBox(row, space-between, center);
+    width: 100%;
+    margin-bottom: 20px;
+
+    h1 {
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    img {
+      height: 24px;
+      width: 24px;
+      padding: 6.5px;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #eceefe;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .profile-pic-detail {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
+
+  .user-info {
+    // @include m.flexBox(column, center, center, 25px);
+    width: 100%;
+  }
+
+  .user-wrapper {
+    @include m.flexBox(column, center, baseline, 15px);
+
+    .detail-name {
+      font-family: Nunito;
+      font-weight: 700;
+      font-size: 28px;
+      color: black;
+    }
+  }
+
+  .status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    .online,
+    .offline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      color: v.$grey;
+    }
+
+    .status-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .email {
+    width: 100%;
+    margin-top: 45px;
+
+    div {
+      @include m.flexBox(row, start, center, 20px);
+
+      span {
+        font-family: Nunito;
+        font-weight: 700;
+        font-size: 18px;
+      }
+    }
+
+    .user-email {
+      display: block;
+      color: #1381ff;
+      font-weight: 500;
+      font-size: 16px;
+      text-decoration: none;
+      margin-top: 5px;
+      margin-left: 50px;
+    }
+  }
+}
+
+.btn-2 {
+  cursor: pointer;
+  color: white;
+  font-family: Nunito;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24.55px;
+  letter-spacing: 0%;
+  text-align: center;
+  background-color: v.$purple_1;
+  padding-top: 12px;
+  padding-right: 25px;
+  padding-bottom: 12px;
+  padding-left: 25px;
+  gap: 10px;
+  border-radius: 50px;
+  border: none;
+  border: 1px solid v.$purple_1;
+  transition: background-color 0.1s ease-in-out, border 0.1s ease-in-out;
+
+  &:hover {
+    background-color: v.$purple_2;
+    border: 1px solid v.$purple_2;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #686868;
+    border: 1px solid #686868;
+  }
+}
+
+.btn-container {
+  margin-top: 45px;
+}
