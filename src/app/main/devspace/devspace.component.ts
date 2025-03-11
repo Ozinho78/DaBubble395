@@ -23,13 +23,14 @@ import {
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
+import { RouterModule } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, CommonModule],
+  imports: [AddChannelComponent, CommonModule, RouterModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
   animations: [
@@ -153,9 +154,10 @@ export class DevspaceComponent implements OnInit {
     this.visibleService.setThreadVisibility(false);
   }
 
-  selectChannel(channel: Channel) {
+  async selectChannel(channel: Channel) {
     this.userService.setChannelIdFromDevSpace(channel.docId!);
-    console.log(this.channelId);
+    this.showComponent('threads');
+    this.visibleService.setThreadVisibility(false);
   }
 
   selectUser(user: User) {

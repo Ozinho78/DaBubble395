@@ -24,6 +24,7 @@ import { EventEmitter, Output } from '@angular/core';
 })
 export class MessageInputComponent {
   @Input() threadId!: string | null; // Die aktuelle Thread-ID
+  @Input() channelId!: string;
   @Input() isDirectMessage: boolean = false;
   @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
   //currentUser: any;

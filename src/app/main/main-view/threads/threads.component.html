@@ -1,7 +1,7 @@
 <div class="container">
     <div class="header">
         <div class="header-label">
-            <h2># Entwicklerteam</h2>
+            <h2># {{ channel?.name }}</h2>
         </div>
         <div class="close-btn-container">
             <div>
@@ -13,43 +13,48 @@
     <div class="shadow"></div>
 
     <div id="chat-container" class="chat-container">
-
-
         <div class="replies">
 
-
-            <div class="date-header">
-                <div class="date">14.01.2025</div>
+            <!-- Falls keine Threads vorhanden sind -->
+            <div *ngIf="threads.length === 0">
+                <h2># {{ channel?.name }}</h2>
+                <div>Du hast diesen Channel am {{ channel?.creationDate | date:'dd.MM.yyyy' }} erstellt. Das ist der
+                    Anfang des Channels <span># {{ channel?.name }}</span></div>
             </div>
 
+            <div *ngFor="let thread of threads">
+                <div class="date-header">
+                    <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
+                </div>
 
-
-
-            <div class="reply-container">
-
-                <div class="reply">
-                    <img src="img/avatar/avatar4.png" alt="Avatar" class="avatar">
-                    <div class="message">
-                        <div class="message-info">
-                            <div class="message-info-name">Noah Braun</div>
-                            <div class="message-info-time">14:25 Uhr</div>
-                        </div>
-                        <div class="message-text">Welche Version ist aktuell von Angular?</div>
-                        <div class="answer-info">
-                            <div class="answers">2 Antworten</div>
-                            <div class="last-answer">Letzte Antwort 14:56</div>
+                <div class="reply-container">
+                    <div class="reply">
+                        <img src="img/avatar/{{ thread.userAvatar }}" alt="Avatar von {{ thread.userName }}"
+                            class="avatar">
+                        <div class="message">
+                            <div class="message-info">
+                                <div class="message-info-name">{{ thread.userName }}</div>
+                                <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
+                            </div>
+                            <div class="message-text">{{ thread.thread }}</div>
+                            <div class="answer-info">
+                                <div class="answers"><a [routerLink]="['/thread/' + thread.docId!]">{{
+                                        thread?.answerCount }} Antworten</a></div>
+                                <div class="last-answer">
+                                    <span *ngIf="thread.lastAnswer > 0">Letzte Antwort {{ thread?.lastAnswer |
+                                        date:'dd.MM.yyyy HH:mm'}}</span>
+                                    <span *ngIf="thread.lastAnswer === 0"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
-
         </div>
-
     </div>
 
     <!-- Nachrichteneingabe -->
-    <app-message-input></app-message-input>
+    <app-message-input [channelId]="channelId"></app-message-input>
 
 </div>

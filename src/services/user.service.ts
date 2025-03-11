@@ -19,6 +19,7 @@ import {
 import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
+import { FirestoreService } from './firestore.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,13 @@ export class UserService {
 
   user = new User();
   userData = this.authService.userData;
+
+  private channelId: string | null = null;
+  private userArray: User[] = [];
+
+  constructor(private firestoreService: FirestoreService) {
+    this.loadUsers();
+  }
 
   /** Holt einen einzelnen Nutzer anhand der ID */
   getUserById(
@@ -145,7 +153,45 @@ export class UserService {
     this.docIdFromDevSpace.next(id);
   }
 
+  /*
   setChannelIdFromDevSpace(id: string) {
     this.channelIdFromDevSpace.next(id);
+  }*/
+
+  /**
+  * Lädt alle User aus Firestore und speichert sie lokal.
+  */
+  async loadUsers() {
+    try {
+      this.userArray = await this.firestoreService.getData<User>('users');
+      console.log('Alle User geladen:', this.userArray);
+    } catch (error) {
+      console.error('❌ Fehler beim Laden der User:', error);
+    }
+  }
+
+  /**
+   * Gibt den Namen eines Users anhand der `userId` zurück.
+   * Falls der User nicht existiert, wird `"Unbekannter Benutzer"` zurückgegeben.
+   * @param userId Die Firestore-User-ID
+   * @returns Der Benutzername oder `"Unbekannter Benutzer"`
+   */
+  getUserNameById(userId: string) {
+    const userArray = this.userArray.find(u => u.docId === userId);
+    return userArray ? userArray.name : 'Unbekannter Benutzer';
+  }
+
+  getUserAvatarById(userId: string) {
+    const userArray = this.userArray.find(u => u.docId === userId);
+    return userArray ? userArray.avatar : 'Unbekannter Avatar';
+  }
+
+  setChannelIdFromDevSpace(channelId: string) {
+    this.channelId = channelId;
+    //console.log('📌 Channel-ID gespeichert im Service:', this.channelId);
+  }
+
+  getChannelIdFromDevSpace(): string | null {
+    return this.channelId;
   }
 }
