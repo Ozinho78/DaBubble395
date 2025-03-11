@@ -28,7 +28,7 @@
 
         <div class="channel-list">
           @for (channel of channels$ | async; track $index){
-            <span [routerLink]="['/channel/' + channel.docId!]" (click)="selectChannel(channel)" class="single-channel"
+            <span (click)="selectChannel(channel)" class="single-channel"
             *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
           }
         </div>

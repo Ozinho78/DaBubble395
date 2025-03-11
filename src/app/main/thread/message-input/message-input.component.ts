@@ -43,6 +43,7 @@ export class MessageInputComponent {
   ) {
     this.allUsers$ = this.userService.getAllUsers();
     this.currentUserId = this.userService.getCurrentUserId();
+    console.log('mesage-input: channelId!:', this.channelId)
     /*
     this.authService.user$.subscribe(user => {
       if (user) {

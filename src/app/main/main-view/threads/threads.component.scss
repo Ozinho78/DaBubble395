@@ -34,10 +34,28 @@ h2 {
 }
 
 .chat-container {
-    overflow-y: visible;
+    overflow-y: auto; // 🔥 Scrollbar ist da, aber unsichtbar
     overflow-x: hidden;
     padding: 5px 0 0 0;
     flex-grow: 1;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 5px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+    }
+
+    &:hover::-webkit-scrollbar {
+        background-color: v.$purple_4;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+        background-color: v.$purple_2;
+    }
 }
 
 .replies {
@@ -72,6 +90,24 @@ h2 {
         height: 1px;
         background-color: v.$purple_4;
         margin-right: 20px;
+    }
+}
+
+.reply-container {
+    padding: 1px 0;
+    margin: 5px 0;
+
+    &:hover {
+        background-color: v.$purple_bg;
+
+        .message-text {
+            background-color: #FFFFFF;
+        }
+
+        .add-reactions-container {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 }
 
@@ -123,7 +159,13 @@ h2 {
 }
 
 .answers {
+    @include m.flexBox(row, normal, normal);
     @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_3);
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.05);
+    }
 }
 
 .last-answer {

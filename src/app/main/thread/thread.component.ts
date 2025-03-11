@@ -10,6 +10,7 @@ import { ThreadMessageComponent } from "./thread-message/thread-message.componen
 import { MessageInputComponent } from "./message-input/message-input.component";
 import { map } from 'rxjs/operators';
 import { VisibleService } from '../../../services/visible.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-thread',
@@ -19,23 +20,31 @@ import { VisibleService } from '../../../services/visible.service';
 })
 export class ThreadComponent implements OnInit {
   @ViewChild('messageInput') messageInput!: MessageInputComponent;
+
+  threadId: string = '';
+
   groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
   totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
   channelName$!: Observable<string>;
   thread: Thread | null = null;
   newMessageText: string = '';
-  threadId: string = '6DGHEdX29kIHBFTtGrSr'; // Beispiel, später dynamisch setzen
   threadVisibility!: boolean;
   private subscription!: Subscription;
 
   constructor(
     private threadService: ThreadService,
-    private visibleService: VisibleService
+    private visibleService: VisibleService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.subscription = this.visibleService.threadSubject$.subscribe(value => {
       this.threadVisibility = value;
+    });
+
+    this.route.paramMap.subscribe(params => {
+      this.threadId = params.get('threadId') || '';
+      console.log('Thread geöffnet mit ID:', this.threadId);
     });
 
     this.threadService.getThreadById(this.threadId).subscribe(threadData => {

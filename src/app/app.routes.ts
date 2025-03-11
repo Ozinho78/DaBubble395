@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'avatar-selection', component: AvatarSelectionComponent, canActivate: [RegisterGuard, AuthGuard] },
   { path: 'main', component: MainComponent, canActivate: [AuthGuard] },
   { path: 'channel/:channelId', component: MainComponent, canActivate: [AuthGuard] },
-  { path: 'thread/:threadId', component: MainComponent, canActivate: [AuthGuard] },
+  { path: 'channel/:channelId/thread/:threadId', component: MainComponent, canActivate: [AuthGuard] },
   { path: "request-password-reset", component: RequestPasswordResetComponent },
   { path: "set-new-password", component: SetNewPasswordComponent },
   { path: 'imprint', component: ImprintComponent },
@@ -29,4 +29,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
