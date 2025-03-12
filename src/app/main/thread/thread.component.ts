@@ -10,7 +10,7 @@ import { ThreadMessageComponent } from "./thread-message/thread-message.componen
 import { MessageInputComponent } from "./message-input/message-input.component";
 import { map } from 'rxjs/operators';
 import { VisibleService } from '../../../services/visible.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-thread',
@@ -21,7 +21,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ThreadComponent implements OnInit {
   @ViewChild('messageInput') messageInput!: MessageInputComponent;
 
-  threadId: string = '';
+  channelId!: string;
+  threadId!: string;
 
   groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
   totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
@@ -34,26 +35,57 @@ export class ThreadComponent implements OnInit {
   constructor(
     private threadService: ThreadService,
     private visibleService: VisibleService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    this.subscribeRouteParams();
+    this.subscribeThreadVisibility();
+    this.loadThreadData();
+    this.loadChannelName();
+    this.loadGroupedMessages();
+    this.calculateTotalMessages();
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  subscribeRouteParams() {
+    this.route.queryParamMap.subscribe(params => {
+      const newThreadId = params.get('thread') || '';
+
+      if (newThreadId && newThreadId !== this.threadId) {
+        this.threadId = newThreadId;
+        this.loadThreadData();
+        this.loadGroupedMessages();
+        this.calculateTotalMessages();
+        this.loadChannelName();
+      }
+
+      this.channelId = params.get('channel') || '';
+    });
+  }
+
+  private subscribeThreadVisibility() {
     this.subscription = this.visibleService.threadSubject$.subscribe(value => {
       this.threadVisibility = value;
     });
+  }
 
-    this.route.paramMap.subscribe(params => {
-      this.threadId = params.get('threadId') || '';
-      console.log('Thread geöffnet mit ID:', this.threadId);
-    });
-
+  private loadThreadData() {
     this.threadService.getThreadById(this.threadId).subscribe(threadData => {
       this.thread = new Thread(threadData);
       this.thread.id = this.threadId;
     });
+  }
 
+  private loadChannelName() {
     this.channelName$ = this.threadService.getChannelName(this.threadId);
+  }
 
+  private loadGroupedMessages() {
     this.groupedMessages$ = this.threadService.getMessages(this.threadId).pipe(
       map(messages => {
         const grouped = messages.reduce((acc, message) => {
@@ -65,9 +97,7 @@ export class ThreadComponent implements OnInit {
             })
             : 'Unbekanntes Datum';
 
-          if (!acc[date]) {
-            acc[date] = [];
-          }
+          if (!acc[date]) acc[date] = [];
           acc[date].push(message);
           return acc;
         }, {} as { [key: string]: Message[] });
@@ -78,42 +108,34 @@ export class ThreadComponent implements OnInit {
         }));
       })
     );
+  }
 
-    // ✅ Berechnet die Gesamtanzahl der Nachrichten
+  private calculateTotalMessages() {
     this.totalMessagesCount$ = this.groupedMessages$.pipe(
       map(groups => groups.reduce((acc, group) => acc + group.messages.length, 0))
     );
   }
 
-  ngAfterViewInit() {
-    this.groupedMessages$.subscribe(() => {
-      this.scrollToBottom();
-    });
-  }
-
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this.subscription.unsubscribe(); // Wichtig: Speicherlecks vermeiden!
-  }
-
-  /** Scrollt den Chat nach unten */
   scrollToBottom() {
     setTimeout(() => {
       const chatContainer = document.getElementById('chat-container');
       if (chatContainer) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
-    }, 100); // Sicherstellen, dass Nachrichten geladen wurden
+    }, 100);
   }
 
   handleEditRequest(event: { id: string, text: string }) {
     this.messageInput.editMessage(event.id, event.text);
   }
 
-  toggleVisibility() {
-    this.visibleService.setThreadVisibility(false); // Oder true setzen
+  closeThread() {
+    this.router.navigate([], {
+      queryParams: { channel: this.channelId },
+      replaceUrl: true
+    });
   }
+
 }
 
 

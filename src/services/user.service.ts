@@ -164,7 +164,6 @@ export class UserService {
   async loadUsers() {
     try {
       this.userArray = await this.firestoreService.getData<User>('users');
-      console.log('Alle User geladen:', this.userArray);
     } catch (error) {
       console.error('❌ Fehler beim Laden der User:', error);
     }
@@ -188,7 +187,6 @@ export class UserService {
 
   setChannelIdFromDevSpace(channelId: string) {
     this.channelId = channelId;
-    //console.log('📌 Channel-ID gespeichert im Service:', this.channelId);
   }
 
   getChannelIdFromDevSpace(): string | null {

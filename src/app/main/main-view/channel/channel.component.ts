@@ -12,10 +12,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-threads',
   imports: [CommonModule, MessageInputComponent],
-  templateUrl: './threads.component.html',
-  styleUrl: './threads.component.scss'
+  templateUrl: './channel.component.html',
+  styleUrl: './channel.component.scss'
 })
-export class ThreadsComponent implements OnInit {
+export class ChannelComponent implements OnInit {
   channelId!: string;
   channel!: Channel | null;
   threads: Thread[] = [];
@@ -33,18 +33,20 @@ export class ThreadsComponent implements OnInit {
   }
 
   subscribeRouteParams() {
-    this.route.params.subscribe(params => {
-      this.channelId = params['channelId'];
+    this.route.queryParamMap.subscribe(params => {
+      this.channelId = params.get('channel') || '';
 
-      this.loadChannel();
-      this.loadThreads();
+      if (this.channelId) {
+        this.loadChannel();
+        this.loadThreads();
+      }
     });
   }
 
   /*
-  loadChannelId() {
-    this.channelId = this.route.snapshot.paramMap.get('docId') || '';
-  }
+    loadChannelId() {
+      this.channelId = this.route.snapshot.paramMap.get('docId') || '';
+    }
   */
 
   async loadChannel() {
@@ -66,12 +68,11 @@ export class ThreadsComponent implements OnInit {
   }
 
   openThread(threadId: string) {
-    if (this.channelId) {
-      this.router.navigate(['/channel', this.channelId, 'thread', threadId], {
-        queryParamsHandling: 'merge',
-        replaceUrl: true // Verhindert unnötige Neuladung
-      });
-    }
+    this.router.navigate([], {
+      queryParams: { channel: this.channelId, thread: threadId },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
 }

@@ -20,25 +20,14 @@ export class MainComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.subscribeRouteParam();
+    this.subscribeRouteParams();
   }
 
-  subscribeRouteParam() {
-    this.route.paramMap.subscribe(params => {
-      this.channelId = params.get('channelId');
-      this.threadId = params.get('threadId');
+  subscribeRouteParams() {
+    this.route.queryParamMap.subscribe(params => {
+      this.channelId = params.get('channel');
+      this.threadId = params.get('thread');
     });
-  }
-
-  openThread(threadId: string) {
-    if (this.channelId) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { thread: threadId },  // Setze Thread als Query-Parameter
-        queryParamsHandling: 'merge',
-        replaceUrl: true
-      });
-    }
   }
 
 }

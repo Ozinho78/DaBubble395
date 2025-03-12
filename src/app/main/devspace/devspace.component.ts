@@ -23,7 +23,7 @@ import {
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,8 @@ export class DevspaceComponent implements OnInit {
     private visibleService: VisibleService,
     private userService: UserService,
     public userPresence: PresenceService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
@@ -155,10 +156,19 @@ export class DevspaceComponent implements OnInit {
     this.visibleService.setThreadVisibility(false);
   }
 
+  /*
   selectChannel(channel: Channel) {
     this.userService.setChannelIdFromDevSpace(channel.docId!);
     //this.showComponent('threads');
     this.router.navigate(['/channel', channel.docId], { queryParamsHandling: 'merge' });
+  }*/
+
+  selectChannel(channel: any) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { channel: channel.docId },
+      replaceUrl: true
+    });
   }
 
   selectUser(user: User) {

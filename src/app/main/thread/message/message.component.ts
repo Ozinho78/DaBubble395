@@ -19,6 +19,9 @@ export class MessageComponent implements OnInit {
   @Input() message!: Message;
   @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
+  channelId: string | null = null;
+  threadId: string | null = null;
+
   currentUserId: string | null = null;
   //currentUserData: any | null = null;
   currentUser: any;

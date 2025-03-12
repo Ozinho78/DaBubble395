@@ -19,7 +19,6 @@ export class MessageService {
         try {
             const messages = await this.firestoreService.getData<{ threadId: string, creationDate: number }>('messages');
 
-            // Gruppiert Nachrichten nach `threadId` und zählt die Anzahl + speichert letzte Antwortzeit
             this.messageCounts = {};
             this.lastAnswerTimes = {};
 
@@ -30,8 +29,6 @@ export class MessageService {
                     this.lastAnswerTimes[msg.threadId] = msg.creationDate;
                 }
             });
-
-            console.log('✅ Antwort-Daten geladen:', { messageCounts: this.messageCounts, lastAnswerTimes: this.lastAnswerTimes });
         } catch (error) {
             console.error('❌ Fehler beim Laden der Nachrichten:', error);
         }
