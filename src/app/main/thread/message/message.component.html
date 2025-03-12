@@ -60,7 +60,7 @@
                             <img [src]="'img/emojis/' + group.key + '.svg'" alt="{{ group.key }}" class="reaction-icon">
                             <div class="counter">{{ group.value.count }}</div>
 
-                            <!-- Tooltip-Overlay, das beim Hover angezeigt wird -->
+                            <!-- Tooltip-Overlay -->
                             <div class="reaction-tooltip" *ngIf="showReactionTooltip && tooltipEmoji === group.key">
                                 <div class="tooltip-content">
                                     <img [src]="'img/emojis/' + tooltipEmoji + '.svg'" alt="{{ tooltipEmoji }}"

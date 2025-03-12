@@ -10,7 +10,7 @@ import { MessageService } from '../../../../services/message.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-threads',
+  selector: 'app-channel',
   imports: [CommonModule, MessageInputComponent],
   templateUrl: './channel.component.html',
   styleUrl: './channel.component.scss'
@@ -42,12 +42,6 @@ export class ChannelComponent implements OnInit {
       }
     });
   }
-
-  /*
-    loadChannelId() {
-      this.channelId = this.route.snapshot.paramMap.get('docId') || '';
-    }
-  */
 
   async loadChannel() {
     try {

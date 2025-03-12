@@ -153,15 +153,10 @@ export class DevspaceComponent implements OnInit {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
     this.showComponent('directMessages');
-    this.visibleService.setThreadVisibility(false);
-  }
 
-  /*
-  selectChannel(channel: Channel) {
-    this.userService.setChannelIdFromDevSpace(channel.docId!);
-    //this.showComponent('threads');
-    this.router.navigate(['/channel', channel.docId], { queryParamsHandling: 'merge' });
-  }*/
+    // 12.03.2025 - Alexander Riedel
+    this.router.navigate(['/main'], { replaceUrl: true });
+  }
 
   selectChannel(channel: any) {
     this.router.navigate([], {
@@ -169,6 +164,7 @@ export class DevspaceComponent implements OnInit {
       queryParams: { channel: channel.docId },
       replaceUrl: true
     });
+    this.showComponent('channel');
   }
 
   selectUser(user: User) {
@@ -180,6 +176,11 @@ export class DevspaceComponent implements OnInit {
 
   showComponent(component: string) {
     this.visibleService.setVisibleComponent(component);
+
+    // 12.03.2025 - Alexander Riedel
+    if (component == 'newMessages') {
+      this.router.navigate(['/main'], { replaceUrl: true });
+    }
   }
 }
 

@@ -44,6 +44,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['thread'] && changes['thread'].currentValue) {
       this.loadUserData();
+      this.loadReactions();
     }
   }
 
@@ -72,7 +73,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
   }
 
   loadReactions() {
-    if (!this.thread.id) return;
+    if (!this.thread?.id) return;
 
     this.reactions$ = this.reactionService.getReactions('threads', this.thread.id);
     this.reactions$.subscribe(reactions => this.groupReactions(reactions));
