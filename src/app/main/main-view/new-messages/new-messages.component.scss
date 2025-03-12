@@ -133,4 +133,28 @@
 
 
 
+.mention-list {
+  position: absolute;
+  left: 200px;
+  bottom: 180px;
+  background: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 5px;
+  width: 200px;
+  max-height: 150px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mention-list li {
+  padding: 5px;
+  cursor: pointer;
+  transition: all 125ms ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+      background-color: v.$purple_4;
+    }
+}
 

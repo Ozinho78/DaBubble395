@@ -32,9 +32,11 @@ export class NewMessagesComponent implements OnInit {
   inputControlBottom = new FormControl('');
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+  filteredUsersBottom: User[] = [];
 
   showUsers = false;
   showChannels = false;
+  showUsersBottom = false;
 
   targetUser: User | null = null;
   targetChannel: Channel | null = null;
@@ -200,16 +202,42 @@ export class NewMessagesComponent implements OnInit {
     this.saveInputToMessages(this.newMessage);
   }
 
+  onInputChange() {
+    const atIndex = this.inputBottomValue.lastIndexOf('@');
+    if (atIndex !== -1) {
+      const searchTermBottom = this.inputBottomValue.substring(atIndex + 1).toLowerCase();
+      this.filteredUsersBottom = this.users.filter(user => user.name.toLowerCase().includes(searchTermBottom));
+      this.showUsersBottom = this.filteredUsersBottom.length > 0;
+    } else {
+      this.showUsersBottom = false;
+    }
+  }
+
+  selectUserBottom(user: User) {
+    const atIndex = this.inputBottomValue.lastIndexOf('@');
+    if (atIndex !== -1) {
+      this.inputBottomValue = this.inputBottomValue.substring(0, atIndex + 1) + user.name + ' ';
+    }
+    this.showUsersBottom = false;
+  }
+
   addInput() {
-    if (this.inputBottomValue.trim() != '') {
-      if (this.targetChannel != null) {this.createNewThread();}
-      else if (this.targetUser != null) {this.createNewMessage();}
-      else {alert("Ungültiger Channel oder User");}
-    } else {alert("Bitte mal was eingeben, Junge!");}
-    this.sendMessagesArray.push(this.inputBottomValue);
-    // console.log(this.sendMessagesArray);
-    this.inputBottomValue = ""; // Eingabe leeren
-    // this.toggleInputBottom();
+    if (this.inputBottomValue.trim() !== '') {
+      if (this.targetChannel) {
+        this.createNewThread();
+      } else if (this.targetUser) {
+        this.createNewMessage();
+      } else {
+        alert("Ungültiger Channel oder User");
+      }
+      this.sendMessagesArray.push(this.inputBottomValue);
+      this.inputBottomValue = ''; // Eingabe leeren
+      this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
+    } else {
+      alert("Bitte mal was eingeben, Junge!");
+    }
+    this.inputControl.setValue('');  // Für FormControl
+    this.inputBottomValue = '';      // Für ngModel
   }
 
   async saveInputToThreads(thread: Thread) {
@@ -241,3 +269,26 @@ export class NewMessagesComponent implements OnInit {
 
 
 }
+
+
+
+
+/* altes Input
+addInput() {
+  if (this.inputBottomValue.trim() != '') {
+    if (this.targetChannel != null) {
+      this.createNewThread();
+    } else if (this.targetUser != null) {
+      this.createNewMessage();
+    } else {
+        alert("Ungültiger Channel oder User");
+      }
+  } else {
+    alert("Bitte mal was eingeben, Junge!");
+  }
+  this.sendMessagesArray.push(this.inputBottomValue);
+  // console.log(this.sendMessagesArray);
+  this.inputBottomValue = ""; // Eingabe leeren
+  // this.toggleInputBottom();
+}
+*/
