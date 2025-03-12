@@ -116,7 +116,6 @@ export class AddMemberComponent implements OnInit {
     } else {
       this.enableButton = false;
     }
-    console.log(this.selectedOption); 
   }
 
   submitData() {
