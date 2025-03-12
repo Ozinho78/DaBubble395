@@ -45,12 +45,13 @@ export class UserService {
         this.loadUsers();
     }
 
-    getUserById(userId: string): Observable<{ name: string; avatar: string; email: string }> {
+    getUserById(userId: string): Observable<{ id: string; name: string; avatar: string; email: string }> {
         const cachedUser = this.userArray.find(user => user.docId === userId);
 
         if (cachedUser) {
             return new Observable(observer => {
                 observer.next({
+                    id: cachedUser.id?.toLocaleString() || '',
                     name: cachedUser.name || 'Unbekannt',
                     avatar: cachedUser.avatar ? `img/avatar/${cachedUser.avatar}` : 'img/avatar/default.png',
                     email: cachedUser.email || '',
@@ -62,6 +63,7 @@ export class UserService {
         return docData(userRef).pipe(
             map((user: any) => {
                 return {
+                    id: userId,
                     name: user?.name || 'Unbekannt',
                     avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png',
                     email: user?.email || '',

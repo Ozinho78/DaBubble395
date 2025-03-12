@@ -30,7 +30,14 @@
     <ng-container *ngIf="(msgs?.length ?? 0) > 0; else infoBlock">
       <div id="chat-container" class="chat-container">
         <div id="replies" class="replies">
-          <div class="reply-container" *ngFor="let msg of msgs">
+          <div
+            class="reply-container"
+            *ngFor="let msg of msgs"
+            [ngClass]="{
+              sent: msg?.userId === loggedInUserId,
+              received: msg?.userId !== loggedInUserId
+            }"
+          >
             <div class="reply" *ngIf="user$ | async as user">
               <img [src]="msg?.senderAvatar" alt="Avatar" class="avatar" />
               <div class="message">
@@ -42,7 +49,7 @@
                     {{ msg?.senderName || msg?.userId }}
                   </div>
                   <div class="message-info-time">
-                    {{ msg?.creationDate | date : "shortTime" }}
+                    {{ formatMessageDate(msg?.creationDate) }}
                   </div>
                 </div>
                 <div class="message-text">
