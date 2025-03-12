@@ -103,9 +103,39 @@ h2 {
   }
 }
 
+.reply-container {
+  width: 100%;
+}
+
 .reply {
   margin: 10px 40px;
   @include m.flexBox(row, normal, normal, 20px);
+}
+
+.sent {
+  // display: flex;
+  // flex-direction: row-reverse;
+
+  .reply {
+    flex-direction: row-reverse;
+  }
+
+  .message {
+    align-items: end;
+  }
+
+  .message-info {
+    flex-direction: row-reverse;
+  }
+
+  .message-text {
+    color: white;
+    background-color: v.$purple_2;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
 }
 
 .avatar {
@@ -140,6 +170,7 @@ h2 {
   @include m.styleFont("Nunito", 18px, 400, 24.55px);
   padding: 15px;
   gap: 8px;
+  width: fit-content;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
