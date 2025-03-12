@@ -40,11 +40,12 @@ export class UserService {
   /** Holt einen einzelnen Nutzer anhand der ID */
   getUserById(
     userId: string
-  ): Observable<{ name: string; avatar: string; email: string }> {
+  ): Observable<{ id: string; name: string; avatar: string; email: string }> {
     const userRef = doc(this.firestore, `users/${userId}`);
 
     return docData(userRef).pipe(
       map((user: any) => ({
+        id: userId,
         name: user?.name || 'Unbekannt',
         avatar: user?.avatar
           ? `img/avatar/${user.avatar}`
