@@ -34,9 +34,8 @@
 
     <div class="shadow"></div>
 
-    <div id="chat-container" class="chat-container">
-        <div class="replies">
-
+    <div class="chat-container">
+        <div class="replies" *ngIf="threads.length > 0">
             <div *ngFor="let thread of threads">
                 <div class="date-header">
                     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
@@ -67,24 +66,24 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <!-- Falls keine Threads vorhanden sind, erst anzeigen, wenn das Laden abgeschlossen ist -->
-        <div *ngIf="!isLoading && threads.length === 0" class="no-replies">
-            <div class="no-replies-header">
-                <span>#</span>
-                <h2>{{ channel?.name }}</h2>
-            </div>
-            <div class="no-replies-text">
-                {{ creatorSentence }} diesen Channel am {{ channel?.creationDate | date:'dd.MM.yyyy' }}
-                erstellt. Das ist der Anfang des Channels <span># {{ channel?.name }}</span>.
+        <!-- Falls keine Threads vorhanden sind -->
+        <div *ngIf="!isLoading && threads.length === 0" class="no-replies-container">
+            <div class="no-replies">
+                <div class="no-replies-header">
+                    <span>#</span>
+                    <h2>{{ channel?.name }}</h2>
+                </div>
+                <div class="no-replies-text">
+                    {{ creatorSentence }} diesen Channel am {{ channel?.creationDate | date:'dd.MM.yyyy' }} erstellt.
+                    Das ist der Anfang des Channels <span># {{ channel?.name }}</span>.
+                </div>
             </div>
         </div>
-
     </div>
 
-    <!-- Nachrichteneingabe -->
+    <!-- Input -->
     <app-message-input [channelId]="channelId"></app-message-input>
 
 </div>

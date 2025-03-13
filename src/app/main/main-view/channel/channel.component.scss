@@ -122,8 +122,10 @@ h2 {
 }
 
 .chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow-y: auto;
-    overflow-x: hidden;
     padding: 5px 0 0 0;
     flex-grow: 1;
 
@@ -260,9 +262,14 @@ h2 {
     @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
 }
 
+.no-replies-container {
+    @include m.flexBox(column, flex-end, normal);
+    flex-grow: 1;
+}
+
 .no-replies {
     @include m.flexBox(column, normal, normal, 7px);
-    margin: 10px 40px;
+    margin: 10px 45px 30px 45px;
 }
 
 .no-replies-header {
