@@ -19,6 +19,7 @@ export class ChannelComponent implements OnInit {
   channelId!: string;
   channel!: Channel | null;
   threads: Thread[] = [];
+  channelMembers: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +31,7 @@ export class ChannelComponent implements OnInit {
 
   ngOnInit() {
     this.subscribeRouteParams();
+    this.loadUsersFromUserService();
   }
 
   subscribeRouteParams() {
@@ -43,12 +45,49 @@ export class ChannelComponent implements OnInit {
     });
   }
 
+  loadUsersFromUserService() {
+    this.userService.loadUsers().then(() => {
+      this.subscribeRouteParams();
+    });
+  }
+
   async loadChannel() {
     try {
       const channels = await this.firestoreService.getDataByDocId<Channel>('channels', this.channelId);
       this.channel = channels.length > 0 ? channels[0] : null;
+
+      if (this.channel) {
+        await this.loadMemberDetails();
+      }
     } catch (error) {
       console.error('❌ Fehler beim Laden des Channels:', error);
+    }
+  }
+
+  /**
+ * Lädt die vollständigen Benutzerdaten für alle Mitglieder des Channels
+ */
+  async loadMemberDetails() {
+    if (!this.channel) return;
+
+    try {
+      // Warten, falls `userArray` noch nicht geladen ist
+      if (this.userService.userArray.length === 0) {
+        await this.userService.loadUsers();
+      }
+
+      // Mitglieder-Details aus dem `userArray` filtern
+      this.channelMembers = this.userService.userArray
+        .filter(user => this.channel!.member.includes(user.docId!))
+        .map(user => ({
+          id: user.docId,
+          name: user.name,
+          avatar: user.avatar,
+          email: user.email
+        }));
+
+    } catch (error) {
+      console.error('❌ Fehler beim Laden der Mitglieder:', error);
     }
   }
 

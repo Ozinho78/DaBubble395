@@ -28,13 +28,78 @@ h2 {
     gap: 16px;
 }
 
+.member-container {
+    height: 46px;
+    @include m.flexBox(row, flex-end, center, 10px);
+    position: relative;
+}
+
+.member {
+    height: 46px;
+    @include m.flexBox(row, center, center, 10px);
+    position: relative;
+    border-radius: 30px;
+    cursor: pointer;
+    padding: 3px 10px;
+    transition: background 0.1s ease-in;
+
+    &:hover {
+        background: v.$purple_bg;
+
+        .member-total {
+            color: v.$purple_3;
+        }
+    }
+}
+
+.member-pics {
+    @include m.flexBox(row, center, center);
+    position: relative;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 50%;
+    margin-left: -15px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+}
+
+.member-total {
+    @include m.styleFont("Nunito", 20px, 600, 100%, #000000);
+}
+
+.add-member {
+    @include m.flexBox(row, center, center);
+    height: 40px;
+    width: 40px;
+    background: v.$purple_bg;
+    border-radius: 50%;
+    cursor: pointer;
+
+    svg {
+        &:hover {
+            transform: scale(1.1);
+            background-color: v.$purple_bg;
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+}
+
 .shadow {
     min-height: 5px;
     background: linear-gradient(to bottom, #00000014, #00000000);
 }
 
 .chat-container {
-    overflow-y: auto; // 🔥 Scrollbar ist da, aber unsichtbar
+    overflow-y: auto;
     overflow-x: hidden;
     padding: 5px 0 0 0;
     flex-grow: 1;

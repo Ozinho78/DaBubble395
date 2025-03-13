@@ -39,11 +39,9 @@ export class UserService {
     userData = this.authService.userData;
 
     private channelId: string | null = null;
-    private userArray: User[] = [];
+    public userArray: User[] = [];
 
-    constructor(private firestoreService: FirestoreService) {
-        this.loadUsers();
-    }
+    constructor(private firestoreService: FirestoreService) { }
 
     getUserById(userId: string): Observable<{ id: string; name: string; avatar: string; email: string }> {
         const cachedUser = this.userArray.find(user => user.docId === userId);
