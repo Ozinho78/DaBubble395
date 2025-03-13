@@ -17,17 +17,19 @@
     <div class="shadow"></div>
     <div id="chat-container" class="chat-container">
 
-        <!-- Thread Header -->
-        <div class="replies">
-            <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
-        </div>
+        <!-- Thread -->
+        <div class="thread">
+            <div class="replies">
+                <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
+            </div>
 
-        <div *ngIf="groupedMessages$ | async as groupedMessages">
-
-            <!-- Anzahl der Nachrichten -->
+            <!-- Anzahl der Nachrichten immer direkt darunter -->
             <div class="replies-spacer">
                 <div>{{ totalMessagesCount$ | async }} Antworten</div>
             </div>
+        </div>
+
+        <div *ngIf="groupedMessages$ | async as groupedMessages">
 
             <!-- Nachrichten gruppiert nach Datum -->
             <div class="replies">
