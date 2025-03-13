@@ -94,7 +94,7 @@ h2 {
 }
 
 .member-total {
-    @include m.styleFont("Nunito", 20px, 600, 100%, #000000);
+    @include m.styleFont("Nunito", 20px, 600);
 }
 
 .add-member-container {
@@ -258,4 +258,26 @@ h2 {
 
 .last-answer {
     @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+}
+
+.no-replies {
+    @include m.flexBox(column, normal, normal, 7px);
+    margin: 10px 40px;
+}
+
+.no-replies-header {
+    @include m.flexBox(row, normal, normal, 10px);
+    @include m.styleFont("Nunito", 24px, 700, 37.74px);
+
+    span {
+        @include m.styleFont("Nunito", 28px, 800);
+    }
+}
+
+.no-replies-text {
+    @include m.styleFont("Nunito", 20px, 400);
+
+    span {
+        color: v.$purple_3;
+    }
 }

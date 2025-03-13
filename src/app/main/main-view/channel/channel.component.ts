@@ -22,6 +22,9 @@ export class ChannelComponent implements OnInit {
     channelMembers: any[] = [];
     isLoading: boolean = true;
 
+    creatorName: string = '';
+    creatorSentence: string = '';
+
     constructor(
         private route: ActivatedRoute,
         private firestoreService: FirestoreService,
@@ -59,6 +62,7 @@ export class ChannelComponent implements OnInit {
 
             if (this.channel) {
                 await this.loadMemberDetails();
+                this.setCreatorName();
             }
         } catch (error) {
             console.error('❌ Fehler beim Laden des Channels:', error);
@@ -66,18 +70,16 @@ export class ChannelComponent implements OnInit {
     }
 
     /**
-   * Lädt die vollständigen Benutzerdaten für alle Mitglieder des Channels
-   */
+     * Lädt die vollständigen Benutzerdaten für alle Mitglieder des Channels
+     */
     async loadMemberDetails() {
         if (!this.channel) return;
 
         try {
-            // Warten, falls `userArray` noch nicht geladen ist
             if (this.userService.userArray.length === 0) {
                 await this.userService.loadUsers();
             }
 
-            // Mitglieder-Details aus dem `userArray` filtern
             this.channelMembers = this.userService.userArray
                 .filter(user => this.channel!.member.includes(user.docId!))
                 .map(user => ({
@@ -89,6 +91,22 @@ export class ChannelComponent implements OnInit {
 
         } catch (error) {
             console.error('❌ Fehler beim Laden der Mitglieder:', error);
+        }
+    }
+
+    async setCreatorName() {
+        if (!this.channel) return;
+
+        const currentUserId = this.userService.getCurrentUserId();
+        const creatorId = this.channel.userId;
+
+        if (currentUserId === creatorId) {
+            this.creatorName = 'Du';
+            this.creatorSentence = 'Du hast';
+        } else {
+            const creator = this.userService.userArray.find(user => user.docId === creatorId);
+            this.creatorName = creator ? creator.name : 'Unbekannter Nutzer';
+            this.creatorSentence = `${this.creatorName} hat`;
         }
     }
 

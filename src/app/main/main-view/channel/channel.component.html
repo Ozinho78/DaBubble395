@@ -71,11 +71,17 @@
         </div>
 
         <!-- Falls keine Threads vorhanden sind, erst anzeigen, wenn das Laden abgeschlossen ist -->
-        <div *ngIf="!isLoading && threads.length === 0">
-            <h2># {{ channel?.name }}</h2>
-            <div>XYZ hat diesen Channel am {{ channel?.creationDate | date:'dd.MM.yyyy' }} erstellt. Das ist der
-                Anfang des Channels <span># {{ channel?.name }}</span></div>
+        <div *ngIf="!isLoading && threads.length === 0" class="no-replies">
+            <div class="no-replies-header">
+                <span>#</span>
+                <h2>{{ channel?.name }}</h2>
+            </div>
+            <div class="no-replies-text">
+                {{ creatorSentence }} diesen Channel am {{ channel?.creationDate | date:'dd.MM.yyyy' }}
+                erstellt. Das ist der Anfang des Channels <span># {{ channel?.name }}</span>.
+            </div>
         </div>
+
     </div>
 
     <!-- Nachrichteneingabe -->
