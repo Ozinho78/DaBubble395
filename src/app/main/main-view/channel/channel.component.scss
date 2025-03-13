@@ -19,13 +19,37 @@ h2 {
     min-height: 96px;
     max-height: 96px;
     margin: 0 40px;
-    @include m.flexBox(row, space-between, center);
+    @include m.flexBox(row, space-between, center, 10px);
 }
 
 .header-label {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    height: 46px;
+    padding: 3px 10px;
+    @include m.flexBox(row, center, center, 10px);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.1s ease-in;
+
+    span {
+        @include m.styleFont("Nunito", 28px, 800);
+    }
+
+    &:hover {
+        background: v.$purple_bg;
+
+        span,
+        h2 {
+            color: v.$purple_3;
+        }
+
+        svg {
+            transform: scale(1.1);
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
 }
 
 .member-container {
@@ -36,11 +60,11 @@ h2 {
 
 .member {
     height: 46px;
+    padding: 3px 10px;
     @include m.flexBox(row, center, center, 10px);
     position: relative;
     border-radius: 30px;
     cursor: pointer;
-    padding: 3px 10px;
     transition: background 0.1s ease-in;
 
     &:hover {
@@ -73,7 +97,7 @@ h2 {
     @include m.styleFont("Nunito", 20px, 600, 100%, #000000);
 }
 
-.add-member {
+.add-member-container {
     @include m.flexBox(row, center, center);
     height: 40px;
     width: 40px;
@@ -81,10 +105,9 @@ h2 {
     border-radius: 50%;
     cursor: pointer;
 
-    svg {
+    .add-member {
         &:hover {
             transform: scale(1.1);
-            background-color: v.$purple_bg;
 
             path {
                 fill: v.$purple_3;
