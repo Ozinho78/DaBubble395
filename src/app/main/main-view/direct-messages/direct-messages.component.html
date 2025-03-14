@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header">
-    <div class="header-label">
-      <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="user$ | async as user">
+      <div class="header-label" (click)="showProfile(user.docId)">
         <div class="profile-pic-wrapper">
           <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
           <ng-container
@@ -22,8 +22,8 @@
           </ng-template>
         </div>
         <h2>{{ user.name }}</h2>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
   </div>
   <div class="shadow"></div>
   <ng-container *ngIf="messages$ | async as msgs">
@@ -96,7 +96,9 @@
         </div>
         <div class="info-about-chat">
           <span class="info-text">Diese Unterhaltung findet nur zwischen</span>
-          <span class="info-name"> &#64;{{ user.name }} </span>
+          <span (click)="showProfile(user.docId)" class="info-name">
+            &#64;{{ user.name }}
+          </span>
           <span class="info-text">und dir statt.</span>
         </div>
       </ng-container>

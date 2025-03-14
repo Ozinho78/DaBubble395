@@ -7,6 +7,7 @@ import { Observable, of, firstValueFrom, map } from 'rxjs';
 import { ChatService } from '../../../../services/direct-meassage.service';
 import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
+import { User } from '../../../../models/user.model';
 
 @Component({
   selector: 'app-direct-messages',
@@ -16,10 +17,7 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 })
 export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   onlineStatus$: Observable<boolean> = of(false);
-  user$: Observable<{ name: string; avatar: string }> = of({
-    name: '',
-    avatar: '',
-  });
+  user$: Observable<User> = of(new User());
   messages$: Observable<Message[]> = of([]);
   selectedProfile: {
     id: string;
@@ -52,15 +50,25 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     this.userService.currentDocIdFromDevSpace.subscribe((selectedUserId) => {
       if (selectedUserId) {
         this.user$ = this.userService.getUserById(selectedUserId).pipe(
-          map((user) => ({
-            ...user,
-            id: selectedUserId, // 👈 Explizit ID setzen
-          }))
+          map((userData: any) => {
+            const user = new User();
+            user.name = userData.name || '';
+            user.avatar = userData.avatar || '';
+            user.email = userData.email || '';
+            // Falls userData.id als String vorliegt, kannst du ihn in eine Zahl umwandeln:
+            user.id = userData.id ? parseInt(userData.id, 10) : 0;
+            user.password = userData.password || '';
+            user.active =
+              userData.active !== undefined ? userData.active : false;
+            // Setze die docId, die du als Identifikator nutzen möchtest:
+            user.docId = selectedUserId;
+            return user;
+          })
         );
         this.onlineStatus$ =
           this.presenceService.getUserPresence(selectedUserId);
       } else {
-        this.user$ = of({ id: '', name: 'Unbekannt', avatar: 'default.png' });
+        this.user$ = of(new User());
       }
     });
   }
