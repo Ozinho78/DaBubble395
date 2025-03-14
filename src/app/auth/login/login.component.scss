@@ -45,7 +45,7 @@
     .login-intro-logo {
       width: 376px;
       height: 184px;
-      animation: moveLeft 1s ease-in-out forwards;
+      animation: moveLeft 0.4s ease-in-out forwards;
       z-index: 7;
     }
 
@@ -56,7 +56,7 @@
       width: 696px;
       height: 184px;
       z-index: 6;
-      animation: flyOut 1s ease-in-out 1s forwards;
+      animation: flyOut 0.8s ease-in-out 1s forwards;
 
       span {
         @include m.styleFont("Nunito", 90px, 700, 1.5, white);
@@ -87,6 +87,7 @@
         .logo {
           @include m.flexBox(row, flex-start, center);
           margin-left: 50px;
+          opacity: 0;
 
           @media (max-width: 630px) {
             margin-left: 0;
@@ -409,7 +410,7 @@
 @keyframes fadeIn {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(50%, 50%) scale(0);
     display: none;
   }
   100% {

@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     }, 2500);
     setTimeout(() => {
       this.fadeInHeaderLogo();
-    }, 2600);
+    }, 2500);
   }
   
   shrinkLogo(): void {
