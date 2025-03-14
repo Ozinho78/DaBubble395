@@ -7,9 +7,13 @@
   @media (max-width: 630px) {
     padding: 0 20px;
   }
-  
+
   .fade-out {
     animation: fadeOut 1s forwards;
+  }
+
+  .fade-in {
+    animation: fadeIn 1s forwards;
   }
 
   .login-intro {
@@ -20,9 +24,8 @@
     z-index: 5;
     background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
 
-
-    .login-background-right {      
-      width: 100%;
+    .login-background-right {
+      width: 50%;
       height: 100%;
       position: fixed;
       left: 50%;
@@ -30,7 +33,7 @@
       z-index: 6;
     }
 
-    .login-background-left {      
+    .login-background-left {
       width: 50%;
       height: 100%;
       position: fixed;
@@ -41,7 +44,7 @@
 
     .login-intro-logo {
       width: 376px;
-      height: 184px;      
+      height: 184px;
       animation: moveLeft 1s ease-in-out forwards;
       z-index: 7;
     }
@@ -324,7 +327,6 @@
       position: fixed;
       bottom: 20px;
 
-
       a {
         @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
         text-decoration: none;
@@ -348,7 +350,7 @@
       @include m.dNone;
       @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
 
-      @media (max-width: 630px) {        
+      @media (max-width: 630px) {
         @include m.flexBox(column, center, flex-end);
         position: fixed;
         bottom: 60px;
@@ -380,7 +382,7 @@
   }
   100% {
     opacity: 1;
-    transform: translateX(80%);
+    transform: translateX(120%);
   }
 }
 
@@ -392,7 +394,7 @@
     transform: translateX(0);
   }
 }
-  
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -400,6 +402,17 @@
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0);
-    display: none
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    display: none;
+  }
+  100% {
+    opacity: 1;
   }
 }

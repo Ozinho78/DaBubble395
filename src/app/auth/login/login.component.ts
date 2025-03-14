@@ -18,6 +18,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   @ViewChild('logo', { static: true }) logoElement!: ElementRef;
+  @ViewChild('logoHeader', { static: true }) logoHeaderElement!: ElementRef;
   email: string = '';
   password: string = '';
   emailErrorMessage: string = '';
@@ -31,13 +32,20 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    /* setTimeout(() => {
+    setTimeout(() => {
       this.shrinkLogo();
-    }, 3000); */
+    }, 2500);
+    setTimeout(() => {
+      this.fadeInHeaderLogo();
+    }, 2600);
   }
   
   shrinkLogo(): void {
     this.renderer.addClass(this.logoElement.nativeElement, 'fade-out');
+  }
+
+  fadeInHeaderLogo(): void {
+    this.renderer.addClass(this.logoHeaderElement.nativeElement, 'fade-in');
   }
 
   guestLogin() {
