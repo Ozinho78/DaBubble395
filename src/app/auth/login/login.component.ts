@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
     }, 3000);
   }
   
-
   shrinkLogo(): void {
     this.renderer.addClass(this.logoElement.nativeElement, 'fade-out');
   }
