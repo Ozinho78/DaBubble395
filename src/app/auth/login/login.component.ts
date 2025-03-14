@@ -34,8 +34,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.shrinkLogo();
-    }, 2500);
-    setTimeout(() => {
       this.fadeInHeaderLogo();
     }, 2500);
   }
