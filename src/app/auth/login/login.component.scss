@@ -3,24 +3,27 @@
 
 .login-main {
   height: 100vh;
+  width: 100vw;
 
   @media (max-width: 630px) {
     padding: 0 20px;
   }
 
   .login-intro {
-    @include m.dNone;
+    @include m.flexBox(row, center, center);
     height: 100%;
-    position: relative;
+    width: 100%;
+    position: fixed;
+    top: 0;
     background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
+    z-index: 2;
+    animation: shrinkAndMove 3s ease-in-out 3s forwards;
 
     .login-intro-logo {
       width: 696px;
       height: 184px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
       z-index: 2;
+
       img {
         animation: moveLeft 1s ease-in-out forwards;
       }
@@ -30,12 +33,10 @@
       width: 696px;
       height: 184px;
       z-index: 1;
+
       span {
         @include m.styleFont("Nunito", 90px, 700, 1.5, white);
         animation: flyOut 1s ease-in-out 1s forwards;
-        position: absolute;
-        left: 50%;
-        top: 50%;
       }
     }
   }
@@ -44,6 +45,8 @@
     @include m.flexBox(column, center, center);
     height: 100%;
     background-color: v.$purple_bg;
+    position: fixed;
+    top: 0;
 
     .login-header {
       @include m.flexBox(row, space-between, center);
@@ -354,7 +357,7 @@
 
 @keyframes flyOut {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
   100% {
     transform: translateX(50%);
@@ -368,5 +371,14 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes shrinkAndMove {
+  0% {
+    transform: translate(50%, 50%) scale(1);
+  }
+  100% {
+    transform: translate(0, 0) scale(0.5);
   }
 }
