@@ -9,23 +9,24 @@
   }
   
   .fade-out {
-    animation: fadeOut 3s forwards;
+    animation: fadeOut 1s forwards;
   }
 
   .login-intro {
     @include m.flexBox(column, center, center);
     width: 100%;
     height: 100%;
-    position: relative;
+    position: fixed;
+    z-index: 2;
     background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
 
     .login-intro-logo {
       width: 696px;
       height: 184px;
       position: absolute;
-      left: 50%;
       top: 50%;
-      z-index: 2;
+      left: 50%;
+
       img {
         animation: moveLeft 1s ease-in-out forwards;
       }
@@ -35,6 +36,7 @@
       width: 696px;
       height: 184px;
       z-index: 1;
+
       span {
         @include m.styleFont("Nunito", 90px, 700, 1.5, white);
         animation: flyOut 1s ease-in-out 1s forwards;
