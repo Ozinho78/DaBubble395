@@ -242,6 +242,27 @@ h2 {
     background-color: #ECEEFE;
 }
 
+.own-message {
+    .reply {
+        @include m.flexBox(row-reverse, normal, normal);
+
+        .message {
+            @include m.flexBox(column, normal, flex-end);
+
+            .message-info {
+                @include m.flexBox(row-reverse, normal, center);
+            }
+
+            .message-text {
+                border-top-right-radius: 0;
+                border-top-left-radius: 20px;
+                background-color: v.$purple_2;
+                color: #FFFFFF;
+            }
+        }
+    }
+}
+
 .answer-info {
     @include m.flexBox(row, normal, center, 20px);
 }
