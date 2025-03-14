@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
-import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +10,9 @@ import { trigger } from '@angular/animations';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+
+  @ViewChild('logo', { static: true }) logoElement!: ElementRef;
   email: string = '';
   password: string = '';
   emailErrorMessage: string = '';
@@ -19,10 +20,16 @@ export class LoginComponent {
   errorMessage: string = '';
   showAnimation: boolean = true;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private renderer: Renderer2) {}
 
-  ngOnInit() {
-    this.triggerAnimation();
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.shrinkLogo();
+    }, 1000);
+  }
+
+  shrinkLogo(): void {
+    this.renderer.addClass(this.logoElement.nativeElement, 'fade-out');
   }
 
   guestLogin() {
@@ -66,12 +73,5 @@ export class LoginComponent {
       this.errorMessage =
         error.message || 'Fehler bei der Anmeldung: Unbekannter Fehler';
     }
-  }
-
-  triggerAnimation() {
-    this.showAnimation = true;
-    setTimeout(() => {
-      this.showAnimation = false;
-    }, 3000);
   }
 }
