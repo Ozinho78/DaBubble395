@@ -160,4 +160,9 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       return `${formattedDate} ${formattedTime} Uhr`;
     }
   }
+
+  getUserPresence(userId: string | undefined): Observable<boolean> {
+    if (!userId) return of(false); // Falls keine userId vorhanden ist, false zurückgeben
+    return this.presenceService.getUserPresence(userId);
+  }
 }
