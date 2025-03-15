@@ -27,6 +27,7 @@ export class NewMessagesComponent implements OnInit {
 
   users: User[] = [];
   channels: Channel[] = [];
+  userChannels: Channel[] = [];
 
   inputControl = new FormControl(''); // Initialisiert mit leerem String!
   inputControlBottom = new FormControl('');
@@ -60,13 +61,18 @@ export class NewMessagesComponent implements OnInit {
     this.users$ = this.dataService.users$;
     this.channels$ = this.dataService.channels$;
 
+    this.userLoggedIn = localStorage.getItem('user-id') || '';
+
     // Direkter Zugriff auf die Arrays (sofortige Speicherung)
     // this.users = this.dataService.getUsers();
     // this.channels = this.dataService.getChannels();
 
     // aktuelle Daten werden geholt und in die lokalen Arrays gespeichert
     this.users$.subscribe((users) => (this.users = users));
-    this.channels$.subscribe((channels) => (this.channels = channels));
+    this.channels$.subscribe((channels) => {
+      this.channels = channels;
+      this.filterUserChannels(); // Filtert die Channels direkt nach dem Laden
+    });
 
     // Filterung bei jeder Eingabe auslösen und an die Filtermethoden übergeben
     this.inputControl.valueChanges.subscribe((value) => {
@@ -74,6 +80,15 @@ export class NewMessagesComponent implements OnInit {
       this.filterUsers(value || '');
       this.filterChannels(value || '');
     });
+    // this.filterChannelForUserLoggedIn();
+  }
+
+  filterUserChannels() {
+    if (!this.userLoggedIn) return;
+    this.userChannels = this.channels.filter(channel =>
+      channel.member.includes(this.userLoggedIn)
+    );
+    console.log(this.userChannels);
   }
 
   // Filtert User, wenn "@" erkannt wird
@@ -100,9 +115,16 @@ export class NewMessagesComponent implements OnInit {
       return;
     }
     const searchTerm = match[1].toLowerCase();
-    this.filteredChannels = this.channels.filter((channel) =>
+
+    // zeigt nur die Channels des eingeloggten Users an
+    this.filteredChannels = this.userChannels.filter((channel) =>
       channel.name.toLowerCase().includes(searchTerm)
     );
+
+    // Zeigt alle Channels an
+    // this.filteredChannels = this.channels.filter((channel) =>
+    //   channel.name.toLowerCase().includes(searchTerm)
+    // );
   }
 
   // Benutzername einfügen und Liste ausblenden
