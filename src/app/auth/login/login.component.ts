@@ -32,10 +32,18 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.shrinkLogo();
-      this.fadeInHeaderLogo();
-    }, 2500);
+    const introPlayed = localStorage.getItem('introPlayed') === 'true';
+
+    if (introPlayed) {
+      this.renderer.setStyle(this.logoElement.nativeElement, 'display', 'none');
+      this.renderer.setStyle(this.logoHeaderElement.nativeElement, 'opacity', '1'); 
+    } else {
+      setTimeout(() => {
+        this.shrinkLogo();
+        this.fadeInHeaderLogo();
+        localStorage.setItem('introPlayed', 'true');
+      }, 2500);
+    }
   }
   
   shrinkLogo(): void {
