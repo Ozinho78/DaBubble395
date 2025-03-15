@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     const introPlayed = sessionStorage.getItem('introPlayed') === 'true';
 
-
     if (introPlayed) {
       this.renderer.setStyle(this.logoElement.nativeElement, 'display', 'none');
       this.renderer.setStyle(this.logoHeaderElement.nativeElement, 'opacity', '1'); 
