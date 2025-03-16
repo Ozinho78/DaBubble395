@@ -159,6 +159,10 @@
   @include m.flexBox(column, center, flex-start);
 }
 
+.error-message {
+  @include m.styleFont("Nunito", 40px, 700, 1.36, rgb(150, 0, 0));
+}
+
 
 
 .mention-list {

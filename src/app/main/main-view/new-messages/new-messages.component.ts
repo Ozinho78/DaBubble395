@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { FirestoreService } from '../../../../services/firestore.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
 
@@ -21,6 +21,7 @@ export class NewMessagesComponent implements OnInit {
   channelDatabase = collection(this.firestore, 'channels');
   threadsDatabase = collection(this.firestore, 'threads');
   userLoggedIn: string = '';
+  userLoggedInAvatar: string = '';
 
   users$!: Observable<User[]>;
   channels$!: Observable<Channel[]>;
@@ -38,6 +39,8 @@ export class NewMessagesComponent implements OnInit {
   showUsers = false;
   showChannels = false;
   showUsersBottom = false;
+  errorMessageChannelUser = false;
+  errorMessageEmpty = false;
 
   targetUser: User | null = null;
   targetChannel: Channel | null = null;
@@ -62,6 +65,14 @@ export class NewMessagesComponent implements OnInit {
     this.channels$ = this.dataService.channels$;
 
     this.userLoggedIn = localStorage.getItem('user-id') || '';
+    this.getAvatarByDocId(this.userLoggedIn).then(avatar => {
+      if (avatar) {
+        console.log("Avatar-URL:", avatar);
+        this.userLoggedInAvatar = avatar;
+      } else {
+        console.log("Kein Avatar gefunden!");
+      }
+    });    
 
     // Direkter Zugriff auf die Arrays (sofortige Speicherung)
     // this.users = this.dataService.getUsers();
@@ -82,6 +93,25 @@ export class NewMessagesComponent implements OnInit {
     });
     // this.filterChannelForUserLoggedIn();
   }
+
+  async getAvatarByDocId(docId: string): Promise<string | null> {
+    try {
+      const userRef = doc(this.userDatabase, docId);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        return userData['avatar'] || null; // Avatar zurückgeben, falls vorhanden
+      } else {
+        console.log("Kein Benutzer gefunden mit dieser DocID!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen des Avatars:", error);
+      return null;
+    }
+  }
+
 
   filterUserChannels() {
     if (!this.userLoggedIn) return;
@@ -250,13 +280,17 @@ export class NewMessagesComponent implements OnInit {
       } else if (this.targetUser) {
         this.createNewMessage();
       } else {
-        alert("Ungültiger Channel oder User");
+        // alert("Ungültiger Channel oder User");
+        this.errorMessageChannelUser = true;
+        setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
       }
       this.sendMessagesArray.push(this.inputBottomValue);
       this.inputBottomValue = ''; // Eingabe leeren
       this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
     } else {
-      alert("Bitte mal was eingeben, Junge!");
+      // alert("Bitte mal was eingeben, Junge!");
+      this.errorMessageEmpty = true;
+      setTimeout(() => {this.errorMessageEmpty = false}, 3000);
     }
     this.inputControl.setValue('');  // Für FormControl
     this.inputBottomValue = '';      // Für ngModel
@@ -283,11 +317,6 @@ export class NewMessagesComponent implements OnInit {
     }
     this.targetUser = null;
   }
-
-
-
-
-
 
 
 }
