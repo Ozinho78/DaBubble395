@@ -156,7 +156,14 @@
 }
 
 .send-messages-list {
-  @include m.flexBox(column, center, flex-start);
+  @include m.flexBox(row, flex-start, center, 12px);
+  padding-top: 10px;
+  padding-left: 20px;
+  // padding-bottom: 10px;
+  img {
+    width: 32px;
+    border-radius: 50%;
+  }
 }
 
 .error-message {

@@ -141,6 +141,7 @@
     </div>
 
     <div class="send-messages-list" *ngFor="let message of sendMessagesArray">
+      <img src="img/avatar/{{ userLoggedInAvatar }}" alt="User-Avatar">
       <span>{{ message }}</span>
     </div>
 
