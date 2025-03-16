@@ -1,6 +1,8 @@
 export class Channel {
   public docId?: string = '';
-  public creationDate: Date = new Date();
+  // public creationDate: Date = new Date();
+  // public creationDate: string = (new Date().getTime() * 1000).toString();
+  public creationDate: string = new Date().getTime().toString();
   public name: string = '';
   public description: string = '';
   public member: string[] = [];
