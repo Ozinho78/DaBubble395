@@ -20,7 +20,11 @@ import { Router } from '@angular/router';
     selector: 'app-channel',
     imports: [CommonModule, MessageInputComponent, ReactionsComponent],
     templateUrl: './channel.component.html',
-    styleUrl: './channel.component.scss'
+    styleUrls: [
+        './channel.component.scss',
+        '../../thread/message/message.component.scss',
+        '../../thread/thread.component.scss'
+    ]
 })
 export class ChannelComponent implements OnInit {
 
