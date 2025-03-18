@@ -57,7 +57,7 @@ export class ChannelComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.subscribeRouteParams();
+        //this.subscribeRouteParams();
         this.loadUsersFromUserService();
     }
 
