@@ -79,7 +79,7 @@
 
                             <!-- Dropdown-Menü -->
                             <div *ngIf="menuOpen" class="menu-dropdown">
-                                <div (click)="requestEdit()">Nachricht bearbeiten</div>
+                                <!-- <div (click)="requestEdit()">Nachricht bearbeiten</div> -->
                             </div>
 
                         </div>
@@ -132,5 +132,5 @@
 </div>
 
 <!-- Reactions Overlay einblenden -->
-<app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
+<app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()"> <!-- (emojiSelected)="onEmojiSelected($event)" -->
 </app-reactions>

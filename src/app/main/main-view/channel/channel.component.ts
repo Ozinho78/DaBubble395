@@ -29,7 +29,7 @@ import { Router } from '@angular/router';
 export class ChannelComponent implements OnInit {
 
     // 14.03.2025
-    @Input() thread!: Thread & { id: string };
+    //@Input() thread!: Thread & { id: string };
     @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
     currentUserId: string | null = null;
@@ -156,6 +156,7 @@ export class ChannelComponent implements OnInit {
 
     // 14.03.2025
 
+    /*
     onEmojiSelected(emojiType: string): void {
         const reaction = new Reaction({
             userId: this.currentUserId,
@@ -168,7 +169,7 @@ export class ChannelComponent implements OnInit {
                 this.showReactionsOverlay = false;
             })
             .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
-    }
+    }*/
 
     onOverlayClosed() {
         this.showReactionsOverlay = false;
@@ -182,9 +183,10 @@ export class ChannelComponent implements OnInit {
         this.showReactionsOverlay = !this.showReactionsOverlay;
     }
 
+    /*
     requestEdit() {
         this.editRequest.emit({ id: this.thread.id!, text: this.thread.thread });
-    }
+    }*/
 
     closeMenu() {
         this.menuOpen = false;

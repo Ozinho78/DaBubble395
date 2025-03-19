@@ -5,6 +5,12 @@
     padding: 1px 0;
     margin: 5px 0;
 
+    .message-text {
+        word-wrap: break-word;
+        text-wrap: auto;
+        max-width: 285px;
+    }
+
     &:hover {
         background-color: v.$purple_bg;
 

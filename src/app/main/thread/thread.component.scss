@@ -59,7 +59,7 @@ h2 {
 }
 
 .chat-container {
-    @include m.flexBox(column, space-between, normal);
+    @include m.flexBox(column, normal, normal);
     overflow-y: auto;
     overflow-x: hidden;
     padding: 5px 0 0 0;
