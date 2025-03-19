@@ -42,6 +42,7 @@ export class ChannelComponent implements OnInit {
     channelId!: string;
     channel!: Channel | null;
     threads: Thread[] = [];
+    threadId: any;
     channelMembers: any[] = [];
     isLoading: boolean = true;
 
@@ -65,13 +66,13 @@ export class ChannelComponent implements OnInit {
     subscribeRouteParams() {
         this.route.queryParamMap.subscribe(params => {
             this.channelId = params.get('channel') || '';
-            const threadId = params.get('thread');
+            this.threadId = params.get('thread') || null;
 
             if (this.channelId) {
                 this.loadChannel();
                 this.loadThreads();
 
-                if (!threadId) {
+                if (!this.threadId) {
                     this.focusMessageInput();
                     setTimeout(() => { this.scrollToBottom(); }, 200);
                 }
@@ -144,8 +145,14 @@ export class ChannelComponent implements OnInit {
         this.isLoading = true;
 
         try {
-            const rawThreads = await this.firestoreService.getDataByField<Thread>('threads', 'channelId', this.channelId);
-            this.threads = rawThreads.map(obj => new Thread(obj, this.userService, this.messageService));
+            const rawThreads = await this.firestoreService.getThreadsSorted(this.channelId);
+            this.threads = rawThreads.map(obj => {
+                return new Thread(obj, this.userService, this.messageService);
+            });
+
+            if (!this.threadId) {
+                setTimeout(() => this.scrollToBottom(), 200); // ✅ Nur scrollen, wenn kein Thread offen ist
+            }
         } catch (error) {
             console.error('❌ Fehler beim Laden der Threads:', error);
         } finally {
@@ -153,7 +160,21 @@ export class ChannelComponent implements OnInit {
         }
     }
 
+    getFormattedDate(timestamp: number | null | undefined): string {
+        if (timestamp === undefined || timestamp === null) return '';
+        return new Date(timestamp).toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+
     openThread(threadId: string) {
+        if (!threadId) {
+            console.error('❌ Fehler: threadId ist undefined oder leer!');
+            return;
+        }
+
         this.router.navigate([], {
             queryParams: { channel: this.channelId, thread: threadId },
             queryParamsHandling: 'merge',
@@ -212,9 +233,18 @@ export class ChannelComponent implements OnInit {
     scrollToBottom() {
         setTimeout(() => {
             const channelChatContainer = document.querySelector('.channel-chat-container');
-            if (channelChatContainer) {
+            const chatContainer = document.getElementById('chat-container');
+
+            if (channelChatContainer && !this.threadId) {
                 channelChatContainer.scrollTo({
                     top: channelChatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (chatContainer && this.threadId) {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
                     behavior: 'smooth'
                 });
             }

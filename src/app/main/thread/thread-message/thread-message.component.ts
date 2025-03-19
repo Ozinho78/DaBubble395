@@ -127,7 +127,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     });
     this.reactionService.addReaction('threads', this.thread.id!, reaction)
       .then(() => {
-        console.log('Reaction hinzugefügt!');
+        //console.log('Reaction hinzugefügt!');
         this.showReactionsOverlay = false;
       })
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
@@ -140,7 +140,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
   removeMyReaction() {
     this.reactionService.removeReaction('threads', this.thread.id!, this.currentUserId!)
       .then(() => {
-        console.log('Reaction entfernt!');
+        //console.log('Reaction entfernt!');
         this.showReactionsOverlay = false;
       })
       .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));

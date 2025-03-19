@@ -15,7 +15,7 @@ export class MessageService {
     /**
      * Lädt alle Nachrichten aus Firestore und speichert die Anzahl und letzte Antwortzeit pro Thread.
      */
-    async loadMessageData(): Promise<void> {
+    async loadMessageData() {
         try {
             const messages = await this.firestoreService.getData<{ threadId: string, creationDate: number }>('messages');
 

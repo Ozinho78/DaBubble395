@@ -36,8 +36,9 @@
 
     <div class="channel-chat-container">
         <div class="replies" *ngIf="threads.length > 0">
-            <div *ngFor="let thread of threads">
-                <div class="date-header">
+            <div *ngFor="let thread of threads; let i = index">
+                <div class="date-header"
+                    *ngIf="i === 0 || getFormattedDate(thread.creationDate) !== getFormattedDate(threads[i - 1]?.creationDate)">
                     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
                 </div>
 
@@ -127,10 +128,11 @@
     </div>
 
     <!-- Input -->
-    <app-message-input [channelId]="channelId"></app-message-input>
+    <app-message-input [channelName]="channel?.name"></app-message-input>
 
 </div>
 
 <!-- Reactions Overlay einblenden -->
-<app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()"> <!-- (emojiSelected)="onEmojiSelected($event)" -->
+<app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()">
+    <!-- (emojiSelected)="onEmojiSelected($event)" -->
 </app-reactions>
