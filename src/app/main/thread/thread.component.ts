@@ -62,8 +62,11 @@ export class ThreadComponent implements OnInit {
                 this.loadGroupedMessages();
                 this.calculateTotalMessages();
                 this.loadChannelName();
+                this.focusMessageInput();
 
-                setTimeout(() => this.scrollToBottom(), 200);
+                setTimeout(() => {
+                    this.scrollToBottom();
+                }, 200);
             }
 
             this.channelId = params.get('channel') || '';
@@ -123,15 +126,6 @@ export class ThreadComponent implements OnInit {
         );
     }
 
-    scrollToBottom() {
-        setTimeout(() => {
-            const chatContainer = document.getElementById('chat-container');
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-        }, 100);
-    }
-
     handleEditRequest(event: { id: string, text: string }) {
         this.messageInput.editMessage(event.id, event.text);
     }
@@ -141,6 +135,26 @@ export class ThreadComponent implements OnInit {
             queryParams: { channel: this.channelId },
             replaceUrl: true
         });
+    }
+
+    focusMessageInput() {
+        setTimeout(() => {
+            if (this.messageInput && this.messageInput.focusInput) {
+                this.messageInput.focusInput();
+            }
+        }, 300); // Kurze Verzögerung, um sicherzustellen, dass das Element gerendert wurde
+    }
+
+    scrollToBottom() {
+        setTimeout(() => {
+            const chatContainer = document.getElementById('chat-container');
+            if (chatContainer) {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
     }
 
 }

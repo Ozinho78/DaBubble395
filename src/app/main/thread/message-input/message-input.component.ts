@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ export class MessageInputComponent {
     @Input() channelId!: string;
     @Input() isDirectMessage: boolean = false;
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
+    @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
 
     editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
@@ -207,5 +208,13 @@ export class MessageInputComponent {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
         }, 100); // Timeout für sicheres Scrollen nach Rendering
+    }
+
+    focusInput() {
+        setTimeout(() => {
+            if (this.inputElement) {
+                this.inputElement.nativeElement.focus();
+            }
+        }, 100);
     }
 }
