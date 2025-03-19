@@ -23,6 +23,7 @@ export class AddMemberComponent implements OnInit {
   @Output() usersUpdated = new EventEmitter<string[]>();
 
   selectedOption: number = 0;
+  enableButton: boolean = false;
   // selectedOption: string = '';
   searchTerm: string = '';
 
@@ -68,10 +69,18 @@ export class AddMemberComponent implements OnInit {
     if (!this.selectedUsers.includes(user)) {
       this.selectedUsers.push(user);
     }
+    if(this.selectedUsers.length > 0){
+      this.enableButton = true;
+    } else {
+      this.enableButton = false;
+    }
   }
 
   removeUser(user: User): void {
     this.selectedUsers = this.selectedUsers.filter(u => u !== user);
+    if(this.selectedUsers.length == 0){
+      this.enableButton = false;
+    }
   }
 
   cancelMemberModal(){
@@ -99,6 +108,16 @@ export class AddMemberComponent implements OnInit {
     }
   }
 
+  checkSelectedOption(){
+    if(this.selectedOption == 1){
+      this.enableButton = true;
+    } else if(this.selectedOption == 2 && this.selectedUsers.length > 0){
+      this.enableButton = true;
+    } else {
+      this.enableButton = false;
+    }
+  }
+
   submitData() {
     if(this.selectedOption == 1){
       this.selectAllUsers();
@@ -106,10 +125,11 @@ export class AddMemberComponent implements OnInit {
       this.closeMemberModal();
     }
     if(this.selectedOption == 2){
-      this.selectSingleUsers();
-      this.usersUpdated.emit(this.selectedUsersDocId);
-      this.closeMemberModal();
+        this.selectSingleUsers();
+        this.usersUpdated.emit(this.selectedUsersDocId);
+        this.closeMemberModal();
     }
+    this.enableButton = false;
   }
 
 

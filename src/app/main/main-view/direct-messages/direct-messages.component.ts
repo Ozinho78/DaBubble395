@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
 import { PresenceService } from '../../../../services/presence.service';
-import { Observable, of, firstValueFrom } from 'rxjs';
+import { Observable, of, firstValueFrom, map } from 'rxjs';
 import { ChatService } from '../../../../services/direct-meassage.service';
 import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
+import { User } from '../../../../models/user.model';
 
 @Component({
   selector: 'app-direct-messages',
@@ -16,10 +17,7 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 })
 export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   onlineStatus$: Observable<boolean> = of(false);
-  user$: Observable<{ name: string; avatar: string }> = of({
-    name: '',
-    avatar: '',
-  });
+  user$: Observable<User> = of(new User());
   messages$: Observable<Message[]> = of([]);
   selectedProfile: {
     id: string;
@@ -30,6 +28,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   chatId: string = '';
   profileViewOpen: boolean = false;
   selectedProfilePresence$: Observable<boolean> = of(false);
+  loggedInUserId: string = '';
 
   constructor(
     private userService: UserService,
@@ -42,6 +41,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
+    this.loggedInUserId = localStorage.getItem('user-id') || '';
     this.subscribeToSelectedUser();
     this.initializeChat();
   }
@@ -49,11 +49,26 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   private subscribeToSelectedUser(): void {
     this.userService.currentDocIdFromDevSpace.subscribe((selectedUserId) => {
       if (selectedUserId) {
-        this.user$ = this.userService.getUserById(selectedUserId);
+        this.user$ = this.userService.getUserById(selectedUserId).pipe(
+          map((userData: any) => {
+            const user = new User();
+            user.name = userData.name || '';
+            user.avatar = userData.avatar || '';
+            user.email = userData.email || '';
+            // Falls userData.id als String vorliegt, kannst du ihn in eine Zahl umwandeln:
+            user.id = userData.id ? parseInt(userData.id, 10) : 0;
+            user.password = userData.password || '';
+            user.active =
+              userData.active !== undefined ? userData.active : false;
+            // Setze die docId, die du als Identifikator nutzen möchtest:
+            user.docId = selectedUserId;
+            return user;
+          })
+        );
         this.onlineStatus$ =
           this.presenceService.getUserPresence(selectedUserId);
       } else {
-        this.user$ = of({ name: 'Unbekannt', avatar: 'default.png' });
+        this.user$ = of(new User());
       }
     });
   }
@@ -110,7 +125,10 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
 
     this.userService.getUserById(userId).subscribe((userData) => {
       if (userData) {
-        this.selectedProfile = { id: userId, ...userData };
+        this.selectedProfile = {
+          ...userData,
+          id: this.selectedProfile?.id ?? userId, // 👈 Falls `id` fehlt, dann userId setzen
+        };
         this.selectedProfilePresence$ =
           this.presenceService.getUserPresence(userId);
         this.profileViewOpen = true;
@@ -123,5 +141,36 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   closeProfile(): void {
     this.profileViewOpen = false;
     this.selectedProfile = null;
+  }
+
+  formatMessageDate(timestamp: any): string {
+    const date = new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const formattedDate = date.toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    const formattedTime = date.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+    if (date.toDateString() === today.toDateString()) {
+      return `Heute ${formattedTime} Uhr`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return `Gestern ${formattedTime} Uhr`;
+    } else {
+      return `${formattedDate} ${formattedTime} Uhr`;
+    }
+  }
+
+  getUserPresence(userId: string | undefined): Observable<boolean> {
+    if (!userId) return of(false); // Falls keine userId vorhanden ist, false zurückgeben
+    return this.presenceService.getUserPresence(userId);
   }
 }

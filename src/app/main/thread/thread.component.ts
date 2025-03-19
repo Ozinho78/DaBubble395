@@ -10,101 +10,153 @@ import { ThreadMessageComponent } from "./thread-message/thread-message.componen
 import { MessageInputComponent } from "./message-input/message-input.component";
 import { map } from 'rxjs/operators';
 import { VisibleService } from '../../../services/visible.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-thread',
-  imports: [CommonModule, FormsModule, MessageComponent, ThreadMessageComponent, MessageInputComponent],
-  templateUrl: './thread.component.html',
-  styleUrl: './thread.component.scss'
+    selector: 'app-thread',
+    imports: [CommonModule, FormsModule, MessageComponent, ThreadMessageComponent, MessageInputComponent],
+    templateUrl: './thread.component.html',
+    styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
-  @ViewChild('messageInput') messageInput!: MessageInputComponent;
-  groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
-  totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
-  channelName$!: Observable<string>;
-  thread: Thread | null = null;
-  newMessageText: string = '';
-  threadId: string = '6DGHEdX29kIHBFTtGrSr'; // Beispiel, später dynamisch setzen
-  threadVisibility!: boolean;
-  private subscription!: Subscription;
+    @ViewChild('messageInput') messageInput!: MessageInputComponent;
 
-  constructor(
-    private threadService: ThreadService,
-    private visibleService: VisibleService
-  ) { }
+    channelId!: string;
+    threadId!: string;
 
-  ngOnInit() {
-    this.subscription = this.visibleService.threadSubject$.subscribe(value => {
-      this.threadVisibility = value;
-    });
+    groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
+    totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
+    channelName$!: Observable<string>;
+    thread: Thread | null = null;
+    newMessageText: string = '';
+    threadVisibility!: boolean;
+    private subscription!: Subscription;
 
-    this.threadService.getThreadById(this.threadId).subscribe(threadData => {
-      this.thread = new Thread(threadData);
-      this.thread.id = this.threadId;
-    });
+    constructor(
+        private threadService: ThreadService,
+        private visibleService: VisibleService,
+        private route: ActivatedRoute,
+        private router: Router
+    ) { }
 
-    this.channelName$ = this.threadService.getChannelName(this.threadId);
+    ngOnInit() {
+        this.subscribeRouteParams();
+        this.subscribeThreadVisibility();
+        this.loadThreadData();
+        this.loadChannelName();
+        this.loadGroupedMessages();
+        this.calculateTotalMessages();
+    }
 
-    this.groupedMessages$ = this.threadService.getMessages(this.threadId).pipe(
-      map(messages => {
-        const grouped = messages.reduce((acc, message) => {
-          const date = message.creationDate
-            ? new Date(message.creationDate).toLocaleDateString('de-DE', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric'
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
+    subscribeRouteParams() {
+        this.route.queryParamMap.subscribe(params => {
+            const newThreadId = params.get('thread') || '';
+
+            if (newThreadId && newThreadId !== this.threadId) {
+                this.threadId = newThreadId;
+                this.loadThreadData();
+                this.loadGroupedMessages();
+                this.calculateTotalMessages();
+                this.loadChannelName();
+                this.focusMessageInput();
+
+                setTimeout(() => {
+                    this.scrollToBottom();
+                }, 200);
+            }
+
+            this.channelId = params.get('channel') || '';
+        });
+    }
+
+    private subscribeThreadVisibility() {
+        this.subscription = this.visibleService.threadSubject$.subscribe(value => {
+            this.threadVisibility = value;
+        });
+    }
+
+    private loadThreadData() {
+        this.threadService.getThreadById(this.threadId).subscribe(threadData => {
+            this.thread = new Thread(threadData);
+            this.thread.id = this.threadId;
+        });
+        this.scrollToBottom();
+    }
+
+    private loadChannelName() {
+        this.channelName$ = this.threadService.getChannelName(this.threadId);
+    }
+
+    private loadGroupedMessages() {
+        this.groupedMessages$ = this.threadService.getMessages(this.threadId).pipe(
+            map(messages => {
+                const grouped = messages.reduce((acc, message) => {
+                    const date = message.creationDate
+                        ? new Date(message.creationDate).toLocaleDateString('de-DE', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        })
+                        : 'Unbekanntes Datum';
+
+                    if (!acc[date]) acc[date] = [];
+                    acc[date].push(message);
+                    return acc;
+                }, {} as { [key: string]: Message[] });
+
+                return Object.keys(grouped).map(date => ({
+                    date,
+                    messages: grouped[date]
+                }));
             })
-            : 'Unbekanntes Datum';
+        );
 
-          if (!acc[date]) {
-            acc[date] = [];
-          }
-          acc[date].push(message);
-          return acc;
-        }, {} as { [key: string]: Message[] });
+        this.groupedMessages$.subscribe(() => {
+            this.scrollToBottom();
+        });
+    }
 
-        return Object.keys(grouped).map(date => ({
-          date,
-          messages: grouped[date]
-        }));
-      })
-    );
+    private calculateTotalMessages() {
+        this.totalMessagesCount$ = this.groupedMessages$.pipe(
+            map(groups => groups.reduce((acc, group) => acc + group.messages.length, 0))
+        );
+    }
 
-    // ✅ Berechnet die Gesamtanzahl der Nachrichten
-    this.totalMessagesCount$ = this.groupedMessages$.pipe(
-      map(groups => groups.reduce((acc, group) => acc + group.messages.length, 0))
-    );
-  }
+    handleEditRequest(event: { id: string, text: string }) {
+        this.messageInput.editMessage(event.id, event.text);
+    }
 
-  ngAfterViewInit() {
-    this.groupedMessages$.subscribe(() => {
-      this.scrollToBottom();
-    });
-  }
+    closeThread() {
+        this.router.navigate([], {
+            queryParams: { channel: this.channelId },
+            replaceUrl: true
+        });
+    }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    this.subscription.unsubscribe(); // Wichtig: Speicherlecks vermeiden!
-  }
+    focusMessageInput() {
+        setTimeout(() => {
+            if (this.messageInput && this.messageInput.focusInput) {
+                this.messageInput.focusInput();
+            }
+        }, 300); // Kurze Verzögerung, um sicherzustellen, dass das Element gerendert wurde
+    }
 
-  /** Scrollt den Chat nach unten */
-  scrollToBottom() {
-    setTimeout(() => {
-      const chatContainer = document.getElementById('chat-container');
-      if (chatContainer) {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
-    }, 100); // Sicherstellen, dass Nachrichten geladen wurden
-  }
+    scrollToBottom() {
+        setTimeout(() => {
+            const chatContainer = document.getElementById('chat-container');
+            if (chatContainer) {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
 
-  handleEditRequest(event: { id: string, text: string }) {
-    this.messageInput.editMessage(event.id, event.text);
-  }
-
-  toggleVisibility() {
-    this.visibleService.setThreadVisibility(false); // Oder true setzen
-  }
 }
 
 

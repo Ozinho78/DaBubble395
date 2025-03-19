@@ -32,22 +32,24 @@
     </div>
     <div class="member-input1">
       <input
+        (change)="checkSelectedOption()"
         for="members-channel"
         name="choice"
         type="radio"
         [(ngModel)]="selectedOption"
-        value=1
+        [value]=1
       /><label for="members"
         >Alle Mitglieder zu <span>{{ newChannelName }}</span> hinzufügen</label
       >
     </div>
     <div class="member-input2">
       <input
+        (change)="checkSelectedOption()"
         for="members-single"
         name="choice"
         type="radio"
         [(ngModel)]="selectedOption"
-        value=2
+        [value]=2
       /><label for="members-single">Bestimmte Leute hinzufügen</label>
     </div>
 
@@ -90,7 +92,7 @@
     </div>
     <!-- <div><p>{{ selectedOption }}</p></div> -->
     <div class="save-btn">
-      <button [disabled]="selectedOption != 1 && selectedOption != 2" (click)="submitData()">Erstellen</button>
+      <button [disabled]="!enableButton" (click)="submitData()">Erstellen</button>
     </div>
   </div>
 </div>

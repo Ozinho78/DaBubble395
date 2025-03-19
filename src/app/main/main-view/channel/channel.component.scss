@@ -1,0 +1,149 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+.channel-container {
+    height: calc(100dvh - 139px);
+    width: 100%;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    @include m.flexBox(column, normal, normal);
+}
+
+.header-label {
+    height: 46px;
+    padding: 3px 10px;
+    @include m.flexBox(row, center, center, 10px);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.1s ease-in;
+
+    span {
+        @include m.styleFont("Nunito", 28px, 800);
+    }
+
+    &:hover {
+        background: v.$purple_bg;
+
+        span,
+        h2 {
+            color: v.$purple_3;
+        }
+
+        svg {
+            transform: scale(1.1);
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+}
+
+.member-container {
+    height: 46px;
+    @include m.flexBox(row, flex-end, center, 10px);
+    position: relative;
+}
+
+.member {
+    height: 46px;
+    padding: 3px 10px;
+    @include m.flexBox(row, center, center, 10px);
+    position: relative;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.1s ease-in;
+
+    &:hover {
+        background: v.$purple_bg;
+
+        .member-total {
+            color: v.$purple_3;
+        }
+    }
+}
+
+.member-pics {
+    @include m.flexBox(row, center, center);
+    position: relative;
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 50%;
+    margin-left: -15px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+}
+
+.member-total {
+    @include m.styleFont("Nunito", 20px, 600);
+}
+
+.add-member-container {
+    @include m.flexBox(row, center, center);
+    height: 40px;
+    width: 40px;
+    background: v.$purple_bg;
+    border-radius: 50%;
+    cursor: pointer;
+
+    .add-member {
+        &:hover {
+            transform: scale(1.1);
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+}
+
+.answer-info {
+    @include m.flexBox(row, normal, center, 20px);
+}
+
+.answers {
+    @include m.flexBox(row, normal, normal);
+    @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_3);
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.last-answer {
+    @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$grey);
+}
+
+.no-replies-container {
+    @include m.flexBox(column, flex-end, normal);
+    flex-grow: 1;
+}
+
+.no-replies {
+    @include m.flexBox(column, normal, normal, 7px);
+    margin: 10px 45px 30px 45px;
+}
+
+.no-replies-header {
+    @include m.flexBox(row, normal, normal, 10px);
+    @include m.styleFont("Nunito", 24px, 700, 37.74px);
+
+    span {
+        @include m.styleFont("Nunito", 28px, 800);
+    }
+}
+
+.no-replies-text {
+    @include m.styleFont("Nunito", 20px, 400);
+
+    span {
+        color: v.$purple_3;
+    }
+}

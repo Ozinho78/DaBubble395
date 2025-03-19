@@ -28,9 +28,8 @@
 
         <div class="channel-list">
           @for (channel of channels$ | async; track $index){
-          <span (click)="selectChannel(channel)" class="single-channel" *ngIf="isChannelVisible" [@fadeOut]
-            >#{{ channel.name }}</span
-          >
+            <span (click)="selectChannel(channel)" class="single-channel"
+            *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
           }
         </div>
         <div class="add-channel-ctn">

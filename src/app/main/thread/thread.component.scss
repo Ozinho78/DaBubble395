@@ -1,105 +1,109 @@
 @use "../../../mixins.scss" as m;
 @use "../../../variables.scss" as v;
 
-::-webkit-scrollbar {
-    width: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: v.$purple_2;
-    border-radius: 5px;
-
-    &:hover {
-        background-color: v.$purple_1;
-    }
-}
-
-::-webkit-scrollbar-track {
-    background-color: v.$purple_4;
-    margin: 0;
-    border-radius: 5px;
-}
-
 h2 {
     margin: 0;
     @include m.styleFont("Nunito", 24px, 700, 37.74px);
 }
 
 .container {
-    height: calc(100% - 20px);
+    height: calc(100dvh - 139px);
     width: 485px;
     background-color: #FFFFFF;
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
-    @include m.styleFont();
+}
 
-    .header {
-        min-height: 96px;
-        max-height: 96px;
-        margin: 0 40px;
-        @include m.flexBox(row, space-between, center);
+.header {
+    min-height: 96px;
+    max-height: 96px;
+    margin: 0 40px;
+    @include m.flexBox(row, space-between, center);
 
-        .header-label {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+    .header-label {
+        display: flex;
+        align-items: center;
+        gap: 16px;
 
-            .channel {
-                @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$purple_2);
-            }
+        .channel {
+            @include m.styleFont("Nunito", 14px, 400, 19.1px, v.$purple_2);
         }
+    }
 
-        .close-btn-container {
-            @include m.flexBox(row, center, center);
+    .close-btn-container {
+        @include m.flexBox(row, center, center);
 
-            .close-btn {
-                height: 13.5px;
-                width: 13.5px;
-                padding: 6.5px;
-                border-radius: 50%;
-                transition: all 0.100s ease-in;
-                cursor: pointer;
+        .close-btn {
+            height: 13.5px;
+            width: 13.5px;
+            padding: 6.5px;
+            border-radius: 50%;
+            transition: all 0.100s ease-in;
+            cursor: pointer;
 
-                &:hover {
-                    transform: scale(1.1);
-                    background-color: v.$purple_bg;
+            &:hover {
+                transform: scale(1.1);
+                background-color: v.$purple_bg;
 
-                    path {
-                        fill: v.$purple_3;
-                    }
+                path {
+                    fill: v.$purple_3;
                 }
             }
         }
     }
+}
 
-    .shadow {
-        min-height: 5px;
-        background: linear-gradient(to bottom, #00000014, #00000000);
-    }
+.shadow {
+    min-height: 5px;
+    background: linear-gradient(to bottom, #00000014, #00000000);
+}
 
-    .chat-container {
-        overflow-y: visible;
-        overflow-x: hidden;
-        padding: 5px 0 0 0;
+.chat-container {
+    @include m.flexBox(column, normal, normal);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px 0 0 0;
+    flex-grow: 1;
 
-        .replies-spacer {
-            margin: 10px 33px;
-            @include m.flexBox(row, normal, center);
-            @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_4);
+    .replies-spacer {
+        margin: 10px 33px;
+        @include m.flexBox(row, normal, center);
+        @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_4);
 
-            &::after {
-                content: "";
-                flex-grow: 1;
-                height: 1px;
-                background-color: v.$purple_4;
-                margin-left: 20px;
-            }
-        }
-
-        .replies {
-            @include m.flexBox(column, normal, normal);
+        &::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background-color: v.$purple_4;
+            margin-left: 20px;
         }
     }
+
+    .replies {
+        @include m.flexBox(column, normal, normal);
+    }
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 5px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+    }
+
+    &:hover::-webkit-scrollbar {
+        background-color: v.$purple_4;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+        background-color: v.$purple_2;
+    }
+}
+
+.thread {
+    @include m.flexBox(column, normal, normal);
 }
 
 .date-header {

@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Firestore } from '@angular/fire/firestore';
+import { ReactionsComponent } from '../../reactions/reactions.component';
+import { ReactionService } from '../../../../services/reaction.service';
+import { Reaction } from '../../../../models/reaction.class';
 import { Thread } from '../../../../models/thread.class';
 import { UserService } from '../../../../services/user.service';
-import { Reaction } from '../../../../models/reaction.class';
-import { ReactionService } from '../../../../services/reaction.service';
-import { ReactionsComponent } from '../../reactions/reactions.component';
+
 
 @Component({
   selector: 'app-thread-message',
@@ -14,12 +14,13 @@ import { ReactionsComponent } from '../../reactions/reactions.component';
   templateUrl: './thread-message.component.html',
   styleUrls: ['../message/message.component.scss'],
 })
-export class ThreadMessageComponent implements OnInit {
+export class ThreadMessageComponent implements OnInit, OnChanges {
   @Input() thread!: Thread & { id: string };
+  @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
 
-  currentUserId!: string;
+  currentUserId: string | null = null;
+  currentUser: any;
   userData$!: Observable<{ name: string, avatar: string }>;
-  userCache: Map<string, Observable<{ name: string, avatar: string }>> = new Map();
   userNamesCache: { [userId: string]: string } = {};
   reactions$!: Observable<Reaction[]>;
   groupedReactions: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } = {};
@@ -27,48 +28,90 @@ export class ThreadMessageComponent implements OnInit {
   showReactionTooltip: boolean = false;
   tooltipEmoji: string = '';
   tooltipText: string = '';
+  menuOpen: boolean = false;
 
   constructor(
     private userService: UserService,
-    private firestore: Firestore,
     private reactionService: ReactionService
   ) { }
 
-  ngOnInit(): void {
-    this.currentUserId = 'qdWWqOADh6O1FkGpHlTr';
+  ngOnInit() {
+    this.initializeUser();
+    this.subscribeToThreadChanges();
+    this.loadReactions();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['thread'] && changes['thread'].currentValue) {
+      this.loadUserData();
+      this.loadReactions();
+    }
+  }
+
+  loadUserData() {
+    if (this.thread?.userId) {
+      this.userData$ = this.userService.getUserById(this.thread.userId);
+    }
+  }
+
+  initializeUser() {
+    this.currentUserId = this.userService.getCurrentUserId();
+    this.loadCurrentName();
+  }
+
+  subscribeToThreadChanges() {
+    if (!this.thread) return;
     this.userData$ = this.userService.getUserById(this.thread.userId);
-    // Lade die Reaktionen
-    if (this.thread.id) {
-      this.reactions$ = this.reactionService.getReactions('threads', this.thread.id);
+  }
 
-      this.reactions$.subscribe(reactions => {
-        const groups = reactions.reduce((acc, reaction) => {
-          if (!acc[reaction.type]) {
-            acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
-          }
-          acc[reaction.type].count++;
-
-          // Aktualisiere nur die Gruppe für den aktuellen Reaction-Typ
-          if (!this.userNamesCache[reaction.userId]) {
-            this.userService.getUserById(reaction.userId).subscribe(userData => {
-              this.userNamesCache[reaction.userId] = userData.name;
-              if (acc[reaction.type].userNames.indexOf(userData.name) === -1) {
-                acc[reaction.type].userNames.push(userData.name);
-              }
-            });
-          } else {
-            const name = this.userNamesCache[reaction.userId];
-            if (acc[reaction.type].userNames.indexOf(name) === -1) {
-              acc[reaction.type].userNames.push(name);
-            }
-          }
-          if (reaction.userId === this.currentUserId) {
-            acc[reaction.type].likedByMe = true;
-          }
-          return acc;
-        }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
-        this.groupedReactions = groups;
+  loadCurrentName() {
+    if (this.currentUserId) {
+      this.userService.loadCurrentUser(this.currentUserId).then(user => {
+        this.currentUser = user;
       });
+    }
+  }
+
+  loadReactions() {
+    if (!this.thread?.id) return;
+
+    this.reactions$ = this.reactionService.getReactions('threads', this.thread.id);
+    this.reactions$.subscribe(reactions => this.groupReactions(reactions));
+  }
+
+  groupReactions(reactions: Reaction[]) {
+    const groups = reactions.reduce((acc, reaction) => {
+      if (!acc[reaction.type]) {
+        acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
+      }
+      acc[reaction.type].count++;
+
+      this.processReactionUser(acc, reaction);
+      if (reaction.userId === this.currentUserId) {
+        acc[reaction.type].likedByMe = true;
+      }
+      return acc;
+    }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
+
+    this.groupedReactions = groups;
+  }
+
+  processReactionUser(
+    acc: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } },
+    reaction: Reaction
+  ) {
+    if (!this.userNamesCache[reaction.userId]) {
+      this.userService.getUserById(reaction.userId).subscribe(userData => {
+        this.userNamesCache[reaction.userId] = userData.name;
+        if (!acc[reaction.type].userNames.includes(userData.name)) {
+          acc[reaction.type].userNames.push(userData.name);
+        }
+      });
+    } else {
+      const name = this.userNamesCache[reaction.userId];
+      if (!acc[reaction.type].userNames.includes(name)) {
+        acc[reaction.type].userNames.push(name);
+      }
     }
   }
 
@@ -90,53 +133,54 @@ export class ThreadMessageComponent implements OnInit {
       .catch(error => console.error('Fehler beim Hinzufügen der Reaction:', error));
   }
 
-  onOverlayClosed(): void {
+  onOverlayClosed() {
     this.showReactionsOverlay = false;
   }
 
-  removeMyReaction(emojiType: string): void {
-    // Hier entfernen wir die Reaction des aktuellen Benutzers.
-    this.reactionService.removeReaction('threads', this.thread.id!, this.currentUserId)
+  removeMyReaction() {
+    this.reactionService.removeReaction('threads', this.thread.id!, this.currentUserId!)
       .then(() => {
         console.log('Reaction entfernt!');
-        // Optionale UI-Aktualisierung, z. B. Overlay schließen
         this.showReactionsOverlay = false;
       })
       .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
   }
 
-  groupAccHasName(
-    acc: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } },
-    reactionType: string,
-    name: string
-  ): boolean {
-    return acc[reactionType]?.userNames.includes(name);
-  }
-
-  openReactionTooltip(emoji: string, userNames: string[]): void {
+  openReactionTooltip(emoji: string, userNames: string[]) {
     this.tooltipEmoji = emoji;
     const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
 
     if (names.length === 1) {
-      if (names[0] === 'Du') {
-        this.tooltipText = 'Du hast reagiert';
-      } else {
-        this.tooltipText = `${names[0]} hat reagiert`;
-      }
+      this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
+    } else if (names.length === 2) {
+      this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
     } else {
-      this.tooltipText = `${names.join(' und ')} haben reagiert`;
+      const allButLast = names.slice(0, -1).join(', ');
+      const last = names[names.length - 1];
+      this.tooltipText = `${allButLast} und ${last} haben reagiert`;
     }
 
     this.showReactionTooltip = true;
   }
 
-  closeReactionTooltip(): void {
+  closeReactionTooltip() {
     this.showReactionTooltip = false;
   }
 
-  // Beispiel: Wenn du den aktuellen Benutzernamen brauchst:
   get currentUserName(): string {
-    // Setze hier den aktuellen Benutzernamen, eventuell aus dem AuthService oder dem userData$
-    return 'Frederik Beck'; // Beispiel
+    return this.currentUser?.name || 'Unbekannter Nutzer';
   }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  requestEdit() {
+    this.editRequest.emit({ id: this.thread.id!, text: this.thread.thread });
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
+  }
+
 }

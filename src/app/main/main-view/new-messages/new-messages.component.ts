@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { FirestoreService } from '../../../../services/firestore.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { addDoc, collection, Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
 
@@ -21,20 +21,26 @@ export class NewMessagesComponent implements OnInit {
   channelDatabase = collection(this.firestore, 'channels');
   threadsDatabase = collection(this.firestore, 'threads');
   userLoggedIn: string = '';
+  userLoggedInAvatar: string = '';
 
   users$!: Observable<User[]>;
   channels$!: Observable<Channel[]>;
 
   users: User[] = [];
   channels: Channel[] = [];
+  userChannels: Channel[] = [];
 
   inputControl = new FormControl(''); // Initialisiert mit leerem String!
   inputControlBottom = new FormControl('');
   filteredUsers: User[] = [];
   filteredChannels: Channel[] = [];
+  filteredUsersBottom: User[] = [];
 
   showUsers = false;
   showChannels = false;
+  showUsersBottom = false;
+  errorMessageChannelUser = false;
+  errorMessageEmpty = false;
 
   targetUser: User | null = null;
   targetChannel: Channel | null = null;
@@ -58,13 +64,26 @@ export class NewMessagesComponent implements OnInit {
     this.users$ = this.dataService.users$;
     this.channels$ = this.dataService.channels$;
 
+    this.userLoggedIn = localStorage.getItem('user-id') || '';
+    this.getAvatarByDocId(this.userLoggedIn).then(avatar => {
+      if (avatar) {
+        console.log("Avatar-URL:", avatar);
+        this.userLoggedInAvatar = avatar;
+      } else {
+        console.log("Kein Avatar gefunden!");
+      }
+    });    
+
     // Direkter Zugriff auf die Arrays (sofortige Speicherung)
     // this.users = this.dataService.getUsers();
     // this.channels = this.dataService.getChannels();
 
     // aktuelle Daten werden geholt und in die lokalen Arrays gespeichert
     this.users$.subscribe((users) => (this.users = users));
-    this.channels$.subscribe((channels) => (this.channels = channels));
+    this.channels$.subscribe((channels) => {
+      this.channels = channels;
+      this.filterUserChannels(); // Filtert die Channels direkt nach dem Laden
+    });
 
     // Filterung bei jeder Eingabe auslösen und an die Filtermethoden übergeben
     this.inputControl.valueChanges.subscribe((value) => {
@@ -72,6 +91,34 @@ export class NewMessagesComponent implements OnInit {
       this.filterUsers(value || '');
       this.filterChannels(value || '');
     });
+    // this.filterChannelForUserLoggedIn();
+  }
+
+  async getAvatarByDocId(docId: string): Promise<string | null> {
+    try {
+      const userRef = doc(this.userDatabase, docId);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        return userData['avatar'] || null; // Avatar zurückgeben, falls vorhanden
+      } else {
+        console.log("Kein Benutzer gefunden mit dieser DocID!");
+        return null;
+      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen des Avatars:", error);
+      return null;
+    }
+  }
+
+
+  filterUserChannels() {
+    if (!this.userLoggedIn) return;
+    this.userChannels = this.channels.filter(channel =>
+      channel.member.includes(this.userLoggedIn)
+    );
+    console.log(this.userChannels);
   }
 
   // Filtert User, wenn "@" erkannt wird
@@ -98,9 +145,16 @@ export class NewMessagesComponent implements OnInit {
       return;
     }
     const searchTerm = match[1].toLowerCase();
-    this.filteredChannels = this.channels.filter((channel) =>
+
+    // zeigt nur die Channels des eingeloggten Users an
+    this.filteredChannels = this.userChannels.filter((channel) =>
       channel.name.toLowerCase().includes(searchTerm)
     );
+
+    // Zeigt alle Channels an
+    // this.filteredChannels = this.channels.filter((channel) =>
+    //   channel.name.toLowerCase().includes(searchTerm)
+    // );
   }
 
   // Benutzername einfügen und Liste ausblenden
@@ -200,16 +254,46 @@ export class NewMessagesComponent implements OnInit {
     this.saveInputToMessages(this.newMessage);
   }
 
+  onInputChange() {
+    const atIndex = this.inputBottomValue.lastIndexOf('@');
+    if (atIndex !== -1) {
+      const searchTermBottom = this.inputBottomValue.substring(atIndex + 1).toLowerCase();
+      this.filteredUsersBottom = this.users.filter(user => user.name.toLowerCase().includes(searchTermBottom));
+      this.showUsersBottom = this.filteredUsersBottom.length > 0;
+    } else {
+      this.showUsersBottom = false;
+    }
+  }
+
+  selectUserBottom(user: User) {
+    const atIndex = this.inputBottomValue.lastIndexOf('@');
+    if (atIndex !== -1) {
+      this.inputBottomValue = this.inputBottomValue.substring(0, atIndex + 1) + user.name + ' ';
+    }
+    this.showUsersBottom = false;
+  }
+
   addInput() {
-    if (this.inputBottomValue.trim() != '') {
-      if (this.targetChannel != null) {this.createNewThread();}
-      else if (this.targetUser != null) {this.createNewMessage();}
-      else {alert("Ungültiger Channel oder User");}
-    } else {alert("Bitte mal was eingeben, Junge!");}
-    this.sendMessagesArray.push(this.inputBottomValue);
-    // console.log(this.sendMessagesArray);
-    this.inputBottomValue = ""; // Eingabe leeren
-    // this.toggleInputBottom();
+    if (this.inputBottomValue.trim() !== '') {
+      if (this.targetChannel) {
+        this.createNewThread();
+      } else if (this.targetUser) {
+        this.createNewMessage();
+      } else {
+        // alert("Ungültiger Channel oder User");
+        this.errorMessageChannelUser = true;
+        setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
+      }
+      this.sendMessagesArray.push(this.inputBottomValue);
+      this.inputBottomValue = ''; // Eingabe leeren
+      this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
+    } else {
+      // alert("Bitte mal was eingeben, Junge!");
+      this.errorMessageEmpty = true;
+      setTimeout(() => {this.errorMessageEmpty = false}, 3000);
+    }
+    this.inputControl.setValue('');  // Für FormControl
+    this.inputBottomValue = '';      // Für ngModel
   }
 
   async saveInputToThreads(thread: Thread) {
@@ -235,9 +319,27 @@ export class NewMessagesComponent implements OnInit {
   }
 
 
-
-
-
-
-
 }
+
+
+
+
+/* altes Input
+addInput() {
+  if (this.inputBottomValue.trim() != '') {
+    if (this.targetChannel != null) {
+      this.createNewThread();
+    } else if (this.targetUser != null) {
+      this.createNewMessage();
+    } else {
+        alert("Ungültiger Channel oder User");
+      }
+  } else {
+    alert("Bitte mal was eingeben, Junge!");
+  }
+  this.sendMessagesArray.push(this.inputBottomValue);
+  // console.log(this.sendMessagesArray);
+  this.inputBottomValue = ""; // Eingabe leeren
+  // this.toggleInputBottom();
+}
+*/

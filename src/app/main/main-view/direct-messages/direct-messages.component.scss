@@ -46,6 +46,14 @@ h2 {
   display: flex;
   align-items: center;
   gap: 15px;
+  border-radius: 35px;
+  padding: 6px;
+  transition: background-color 100ms ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    background-color: v.$purple_bg;
+  }
 }
 
 .shadow {
@@ -103,9 +111,39 @@ h2 {
   }
 }
 
+.reply-container {
+  width: 100%;
+}
+
 .reply {
   margin: 10px 40px;
   @include m.flexBox(row, normal, normal, 20px);
+}
+
+.sent {
+  // display: flex;
+  // flex-direction: row-reverse;
+
+  .reply {
+    flex-direction: row-reverse;
+  }
+
+  .message {
+    align-items: end;
+  }
+
+  .message-info {
+    flex-direction: row-reverse;
+  }
+
+  .message-text {
+    color: white;
+    background-color: v.$purple_2;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
 }
 
 .avatar {
@@ -140,6 +178,7 @@ h2 {
   @include m.styleFont("Nunito", 18px, 400, 24.55px);
   padding: 15px;
   gap: 8px;
+  width: fit-content;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
@@ -231,4 +270,29 @@ h2 {
 
 :host ::ng-deep app-message-input .input-area-container {
   margin: 0px 45px 40px 45px;
+}
+
+.profile-message-wrapper {
+  position: relative;
+  height: fit-content;
+
+  .profile-message-pic {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+  }
+
+  .profile-pic-online {
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+  }
+
+  .profile-pic-message-offline {
+    height: 17px;
+    width: 17px;
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+  }
 }

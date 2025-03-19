@@ -89,6 +89,7 @@ button, svg {
       flex-grow: 0;
       &:focus {
         outline: none;
+        box-shadow: 0 0 0 1px v.$purple_1;
       }
       ::placeholder {
         /* z.B. Kooperationsprojekte */

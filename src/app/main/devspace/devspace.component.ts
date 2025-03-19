@@ -23,13 +23,14 @@ import {
 import { UserService } from '../../../services/user.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, CommonModule],
+  imports: [AddChannelComponent, CommonModule, RouterModule],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
   animations: [
@@ -73,7 +74,9 @@ export class DevspaceComponent implements OnInit {
     private dataService: FirestoreService,
     private visibleService: VisibleService,
     private userService: UserService,
-    public userPresence: PresenceService
+    public userPresence: PresenceService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
@@ -150,12 +153,18 @@ export class DevspaceComponent implements OnInit {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
     this.showComponent('directMessages');
-    this.visibleService.setThreadVisibility(false);
+
+    // 12.03.2025 - Alexander Riedel
+    this.router.navigate(['/main'], { replaceUrl: true });
   }
 
-  selectChannel(channel: Channel) {
-    this.userService.setChannelIdFromDevSpace(channel.docId!);
-    console.log(this.channelId);
+  selectChannel(channel: any) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { channel: channel.docId },
+      replaceUrl: true
+    });
+    this.showComponent('channel');
   }
 
   selectUser(user: User) {
@@ -167,6 +176,11 @@ export class DevspaceComponent implements OnInit {
 
   showComponent(component: string) {
     this.visibleService.setVisibleComponent(component);
+
+    // 12.03.2025 - Alexander Riedel
+    if (component == 'newMessages') {
+      this.router.navigate(['/main'], { replaceUrl: true });
+    }
   }
 }
 

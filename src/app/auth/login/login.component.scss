@@ -8,34 +8,58 @@
     padding: 0 20px;
   }
 
+  .fade-out {
+    animation: fadeOut 1s forwards;
+  }
+
+  .fade-in {
+    animation: fadeIn 1s forwards;
+  }
+
   .login-intro {
-    @include m.dNone;
+    @include m.flexBox(row, center, center);
+    width: 100%;
     height: 100%;
-    position: relative;
+    position: fixed;
+    z-index: 5;
     background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
 
-    .login-intro-logo {
-      width: 696px;
-      height: 184px;
-      position: absolute;
+    .login-background-right {
+      width: 50%;
+      height: 100%;
+      position: fixed;
       left: 50%;
-      top: 50%;
-      z-index: 2;
-      img {
-        animation: moveLeft 1s ease-in-out forwards;
-      }
+      background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
+      z-index: 6;
+    }
+
+    .login-background-left {
+      width: 50%;
+      height: 100%;
+      position: fixed;
+      left: 0;
+      background: linear-gradient(to bottom, v.$purple_2, v.$purple_1);
+      z-index: 7;
+    }
+
+    .login-intro-logo {
+      width: 376px;
+      height: 184px;
+      animation: moveLeft 0.4s ease-in-out forwards;
+      z-index: 7;
     }
 
     .login-intro-txt {
+      @include m.flexBox(row, center, center);
+      position: absolute;
+      left: 0;
       width: 696px;
       height: 184px;
-      z-index: 1;
+      z-index: 6;
+      animation: flyOut 0.8s ease-in-out 1s forwards;
+
       span {
         @include m.styleFont("Nunito", 90px, 700, 1.5, white);
-        animation: flyOut 1s ease-in-out 1s forwards;
-        position: absolute;
-        left: 50%;
-        top: 50%;
       }
     }
   }
@@ -63,6 +87,7 @@
         .logo {
           @include m.flexBox(row, flex-start, center);
           margin-left: 50px;
+          opacity: 0;
 
           @media (max-width: 630px) {
             margin-left: 0;
@@ -303,7 +328,6 @@
       position: fixed;
       bottom: 20px;
 
-
       a {
         @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
         text-decoration: none;
@@ -327,7 +351,7 @@
       @include m.dNone;
       @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
 
-      @media (max-width: 630px) {        
+      @media (max-width: 630px) {
         @include m.flexBox(column, center, flex-end);
         position: fixed;
         bottom: 60px;
@@ -354,11 +378,10 @@
 
 @keyframes flyOut {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(-50px);
   }
   100% {
-    transform: translateX(50%);
-    opacity: 1;
+    transform: translateX(44vw);
   }
 }
 
@@ -368,5 +391,27 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(50%, 50%) scale(0);
+    display: none;
+  }
+  100% {
+    opacity: 1;
   }
 }

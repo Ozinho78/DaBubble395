@@ -5,6 +5,12 @@
     padding: 1px 0;
     margin: 5px 0;
 
+    .message-text {
+        word-wrap: break-word;
+        text-wrap: auto;
+        max-width: 285px;
+    }
+
     &:hover {
         background-color: v.$purple_bg;
 
@@ -60,6 +66,7 @@
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 20px;
     background-color: #ECEEFE;
+    white-space: pre-line;
 
     a {
         text-decoration: none;
