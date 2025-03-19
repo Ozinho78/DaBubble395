@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
@@ -27,6 +27,7 @@ import { Router } from '@angular/router';
     ]
 })
 export class ChannelComponent implements OnInit {
+    @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
 
     // 14.03.2025
     //@Input() thread!: Thread & { id: string };
@@ -64,10 +65,16 @@ export class ChannelComponent implements OnInit {
     subscribeRouteParams() {
         this.route.queryParamMap.subscribe(params => {
             this.channelId = params.get('channel') || '';
+            const threadId = params.get('thread');
 
             if (this.channelId) {
                 this.loadChannel();
                 this.loadThreads();
+
+                if (!threadId) {
+                    this.focusMessageInput();
+                    setTimeout(() => { this.scrollToBottom(); }, 200);
+                }
             }
         });
     }
@@ -193,5 +200,25 @@ export class ChannelComponent implements OnInit {
     }
 
     //
+
+    focusMessageInput() {
+        setTimeout(() => {
+            if (this.messageInput && this.messageInput.focusInput) {
+                this.messageInput.focusInput();
+            }
+        }, 100);
+    }
+
+    scrollToBottom() {
+        setTimeout(() => {
+            const channelChatContainer = document.querySelector('.channel-chat-container');
+            if (channelChatContainer) {
+                channelChatContainer.scrollTo({
+                    top: channelChatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
 
 }

@@ -103,6 +103,50 @@
     }
 }
 
+.channel-chat-container {
+    @include m.flexBox(column, normal, normal);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px 0 0 0;
+    flex-grow: 1;
+
+    .replies-spacer {
+        margin: 10px 33px;
+        @include m.flexBox(row, normal, center);
+        @include m.styleFont("Nunito", 18px, 400, 24.55px, v.$purple_4);
+
+        &::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background-color: v.$purple_4;
+            margin-left: 20px;
+        }
+    }
+
+    .replies {
+        @include m.flexBox(column, normal, normal);
+    }
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        border-radius: 5px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+    }
+
+    &:hover::-webkit-scrollbar {
+        background-color: v.$purple_4;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+        background-color: v.$purple_2;
+    }
+}
+
 .answer-info {
     @include m.flexBox(row, normal, center, 20px);
 }

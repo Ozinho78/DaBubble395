@@ -70,13 +70,14 @@ export class MessageInputComponent {
     }
     */
 
-    /** Nachricht senden oder bearbeiten */
+    /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
         if (!this.messageText.trim()) return;
+
         if (this.isDirectMessage) {
             this.sendDirectMessage();
         } else {
-            if (!this.threadId) return;
+            if (!this.threadId && !this.channelId) return;
             this.editingMessageId ? this.updateMessage() : this.createMessage();
         }
 
