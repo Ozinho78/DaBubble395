@@ -57,7 +57,8 @@ export class AddChannelComponent {
     let newChannel = new Channel();
     newChannel.name = this.nameInput;
     newChannel.description = this.descriptionInput;
-    newChannel.creationDate = new Date();
+    // newChannel.creationDate = new Date();
+    newChannel.creationDate = new Date().getTime().toString();
     newChannel.member = this.memberDocIds;
     this.onSave.emit(newChannel);
     // console.log(newChannel);

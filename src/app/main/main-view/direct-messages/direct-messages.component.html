@@ -1,7 +1,7 @@
 <div class="container">
   <div class="header">
-    <div class="header-label">
-      <ng-container *ngIf="user$ | async as user">
+    <ng-container *ngIf="user$ | async as user">
+      <div class="header-label" (click)="showProfile(user.docId)">
         <div class="profile-pic-wrapper">
           <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
           <ng-container
@@ -9,21 +9,21 @@
           >
             <img
               class="profile-pic-online"
-              src="/img/direct-messages-img/online.png"
+              src="img/direct-messages-img/online.png"
               alt="Online Indicator"
             />
           </ng-container>
           <ng-template #offlineBlock>
             <img
               class="profile-pic-offline"
-              src="/img/direct-messages-img/offline.png"
+              src="img/direct-messages-img/offline.png"
               alt="Offline Indicator"
             />
           </ng-template>
         </div>
         <h2>{{ user.name }}</h2>
-      </ng-container>
-    </div>
+      </div>
+    </ng-container>
   </div>
   <div class="shadow"></div>
   <ng-container *ngIf="messages$ | async as msgs">
@@ -39,7 +39,32 @@
             }"
           >
             <div class="reply" *ngIf="user$ | async as user">
-              <img [src]="msg?.senderAvatar" alt="Avatar" class="avatar" />
+              <div class="profile-message-wrapper">
+                <img
+                  class="profile-message-pic"
+                  [src]="msg?.senderAvatar"
+                  alt="Profilepicture"
+                />
+                <ng-container
+                  *ngIf="
+                    getUserPresence(msg?.userId) | async as online;
+                    else offlineBlock
+                  "
+                >
+                  <img
+                    class="profile-pic-online"
+                    src="img/header-img/profile-pic-online.png"
+                    alt="Online Indicator"
+                  />
+                </ng-container>
+                <ng-template #offlineBlock>
+                  <img
+                    class="profile-pic-message-offline"
+                    src="img/header-img/profile-pic-offline.png"
+                    alt="Offline Indicator"
+                  />
+                </ng-template>
+              </div>
               <div class="message">
                 <div class="message-info">
                   <div
@@ -71,7 +96,9 @@
         </div>
         <div class="info-about-chat">
           <span class="info-text">Diese Unterhaltung findet nur zwischen</span>
-          <span class="info-name"> &#64;{{ user.name }} </span>
+          <span (click)="showProfile(user.docId)" class="info-name">
+            &#64;{{ user.name }}
+          </span>
           <span class="info-text">und dir statt.</span>
         </div>
       </ng-container>
