@@ -48,6 +48,11 @@
                 <div class="message-info-time">{{ message.creationDate | date:'HH:mm' }} Uhr</div>
             </div>
             <div class="message-text">{{ message.text }}</div>
+            
+            <!-- YouTube Video nur anzeigen, wenn eine gültige URL vorhanden ist -->
+            <div *ngIf="sanitizedVideoUrl" class="video-container">
+                <iframe width="100%" height="300" [src]="sanitizedVideoUrl" frameborder="0" allowfullscreen></iframe>
+            </div>
 
             <!-- reactions -->
             <div class="message-reactions">

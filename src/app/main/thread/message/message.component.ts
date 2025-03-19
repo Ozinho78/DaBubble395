@@ -6,6 +6,7 @@ import { ReactionService } from '../../../../services/reaction.service';
 import { Reaction } from '../../../../models/reaction.class';
 import { Message } from '../../../../models/message.class';
 import { UserService } from '../../../../services/user.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';  // ✅ Import hinzufügen
 
 @Component({
   selector: 'app-message',
@@ -16,6 +17,8 @@ import { UserService } from '../../../../services/user.service';
 export class MessageComponent implements OnInit, OnChanges {
   @Input() message!: Message;
   @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+
+  sanitizedVideoUrl: SafeResourceUrl | null = null; // ✅ Sicherheits-URL
 
   currentUserId: string | null = null;
   currentUser: any;
@@ -32,17 +35,20 @@ export class MessageComponent implements OnInit, OnChanges {
   constructor(
     private userService: UserService,
     private reactionService: ReactionService,
+    private sanitizer: DomSanitizer  // ✅ DomSanitizer hinzufügen
   ) { }
 
   ngOnInit() {
     this.initializeUser();
     this.subscribeToThreadChanges();
     this.loadReactions();
+    this.sanitizeVideoUrl(); // ✅ Video-URL sicher machen
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['message'] && changes['message'].currentValue) {
       this.loadUserData();
+      this.sanitizeVideoUrl(); // ✅ Falls sich die Nachricht ändert, neu prüfen
     }
   }
 
@@ -180,5 +186,25 @@ export class MessageComponent implements OnInit, OnChanges {
 
   closeMenu() {
     this.menuOpen = false;
+  }
+
+  getEmbeddedVideoUrl(messageText: string): string | null {
+    const youtubeRegex =
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+    const match = messageText.match(youtubeRegex);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+  }
+
+  /** Prüft, ob ein YouTube-Link in der Nachricht ist und erstellt eine sichere URL */
+  sanitizeVideoUrl() {
+    const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+    const match = this.message.text.match(youtubeRegex);
+
+    if (match) {
+      const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+      this.sanitizedVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+    } else {
+      this.sanitizedVideoUrl = null;
+    }
   }
 }
