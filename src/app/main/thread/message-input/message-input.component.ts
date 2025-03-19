@@ -79,6 +79,8 @@ export class MessageInputComponent {
             if (!this.threadId) return;
             this.editingMessageId ? this.updateMessage() : this.createMessage();
         }
+
+        this.focusInput();
     }
 
     sendDirectMessage() {
