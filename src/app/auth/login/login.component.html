@@ -26,11 +26,14 @@
         Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit
         verwendest.
       </p>
-      <input
-        type="email"
-        placeholder="beispielname@email.com"
-        [(ngModel)]="email"
-      />
+      <div class="login-input-mail">
+        <img src="img/mail.png" alt="mail logo" />
+        <input
+          type="email"
+          placeholder="beispielname@email.com"
+          [(ngModel)]="email"
+        />
+      </div>
       <div class="error-message" *ngIf="emailErrorMessage">
         {{ emailErrorMessage }}
       </div>
