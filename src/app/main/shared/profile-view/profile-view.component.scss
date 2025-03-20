@@ -82,9 +82,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 18px;
-      font-weight: 500;
-      color: v.$grey;
+      @include m.styleFont("Nunito", 20px, 400, 24px, v.$grey);
+      //font-size: 18px;
+      //font-weight: 500;
+      //color: v.$grey;
     }
 
     .status-icon {
@@ -109,9 +110,10 @@
 
     .user-email {
       display: block;
-      color: #1381ff;
-      font-weight: 500;
-      font-size: 16px;
+      @include m.styleFont("Nunito", 18px, 400, 22px, #1381ff);
+      //color: #1381ff;
+      //font-weight: 500;
+      //font-size: 16px;
       text-decoration: none;
       margin-top: 5px;
       margin-left: 50px;
