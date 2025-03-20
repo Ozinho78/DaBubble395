@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from '../../reactions/reactions.component';
 import { ReactionService } from '../../../../services/reaction.service';
@@ -7,9 +7,16 @@ import { Reaction } from '../../../../models/reaction.class';
 import { Message } from '../../../../models/message.class';
 import { UserService } from '../../../../services/user.service';
 
+import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
+import { PresenceService } from '../../../../services/presence.service';
+
 @Component({
   selector: 'app-message',
-  imports: [CommonModule, ReactionsComponent],
+  imports: [
+    CommonModule,
+    ReactionsComponent,
+    ProfileViewComponent
+  ],
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
@@ -29,9 +36,20 @@ export class MessageComponent implements OnInit, OnChanges {
   tooltipText: string = '';
   menuOpen: boolean = false;
 
+  selectedProfile: {
+    id: string;
+    name: string;
+    avatar: string;
+    email?: string;
+  } | null = null;
+  chatId: string = '';
+  profileViewOpen: boolean = false;
+  selectedProfilePresence$: Observable<boolean> = of(false);
+
   constructor(
     private userService: UserService,
     private reactionService: ReactionService,
+    public presenceService: PresenceService
   ) { }
 
   ngOnInit() {
@@ -180,5 +198,28 @@ export class MessageComponent implements OnInit, OnChanges {
 
   closeMenu() {
     this.menuOpen = false;
+  }
+
+  showProfile(userId: string | undefined): void {
+    if (!userId) return;
+
+    this.userService.getUserById(userId).subscribe((userData) => {
+      if (userData) {
+        this.selectedProfile = {
+          ...userData,
+          id: this.selectedProfile?.id ?? userId,
+        };
+        this.selectedProfilePresence$ =
+          this.presenceService.getUserPresence(userId);
+        this.profileViewOpen = true;
+      } else {
+        console.error('Fehler: User-Daten nicht gefunden.');
+      }
+    });
+  }
+
+  closeProfile(): void {
+    this.profileViewOpen = false;
+    this.selectedProfile = null;
   }
 }
