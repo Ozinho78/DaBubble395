@@ -16,9 +16,13 @@ import { UserService } from '../../../../services/user.service';
 import { MessageService } from '../../../../services/message.service';
 import { Router } from '@angular/router';
 
+import { Observable, of } from 'rxjs';
+import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
+import { PresenceService } from '../../../../services/presence.service';
+
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ReactionsComponent],
+    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -49,13 +53,24 @@ export class ChannelComponent implements OnInit {
     creatorName: string = '';
     creatorSentence: string = '';
 
+    profileViewOpen: boolean = false;
+    selectedProfilePresence$: Observable<boolean> = of(false);
+    loggedInUserId: string = '';
+    selectedProfile: {
+        id: string;
+        name: string;
+        avatar: string;
+        email?: string;
+    } | null = null;
+
     constructor(
         private route: ActivatedRoute,
         private firestoreService: FirestoreService,
         private userService: UserService,
         private messageService: MessageService,
         private router: Router,
-        private reactionService: ReactionService
+        private reactionService: ReactionService,
+        public presenceService: PresenceService
     ) { }
 
     ngOnInit() {
@@ -251,4 +266,26 @@ export class ChannelComponent implements OnInit {
         }, 100);
     }
 
+    showProfile(userId: string | undefined): void {
+        if (!userId) return;
+
+        this.userService.getUserById(userId).subscribe((userData) => {
+            if (userData) {
+                this.selectedProfile = {
+                    ...userData,
+                    id: this.selectedProfile?.id ?? userId,
+                };
+                this.selectedProfilePresence$ =
+                    this.presenceService.getUserPresence(userId);
+                this.profileViewOpen = true;
+            } else {
+                console.error('Fehler: User-Daten nicht gefunden.');
+            }
+        });
+    }
+
+    closeProfile(): void {
+        this.profileViewOpen = false;
+        this.selectedProfile = null;
+    }
 }

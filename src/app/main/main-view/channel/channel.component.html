@@ -91,7 +91,9 @@
                             class="avatar">
                         <div class="message">
                             <div class="message-info">
-                                <div class="message-info-name">{{ thread.userName }}</div>
+                                <div class="message-info-name"
+                                    (click)="thread.userId ? showProfile(thread.userId) : null">{{
+                                    thread.userName }}</div>
                                 <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
                             </div>
                             <div class="message-text">{{ thread.thread }}</div>
@@ -136,3 +138,6 @@
 <app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()">
     <!-- (emojiSelected)="onEmojiSelected($event)" -->
 </app-reactions>
+
+<app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
+    [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
