@@ -44,7 +44,8 @@
         <img [src]="(userData$ | async)?.avatar" alt="Avatar" class="avatar">
         <div class="message">
             <div class="message-info">
-                <div class="message-info-name">{{ (userData$ | async)?.name }}</div>
+                <div class="message-info-name" (click)="message.userId ? showProfile(message.userId) : null">{{
+                    (userData$ | async)?.name }}</div>
                 <div class="message-info-time">{{ message.creationDate | date:'HH:mm' }} Uhr</div>
             </div>
             <div class="message-text">{{ message.text }}</div>
@@ -101,3 +102,6 @@
 <!-- Reactions Overlay einblenden -->
 <app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
 </app-reactions>
+
+<app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
+    [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>

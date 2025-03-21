@@ -30,7 +30,7 @@
     type="text"
     [(ngModel)]="messageText"
     (input)="onTextChange($event)"
-    placeholder="Antworten..."
+    [placeholder]="channelName ? 'Nachricht an #' + channelName : 'Antworten...'"
     (keyup.enter)="sendMessage()"
   >
   </textarea>

@@ -34,10 +34,11 @@
 
     <div class="shadow"></div>
 
-    <div class="chat-container">
+    <div class="channel-chat-container">
         <div class="replies" *ngIf="threads.length > 0">
-            <div *ngFor="let thread of threads">
-                <div class="date-header">
+            <div *ngFor="let thread of threads; let i = index">
+                <div class="date-header"
+                    *ngIf="i === 0 || getFormattedDate(thread.creationDate) !== getFormattedDate(threads[i - 1]?.creationDate)">
                     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
                 </div>
 
@@ -90,7 +91,9 @@
                             class="avatar">
                         <div class="message">
                             <div class="message-info">
-                                <div class="message-info-name">{{ thread.userName }}</div>
+                                <div class="message-info-name"
+                                    (click)="thread.userId ? showProfile(thread.userId) : null">{{
+                                    thread.userName }}</div>
                                 <div class="message-info-time">{{ thread.creationDate | date:'HH:mm' }} Uhr</div>
                             </div>
                             <div class="message-text">{{ thread.thread }}</div>
@@ -127,10 +130,14 @@
     </div>
 
     <!-- Input -->
-    <app-message-input [channelId]="channelId"></app-message-input>
+    <app-message-input [channelName]="channel?.name"></app-message-input>
 
 </div>
 
 <!-- Reactions Overlay einblenden -->
-<app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()"> <!-- (emojiSelected)="onEmojiSelected($event)" -->
+<app-reactions *ngIf="showReactionsOverlay" (closed)="onOverlayClosed()">
+    <!-- (emojiSelected)="onEmojiSelected($event)" -->
 </app-reactions>
+
+<app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
+    [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>

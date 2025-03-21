@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,9 +16,13 @@ import { UserService } from '../../../../services/user.service';
 import { MessageService } from '../../../../services/message.service';
 import { Router } from '@angular/router';
 
+import { Observable, of } from 'rxjs';
+import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
+import { PresenceService } from '../../../../services/presence.service';
+
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ReactionsComponent],
+    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -27,6 +31,7 @@ import { Router } from '@angular/router';
     ]
 })
 export class ChannelComponent implements OnInit {
+    @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
 
     // 14.03.2025
     //@Input() thread!: Thread & { id: string };
@@ -41,11 +46,22 @@ export class ChannelComponent implements OnInit {
     channelId!: string;
     channel!: Channel | null;
     threads: Thread[] = [];
+    threadId: any;
     channelMembers: any[] = [];
     isLoading: boolean = true;
 
     creatorName: string = '';
     creatorSentence: string = '';
+
+    profileViewOpen: boolean = false;
+    selectedProfilePresence$: Observable<boolean> = of(false);
+    loggedInUserId: string = '';
+    selectedProfile: {
+        id: string;
+        name: string;
+        avatar: string;
+        email?: string;
+    } | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -53,7 +69,8 @@ export class ChannelComponent implements OnInit {
         private userService: UserService,
         private messageService: MessageService,
         private router: Router,
-        private reactionService: ReactionService
+        private reactionService: ReactionService,
+        public presenceService: PresenceService
     ) { }
 
     ngOnInit() {
@@ -64,10 +81,16 @@ export class ChannelComponent implements OnInit {
     subscribeRouteParams() {
         this.route.queryParamMap.subscribe(params => {
             this.channelId = params.get('channel') || '';
+            this.threadId = params.get('thread') || null;
 
             if (this.channelId) {
                 this.loadChannel();
                 this.loadThreads();
+
+                if (!this.threadId) {
+                    this.focusMessageInput();
+                    setTimeout(() => { this.scrollToBottom(); }, 200);
+                }
             }
         });
     }
@@ -137,8 +160,14 @@ export class ChannelComponent implements OnInit {
         this.isLoading = true;
 
         try {
-            const rawThreads = await this.firestoreService.getDataByField<Thread>('threads', 'channelId', this.channelId);
-            this.threads = rawThreads.map(obj => new Thread(obj, this.userService, this.messageService));
+            const rawThreads = await this.firestoreService.getThreadsSorted(this.channelId);
+            this.threads = rawThreads.map(obj => {
+                return new Thread(obj, this.userService, this.messageService);
+            });
+
+            if (!this.threadId) {
+                setTimeout(() => this.scrollToBottom(), 200); // ✅ Nur scrollen, wenn kein Thread offen ist
+            }
         } catch (error) {
             console.error('❌ Fehler beim Laden der Threads:', error);
         } finally {
@@ -146,7 +175,21 @@ export class ChannelComponent implements OnInit {
         }
     }
 
+    getFormattedDate(timestamp: number | null | undefined): string {
+        if (timestamp === undefined || timestamp === null) return '';
+        return new Date(timestamp).toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+
     openThread(threadId: string) {
+        if (!threadId) {
+            console.error('❌ Fehler: threadId ist undefined oder leer!');
+            return;
+        }
+
         this.router.navigate([], {
             queryParams: { channel: this.channelId, thread: threadId },
             queryParamsHandling: 'merge',
@@ -194,4 +237,55 @@ export class ChannelComponent implements OnInit {
 
     //
 
+    focusMessageInput() {
+        setTimeout(() => {
+            if (this.messageInput && this.messageInput.focusInput) {
+                this.messageInput.focusInput();
+            }
+        }, 100);
+    }
+
+    scrollToBottom() {
+        setTimeout(() => {
+            const channelChatContainer = document.querySelector('.channel-chat-container');
+            const chatContainer = document.getElementById('chat-container');
+
+            if (channelChatContainer && !this.threadId) {
+                channelChatContainer.scrollTo({
+                    top: channelChatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (chatContainer && this.threadId) {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
+
+    showProfile(userId: string | undefined): void {
+        if (!userId) return;
+
+        this.userService.getUserById(userId).subscribe((userData) => {
+            if (userData) {
+                this.selectedProfile = {
+                    ...userData,
+                    id: this.selectedProfile?.id ?? userId,
+                };
+                this.selectedProfilePresence$ =
+                    this.presenceService.getUserPresence(userId);
+                this.profileViewOpen = true;
+            } else {
+                console.error('Fehler: User-Daten nicht gefunden.');
+            }
+        });
+    }
+
+    closeProfile(): void {
+        this.profileViewOpen = false;
+        this.selectedProfile = null;
+    }
 }

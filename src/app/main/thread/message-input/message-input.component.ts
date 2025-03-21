@@ -18,11 +18,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MessageInputComponent {
     @Input() threadId!: string | null;
-    @Input() channelId!: string;
+    //@Input() channelId!: string;
+    @Input() channelName: string | null | undefined = null;
     @Input() isDirectMessage: boolean = false;
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
 
+    channelId!: string;
     editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
     showEmojiPicker: boolean = false;
@@ -70,14 +72,22 @@ export class MessageInputComponent {
     }
     */
 
-    /** Nachricht senden oder bearbeiten */
+    /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
         if (!this.messageText.trim()) return;
+
         if (this.isDirectMessage) {
             this.sendDirectMessage();
         } else {
-            if (!this.threadId) return;
-            this.editingMessageId ? this.updateMessage() : this.createMessage();
+            if (!this.channelId) return;
+
+            if (this.threadId) {
+                // Falls eine Thread-ID existiert → Nachricht speichern
+                this.editingMessageId ? this.updateMessage() : this.createMessage();
+            } else {
+                // Falls keine Thread-ID existiert → Thread erstellen
+                this.createThread();
+            }
         }
 
         this.focusInput();
@@ -91,6 +101,29 @@ export class MessageInputComponent {
         //  b) oder direkt über einen ChatService senden, falls du das hier machen möchtest.
         // Beispiel für Option (a):
         this.messageText = '';
+    }
+
+    private async createThread() {
+        if (!this.messageText.trim() || !this.currentUserId) return;
+
+        try {
+            const newThread = {
+                thread: this.messageText,
+                userId: this.currentUserId,
+                channelId: this.channelId, // Thread gehört zu einem Channel
+                creationDate: Date.now(),
+                answerCount: 0, // Standardwert für neue Threads
+                lastAnswer: 0,
+            };
+
+            const threadsRef = collection(this.firestore, 'threads'); // Firestore Collection für Threads
+            await addDoc(threadsRef, newThread);
+
+            this.resetInput();
+            this.scrollToBottom();
+        } catch (error) {
+            console.error('Fehler beim Erstellen eines Threads:', error);
+        }
     }
 
     /** Nachricht in Firestore aktualisieren */
