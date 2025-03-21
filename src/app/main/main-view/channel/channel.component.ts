@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
@@ -19,10 +19,11 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { PresenceService } from '../../../../services/presence.service';
+import { ShowChannelComponent } from "./show-channel/show-channel.component";
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent],
+    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent, ShowChannelComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -35,11 +36,11 @@ export class ChannelComponent implements OnInit {
 
     // 14.03.2025
     //@Input() thread!: Thread & { id: string };
-    @Output() editRequest = new EventEmitter<{
-        id: string,
-        text: string,
-        type: 'thread' | 'message'
-    }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+    
+    // fürs Modal
+    @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    
 
     currentUser: any;
     currentUserId: string | null = null;
@@ -50,6 +51,7 @@ export class ChannelComponent implements OnInit {
 
     channelId!: string;
     channel!: Channel | null;
+    editedChannel!: Channel | null;
     threads: Thread[] = [];
     threadId: any;
     channelMembers: any[] = [];
@@ -328,4 +330,10 @@ export class ChannelComponent implements OnInit {
         this.profileViewOpen = false;
         this.selectedProfile = null;
     }
+
+
+    openModal() {
+        this.modal.openModal();
+      }
+
 }

@@ -1,5 +1,5 @@
 <div class="channel-container">
-    <div class="header">
+    <div (click)="openModal()" class="header">
 
         <div class="header-label">
             <span>#</span>
@@ -142,3 +142,6 @@
 
 <app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
     [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
+
+
+<app-show-channel #modal></app-show-channel>
