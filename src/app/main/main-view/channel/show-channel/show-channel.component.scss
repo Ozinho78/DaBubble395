@@ -1,4 +1,4 @@
-.modal {
+.show-channel-container {
   display: flex;
   position: fixed;
   top: 0;
@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.modal-content {
+.show-channel-content {
   background: white;
   padding: 20px;
   border-radius: 8px;
