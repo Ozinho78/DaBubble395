@@ -3,7 +3,7 @@
     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
 </div>
 
-<div class="reply-container" [ngClass]="{'own-message': thread.userId === currentUserId}">
+<div class="reply-container" [ngClass]="{'own-message': thread.userId === currentUserId}" (mouseleave)="closeMenu()">
 
     <!-- add reactions -->
     <div class="add-reactions-container" [ngClass]="{'own-message': thread.userId === currentUserId}">
@@ -39,7 +39,7 @@
 
             <!-- Dropdown-Menü -->
             <div *ngIf="menuOpen" class="menu-dropdown">
-                <div (click)="requestEdit()">Nachricht bearbeiten</div>
+                <div (click)="requestEdit(thread)">Nachricht bearbeiten</div>
             </div>
 
         </div>

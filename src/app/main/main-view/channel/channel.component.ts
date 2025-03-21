@@ -35,8 +35,13 @@ export class ChannelComponent implements OnInit {
 
     // 14.03.2025
     //@Input() thread!: Thread & { id: string };
-    @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+    @Output() editRequest = new EventEmitter<{
+        id: string,
+        text: string,
+        type: 'thread' | 'message'
+    }>();
 
+    currentUser: any;
     currentUserId: string | null = null;
 
     showReactionsOverlay: boolean = false;
@@ -74,8 +79,9 @@ export class ChannelComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        //this.subscribeRouteParams();
+        this.initializeUser();
         this.loadUsersFromUserService();
+        this.subscribeThreads();
     }
 
     subscribeRouteParams() {
@@ -95,9 +101,31 @@ export class ChannelComponent implements OnInit {
         });
     }
 
+    initializeUser() {
+        this.currentUserId = this.userService.getCurrentUserId();
+        this.loadCurrentName();
+    }
+
+    loadCurrentName() {
+        if (this.currentUserId) {
+            this.userService.loadCurrentUser(this.currentUserId).then(user => {
+                this.currentUser = user;
+            });
+        }
+    }
+
     loadUsersFromUserService() {
         this.userService.loadUsers().then(() => {
             this.subscribeRouteParams();
+        });
+    }
+
+    subscribeThreads() {
+        this.firestoreService.subscribeToCollection<Thread>('threads', (allThreads) => {
+            this.threads = allThreads
+                .filter(thread => thread.channelId === this.channelId)
+                .map(obj => new Thread(obj, this.userService, this.messageService)) // 👈 hier!
+                .sort((a, b) => (a.creationDate ?? 0) - (b.creationDate ?? 0));
         });
     }
 
@@ -166,7 +194,7 @@ export class ChannelComponent implements OnInit {
             });
 
             if (!this.threadId) {
-                setTimeout(() => this.scrollToBottom(), 200); // ✅ Nur scrollen, wenn kein Thread offen ist
+                setTimeout(() => this.scrollToBottom(), 200);
             }
         } catch (error) {
             console.error('❌ Fehler beim Laden der Threads:', error);
@@ -197,6 +225,23 @@ export class ChannelComponent implements OnInit {
         });
     }
 
+    requestEdit(thread: Thread) {
+        this.editRequest.emit({
+            id: thread.docId,
+            text: thread.thread,
+            type: 'thread'
+        });
+    }
+
+    /*
+    editMessage(id: string, text: string) {
+        if (this.messageInput) {
+            this.messageInput.editMessage(id, text, 'thread');
+        } else {
+            console.warn('messageInput ist noch nicht geladen.');
+        }
+    }*/
+
     // 14.03.2025
 
     /*
@@ -225,11 +270,6 @@ export class ChannelComponent implements OnInit {
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;
     }
-
-    /*
-    requestEdit() {
-        this.editRequest.emit({ id: this.thread.id!, text: this.thread.thread });
-    }*/
 
     closeMenu() {
         this.menuOpen = false;

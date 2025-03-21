@@ -126,8 +126,8 @@ export class ThreadComponent implements OnInit {
         );
     }
 
-    handleEditRequest(event: { id: string, text: string }) {
-        this.messageInput.editMessage(event.id, event.text);
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+        this.messageInput.editMessage(event.id, event.text, event.type);
     }
 
     closeThread() {

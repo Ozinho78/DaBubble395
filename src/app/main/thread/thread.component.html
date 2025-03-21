@@ -20,7 +20,8 @@
         <!-- Thread -->
         <div class="thread">
             <div class="replies">
-                <app-thread-message *ngIf="thread" [thread]="thread"></app-thread-message>
+                <app-thread-message *ngIf="thread" [thread]="thread"
+                    (editRequest)="handleEditRequest($event)"></app-thread-message>
             </div>
 
             <!-- Anzahl der Nachrichten immer direkt darunter -->

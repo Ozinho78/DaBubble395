@@ -22,7 +22,7 @@ import { PresenceService } from '../../../../services/presence.service';
 })
 export class MessageComponent implements OnInit, OnChanges {
   @Input() message!: Message;
-  @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+  @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' }>();
 
   currentUserId: string | null = null;
   currentUser: any;
@@ -193,7 +193,7 @@ export class MessageComponent implements OnInit, OnChanges {
   }
 
   requestEdit() {
-    this.editRequest.emit({ id: this.message.id!, text: this.message.text });
+    this.editRequest.emit({ id: this.message.id!, text: this.message.text, type: 'message' });
   }
 
   closeMenu() {

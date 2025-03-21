@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChannelComponent } from "./channel/channel.component";
 import { DirectMessagesComponent } from "./direct-messages/direct-messages.component";
 import { NewMessagesComponent } from "./new-messages/new-messages.component";
@@ -13,6 +13,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './main-view.component.scss'
 })
 export class MainViewComponent implements OnInit {
+  @ViewChild('channelComp') channelComp!: ChannelComponent;
+
   visibleComponent: string = '';
 
   constructor(
@@ -36,6 +38,14 @@ export class MainViewComponent implements OnInit {
 
   setVisibleComponent(component: string) {
     this.visibilityService.setVisibleComponent(component);
+  }
+
+  handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    if (this.channelComp?.messageInput) {
+      this.channelComp.messageInput.editMessage(event.id, event.text, event.type);
+    } else {
+      console.warn('messageInput nicht gefunden');
+    }
   }
 
 }

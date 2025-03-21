@@ -26,6 +26,7 @@ export class MessageInputComponent {
 
     channelId!: string;
     editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
+    editingType: 'message' | 'thread' | null = null;
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
     showEmojiPicker: boolean = false;
     showMentionList: boolean = false; // Zeigt die Erwähnungsliste an
@@ -76,16 +77,25 @@ export class MessageInputComponent {
     sendMessage() {
         if (!this.messageText.trim()) return;
 
+        if (this.editingMessageId && this.editingType) {
+            if (this.editingType === 'thread') {
+                this.updateThread();
+            } else {
+                this.updateMessage();
+            }
+
+            this.focusInput();
+            return;
+        }
+
         if (this.isDirectMessage) {
             this.sendDirectMessage();
         } else {
             if (!this.channelId) return;
 
             if (this.threadId) {
-                // Falls eine Thread-ID existiert → Nachricht speichern
-                this.editingMessageId ? this.updateMessage() : this.createMessage();
+                this.createMessage();
             } else {
-                // Falls keine Thread-ID existiert → Thread erstellen
                 this.createThread();
             }
         }
@@ -165,14 +175,32 @@ export class MessageInputComponent {
     }
 
     /** Nachricht für die Bearbeitung setzen */
-    editMessage(messageId: string, text: string) {
+    editMessage(messageId: string, text: string, type: 'message' | 'thread') {
+        debugger;
         this.editingMessageId = messageId;
         this.messageText = text;
+        this.editingType = type;
     }
+
+    private async updateThread() {
+        if (!this.editingMessageId) return;
+
+        try {
+            const threadRef = doc(this.firestore, 'threads', this.editingMessageId);
+            await updateDoc(threadRef, { thread: this.messageText });
+
+            this.resetInput();
+            this.scrollToBottom(); // Nach dem Bearbeiten scrollen
+        } catch (error) {
+            console.error('Fehler beim Aktualisieren des Threads:', error);
+        }
+    }
+
 
     /** Eingabe zurücksetzen */
     resetInput() {
         this.editingMessageId = null;
+        this.editingType = null;
         this.messageText = '';
     }
 
