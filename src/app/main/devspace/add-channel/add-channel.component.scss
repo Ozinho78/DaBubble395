@@ -19,9 +19,7 @@ button, svg {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include m.flexBox(row, center, center);
   @include m.styleFont("Nunito");
   // @include m.styleFont("Nunito", 90px, 700, 1.5, white);
   // @include m.flexBox(row, center, center);

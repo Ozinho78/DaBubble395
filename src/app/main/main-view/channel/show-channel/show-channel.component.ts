@@ -22,4 +22,6 @@ export class ShowChannelComponent {
     this.closeModal.emit();
   }
 
+  editChannelName(){}
+
 }
