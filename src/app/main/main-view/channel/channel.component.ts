@@ -36,7 +36,9 @@ export class ChannelComponent implements OnInit {
 
     // 14.03.2025
     //@Input() thread!: Thread & { id: string };
-    @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+    // @Output() editRequest = new EventEmitter<{ id: string, text: string }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: "message" | "thread" }>();
+
     
     // fürs Modal
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
