@@ -19,6 +19,7 @@
       DABubble-Konto.
     </p>
     <input
+      class="name"
       type="text"
       name="name"
       id="name"
@@ -27,12 +28,13 @@
     />
     <p class="error-message" *ngIf="nameErrorMessage">{{ nameErrorMessage }}</p>
     <input
+      class="email"
       type="email"
       placeholder="beispielname@email.com"
       [(ngModel)]="email"
     />
     <p class="error-message" *ngIf="emailErrorMessage">{{ emailErrorMessage }}</p>
-    <input type="password" placeholder="Passwort" [(ngModel)]="password" />
+    <input class="password" type="password" placeholder="Passwort" [(ngModel)]="password" />
     <p class="error-message" *ngIf="passwordErrorMessage">{{ passwordErrorMessage }}</p>
     <div class="privacy">
       <input

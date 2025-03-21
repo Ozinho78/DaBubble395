@@ -29,6 +29,7 @@
         verwendest.
       </p>
       <input
+        class="email"
         type="email"
         placeholder="beispielname@email.com"
         [(ngModel)]="email"
@@ -36,7 +37,7 @@
       <div class="error-message" *ngIf="emailErrorMessage">
         {{ emailErrorMessage }}
       </div>
-      <input type="password" placeholder="Passwort" [(ngModel)]="password" />
+      <input class="password" type="password" placeholder="Passwort" [(ngModel)]="password" />
       <div class="error-message" *ngIf="passwordErrorMessage">
         {{ passwordErrorMessage }}
       </div>
