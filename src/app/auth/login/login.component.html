@@ -60,8 +60,6 @@
       </div>
     </div>
     <div class="legal-infos">
-      <!-- <a href="imprint">Impressum</a>
-      <a href="policy">Datenschutz</a> -->
       <a routerLink="/imprint" >Impressum</a>
       <a routerLink="/policy">Datenschutz</a>
     </div>
@@ -69,5 +67,8 @@
       <span>Neu bei DABubble?</span>
       <a routerLink="/register">Konto erstellen</a>
     </div>
+  </div>
+  <div class="success-msg" *ngIf="showSuccessMsg">
+    <span>Anmelden</span>
   </div>
 </section>

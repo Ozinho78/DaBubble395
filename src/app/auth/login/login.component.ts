@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   emailErrorMessage: string = '';
   passwordErrorMessage: string = '';
   errorMessage: string = '';
+  showSuccessMsg = false;
 
   constructor(
     private router: Router,
@@ -79,7 +80,11 @@ export class LoginComponent implements OnInit {
 
     try {
       await this.authService.loginUser(this.email, this.password);
-      this.router.navigate(['/main']);
+      this.showSuccessMsg = true;
+        setTimeout(() => {
+          this.showSuccessMsg = false;
+          this.router.navigate(['/main']);
+        }, 1000);
     } catch (error: any) {
       this.handleLoginError(error);
     }

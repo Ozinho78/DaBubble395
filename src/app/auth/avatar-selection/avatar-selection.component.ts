@@ -59,7 +59,7 @@ export class AvatarSelectionComponent {
         setTimeout(() => {
           this.showSuccessMsg = false;
           this.router.navigate(['/main']);
-        }, 1000);
+        }, 2000);
       } catch (error) {
         console.error("Fehler bei der Registrierung:", error);
       }
