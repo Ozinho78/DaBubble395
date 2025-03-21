@@ -13,7 +13,8 @@ import { AuthService } from '../../../services/auth.service';
 export class RequestPasswordResetComponent {
   email: string = '';
   emailErrorMessage: string = '';
-  successMessage: string = '';
+  successMessage: string = '';  
+  isEmail: boolean = false;
 
   constructor(private router: Router, private authService: AuthService) { }
 
@@ -57,6 +58,10 @@ export class RequestPasswordResetComponent {
   isValidEmail(email: string): boolean {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
+  }
+
+  validateEmail() {
+    this.isEmail = this.isValidEmail(this.email);
   }
 
   navigateToLogin() {
