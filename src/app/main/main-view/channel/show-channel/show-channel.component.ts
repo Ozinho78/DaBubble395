@@ -118,6 +118,10 @@ export class ShowChannelComponent {
       return;
     }
 
+    if(this.editedChannelName.length < 3){
+      this.editedChannelName = this.channelToChange.name;
+    }
+
     const channelRef = doc(this.firestore, 'channels', this.channelToChange.docId);
     try {
       await updateDoc(channelRef, {
