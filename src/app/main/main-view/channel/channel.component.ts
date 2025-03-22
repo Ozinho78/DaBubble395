@@ -42,6 +42,7 @@ export class ChannelComponent implements OnInit {
     
     // fürs Modal
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    selectedChannelId: string = ''; // Speichert den ausgewählten Channel
     
 
     currentUser: any;
@@ -334,8 +335,9 @@ export class ChannelComponent implements OnInit {
     }
 
 
-    openModal() {
+    openModal(id: string): void {
+        this.selectedChannelId = id; // Setzt den aktuellen Channel
         this.modal.openModal();
-      }
+    }
 
 }

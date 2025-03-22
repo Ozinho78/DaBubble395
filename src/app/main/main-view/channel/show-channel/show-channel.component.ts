@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Channel } from '../../../../../models/channel.model';
 
 @Component({
   selector: 'app-show-channel',
@@ -10,6 +11,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ShowChannelComponent {
   isOpen = false; // Steuert, ob das Modal sichtbar ist
 
+  @Input() channelIdInput!: string;
   @Output() closeModal = new EventEmitter<void>();
 
   
