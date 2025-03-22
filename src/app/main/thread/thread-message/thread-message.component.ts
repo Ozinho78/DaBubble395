@@ -10,6 +10,7 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 import { PresenceService } from '../../../../services/presence.service';
 import { MessageInputComponent } from '../message-input/message-input.component';
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
+import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
     selector: 'app-thread-message',
@@ -17,7 +18,8 @@ import { ReactionDisplayComponent } from '../../reactions/reaction-display.compo
         CommonModule,
         ReactionsComponent,
         ProfileViewComponent,
-        ReactionDisplayComponent
+        ReactionDisplayComponent,
+        ReactionMenuComponent
     ],
     templateUrl: './thread-message.component.html',
     styleUrls: ['../message/message.component.scss'],
@@ -43,6 +45,8 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     chatId: string = '';
     profileViewOpen: boolean = false;
     selectedProfilePresence$: Observable<boolean> = of(false);
+
+    hoveredThreadId: string | null = null;
 
     constructor(
         public userService: UserService,
@@ -171,5 +175,9 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     closeProfile(): void {
         this.profileViewOpen = false;
         this.selectedProfile = null;
+    }
+
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+        this.editRequest.emit(event);
     }
 }

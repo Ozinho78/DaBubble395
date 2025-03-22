@@ -13,10 +13,11 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 import { PresenceService } from '../../../../services/presence.service';
 import { ShowChannelComponent } from "./show-channel/show-channel.component";
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
+import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent],
+    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent, ReactionMenuComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -25,16 +26,16 @@ import { ReactionDisplayComponent } from '../../reactions/reaction-display.compo
     ]
 })
 export class ChannelComponent implements OnInit {
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: "message" | "thread" }>();
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
 
     selectedChannelId: string = '';
     currentUser: any;
     currentUserId: string | null = null;
     activeReactionThreadId: string | null = null;
-    showReactionsOverlay: boolean = false;
-    menuOpen: boolean = false;
+
     channelId!: string;
     channel!: Channel | null;
     editedChannel!: Channel | null;
@@ -48,6 +49,8 @@ export class ChannelComponent implements OnInit {
     selectedProfilePresence$: Observable<boolean> = of(false);
     loggedInUserId: string = '';
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
+
+    hoveredThreadId: string | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -203,31 +206,6 @@ export class ChannelComponent implements OnInit {
         });
     }
 
-    requestEdit(thread: Thread) {
-        this.editRequest.emit({
-            id: thread.docId,
-            text: thread.thread,
-            type: 'thread'
-        });
-    }
-
-    onOverlayClosed() {
-        this.showReactionsOverlay = false;
-    }
-
-    toggleMenu() {
-        this.menuOpen = !this.menuOpen;
-    }
-
-    toggleReactionsOverlay(threadId: string): void {
-        this.showReactionsOverlay = this.activeReactionThreadId !== threadId;
-        this.activeReactionThreadId = this.showReactionsOverlay ? threadId : null;
-    }
-
-    closeMenu() {
-        this.menuOpen = false;
-    }
-
     focusMessageInput() {
         setTimeout(() => {
             if (this.messageInput && this.messageInput.focusInput) {
@@ -281,7 +259,12 @@ export class ChannelComponent implements OnInit {
     }
 
     openModal(id: string): void {
+        debugger;
         this.selectedChannelId = id;
         this.modal.openModal();
+    }
+
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+        this.editRequest.emit(event);
     }
 }
