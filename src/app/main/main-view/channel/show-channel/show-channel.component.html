@@ -3,7 +3,7 @@
     <div class="header">
       <div class="header-left">
         <span>#</span>
-        <span>{{ channelIdInput }}</span>
+        <span>{{ channelToChange?.name }}</span>
       </div>
       <svg
           class="close-icon"
@@ -42,7 +42,7 @@
       </div>
       <div class="channel-name-title">
         <span>#</span>
-        <span>Entwicklerteam</span>
+        <span>{{ channelToChange?.name }}</span>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       </div>
 
       <div class="channel-description-text">
-        <span>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meeting abhalten, Dokumente teilen und Entscheidungen treffen.</span>
+        <span>{{ channelToChange?.description }}</span>
       </div>
 
       <div class="channel-description-line">
@@ -61,7 +61,7 @@
 
       <div class="channel-creator-ctn">
         <span class="channel-creator-title">Erstellt von</span>
-        <span class="channel-creator-name">Noah Braun</span>
+        <span class="channel-creator-name">{{ channelToChange?.userId }}</span>
       </div>
 
     <!-- channel-description-container -->
