@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { Channel } from '../../../../../models/channel.model';
-import { doc, Firestore, getDoc } from '@angular/fire/firestore';
+import { doc, Firestore, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../../../../../models/user.model';
 
 @Component({
@@ -20,8 +20,13 @@ export class ShowChannelComponent {
 
   channelToChange!: Channel | null;
   userToChange!: User | null;
+  userLoggedIn: string = '';
 
   constructor(private firestore: Firestore) {
+    setTimeout(() => {
+      this.userLoggedIn = localStorage.getItem('user-id') || '';
+      // this.filterUserChannels();
+    }, 500);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -96,9 +101,36 @@ export class ShowChannelComponent {
     setTimeout(() => {this.editDescriptionMode = false}, 3000);
   }
 
-  leaveChannel(){
+  async leaveChannel(){
+    if (!this.channelToChange || !this.userToChange) {
+      console.log('Channel oder User nicht vorhanden!');
+      return;
+    }
+
+    const userIdToRemove = this.userLoggedIn; // Die zu entfernende UserId
+    if (!userIdToRemove) {
+      console.log('UserId nicht gefunden!');
+      return;
+    }
+
+    // Entferne die UserId aus dem Member-Array
+    this.channelToChange.member = this.channelToChange.member.filter(id => id !== userIdToRemove);
+
+    // Speichere die aktualisierten Daten in Firestore
+    const channelRef = doc(this.firestore, 'channels', this.channelToChange.docId!);
+    try {
+      await updateDoc(channelRef, {
+        member: this.channelToChange.member
+      });
+      console.log('User erfolgreich aus dem Channel entfernt!');
+    } catch (error) {
+      console.error('Fehler beim Speichern des Channels:', error);
+    }
+    
     this.isOpen = false;
     this.closeModal.emit();
   }
+
+  // userId Michael Fiebelkorn ktUA231gfQVPbWIyhBU8
 
 }

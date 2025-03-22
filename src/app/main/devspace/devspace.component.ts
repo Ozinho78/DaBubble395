@@ -103,7 +103,6 @@ export class DevspaceComponent implements OnInit {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
       this.filterUserChannels();
     }, 500);
-    
   }
 
   ngOnInit() {
