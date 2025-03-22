@@ -18,6 +18,7 @@ import { User } from '../../../models/user.model';
 export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() threadId!: string;
     @Input() currentUserId!: string;
+    @Input() collectionName: 'threads' | 'messages' = 'threads';
 
     currentUserName: string = '';
     userArray: User[] = [];
@@ -73,7 +74,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        this.reactionsSub = this.reactionService.getReactions('threads', this.threadId).subscribe(reactions => {
+        this.reactionsSub = this.reactionService.getReactions(this.collectionName, this.threadId).subscribe(reactions => {
             this.reactions = reactions;
             this.groupReactions();
             this.isReady = true;
@@ -142,8 +143,9 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     handleReactionClick(type: string, likedByMe: boolean) {
         this.closeTooltip();
+
         if (likedByMe) {
-            this.reactionService.removeReaction('threads', this.threadId, this.currentUserId).then(() => {
+            this.reactionService.removeReaction(this.collectionName, this.threadId, this.currentUserId).then(() => {
                 this.loadReactions();
             });
         } else {
@@ -152,7 +154,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
                 type,
                 timestamp: Date.now()
             });
-            this.reactionService.addReaction('threads', this.threadId, reaction).then(() => {
+            this.reactionService.addReaction(this.collectionName, this.threadId, reaction).then(() => {
                 this.loadReactions();
             });
         }
