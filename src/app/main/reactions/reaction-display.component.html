@@ -1,0 +1,17 @@
+<div class="reactions-wrapper" *ngIf="groupedReactions | keyvalue as groups">
+    <div *ngFor="let group of groups" class="reaction" [class.liked]="group.value.likedByMe"
+        (click)="handleReactionClick(group.key, group.value.likedByMe)"
+        (mouseenter)="openTooltip(group.key, group.value.userNames)" (mouseleave)="closeTooltip()">
+
+        <img [src]="'img/emojis/' + group.key + '.svg'" [alt]="group.key" class="reaction-icon">
+        <div class="counter">{{ group.value.count }}</div>
+
+        <!-- Tooltip -->
+        <div class="reaction-tooltip" *ngIf="tooltipVisibleEmoji === group.key">
+            <div class="tooltip-content">
+                <img [src]="'img/emojis/' + group.key + '.svg'" [alt]="group.key" class="tooltip-emoji">
+                <div class="tooltip-names">{{ tooltipTextMap[group.key] }}</div>
+            </div>
+        </div>
+    </div>
+</div>

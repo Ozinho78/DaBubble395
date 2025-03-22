@@ -15,10 +15,11 @@ import { Observable, of } from 'rxjs';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { PresenceService } from '../../../../services/presence.service';
 import { ShowChannelComponent } from "./show-channel/show-channel.component";
+import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent, ShowChannelComponent],
+    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -34,7 +35,8 @@ export class ChannelComponent implements OnInit {
     currentUser: any;
     currentUserId: string | null = null;
     activeReactionThreadId: string | null = null;
-    reactionsMap: { [threadId: string]: Reaction[] } = {};
+    //reactionsMap: { [threadId: string]: Reaction[] } = {};
+    reactions$!: Observable<Reaction[]>;
     groupedReactionsMap: { [threadId: string]: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } } = {};
     showReactionsOverlay: boolean = false;
     showReactionTooltip: boolean = false;
@@ -58,7 +60,7 @@ export class ChannelComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private firestoreService: FirestoreService,
-        private userService: UserService,
+        public userService: UserService,
         private messageService: MessageService,
         private router: Router,
         private reactionService: ReactionService,
@@ -116,12 +118,12 @@ export class ChannelComponent implements OnInit {
             this.threads = filtered.map(obj => {
                 const thread = new Thread(obj, this.userService, this.messageService);
 
-                if (!this.reactionsMap[thread.docId]) {
+                /*if (!this.reactionsMap[thread.docId]) {
                     this.reactionService.getReactions('threads', thread.docId!).subscribe(reactions => {
                         this.reactionsMap[thread.docId!] = reactions;
                         this.groupReactions(thread.docId!, reactions);
                     });
-                }
+                }*/
 
                 return thread;
             });
@@ -153,12 +155,11 @@ export class ChannelComponent implements OnInit {
             this.channelMembers = this.userService.userArray
                 .filter(user => this.channel!.member.includes(user.docId!))
                 .map(user => ({
-                    id: user.docId,
+                    docId: user.docId,
                     name: user.name,
                     avatar: user.avatar,
                     email: user.email
                 }));
-
         } catch (error) {
             console.error('❌ Fehler beim Laden der Mitglieder:', error);
         }
@@ -187,7 +188,7 @@ export class ChannelComponent implements OnInit {
             const rawThreads = await this.firestoreService.getThreadsSorted(this.channelId);
             this.threads = rawThreads.map(obj => { return new Thread(obj, this.userService, this.messageService); });
 
-            this.loadAllReactions();
+            //this.loadAllReactions();
 
             if (!this.threadId) {
                 setTimeout(() => this.scrollToBottom(), 200);
@@ -302,14 +303,14 @@ export class ChannelComponent implements OnInit {
         this.modal.openModal();
     }
 
-    loadAllReactions() {
+    /*loadAllReactions() {
         for (const thread of this.threads) {
             this.reactionService.getReactions('threads', thread.docId!).subscribe(reactions => {
                 this.reactionsMap[thread.docId!] = reactions;
                 this.groupReactions(thread.docId!, reactions);
             });
         }
-    }
+    }*/
 
     groupReactions(threadId: string, reactions: Reaction[]) {
         const groups = reactions.reduce((acc, reaction) => {
@@ -336,15 +337,36 @@ export class ChannelComponent implements OnInit {
     async onEmojiSelected(emojiType: string) {
         if (!this.activeReactionThreadId) return;
 
-        const reaction = new Reaction({ userId: this.currentUserId, type: emojiType, timestamp: Date.now() });
+        const threadId = this.activeReactionThreadId;
 
-        await this.reactionService.addReaction('threads', this.activeReactionThreadId, reaction);
+        const reaction = new Reaction({
+            userId: this.currentUserId,
+            type: emojiType,
+            timestamp: Date.now()
+        });
+
+        await this.reactionService.addReaction('threads', threadId, reaction);
+
         this.showReactionsOverlay = false;
         this.activeReactionThreadId = null;
+
+        if (this.showReactionTooltip && this.tooltipEmoji === emojiType) {
+            setTimeout(() => {
+                const grouped = this.groupedReactionsMap[threadId];
+                const userNames = grouped?.[emojiType]?.userNames ?? [];
+                //this.openReactionTooltip(emojiType, userNames);
+            }, 50);
+        }
     }
 
     async removeMyReaction(threadId: string) {
         await this.reactionService.removeReaction('threads', threadId, this.currentUserId!);
+
+        const grouped = this.groupedReactionsMap[threadId];
+        if (this.showReactionTooltip && this.tooltipEmoji && grouped) {
+            const userNames = grouped[this.tooltipEmoji]?.userNames ?? [];
+            //setTimeout(() => { this.openReactionTooltip(this.tooltipEmoji, userNames); }, 50);
+        }
     }
 
     getReactionTypes(grouped: any): string[] {
@@ -358,9 +380,29 @@ export class ChannelComponent implements OnInit {
 
     onEmojiSelectedFromList(threadId: string, emojiType: string): void {
         this.activeReactionThreadId = threadId;
-        this.onEmojiSelected(emojiType);
+        this.reactionService.addReaction('threads', threadId, new Reaction({
+            userId: this.currentUserId,
+            type: emojiType,
+            timestamp: Date.now()
+        })).then(() => {
+            this.showReactionsOverlay = false;
+            this.activeReactionThreadId = null;
+
+            const subscription = this.reactionService.getReactions('threads', threadId).subscribe(reactions => {
+                this.groupReactions(threadId, reactions);
+
+                const grouped = this.groupedReactionsMap[threadId];
+                if (this.showReactionTooltip && this.tooltipEmoji === emojiType && grouped) {
+                    const userNames = grouped[emojiType]?.userNames ?? [];
+                    //this.openReactionTooltip(emojiType, userNames);
+                }
+
+                subscription.unsubscribe();
+            });
+        });
     }
 
+    /*
     openReactionTooltip(emoji: string, userNames: string[]) {
         this.tooltipEmoji = emoji;
         const names = userNames.map(name => (name === this.currentUser.name ? 'Du' : name));
@@ -376,10 +418,11 @@ export class ChannelComponent implements OnInit {
         }
 
         this.showReactionTooltip = true;
-    }
+    }*/
 
+    /*    
     closeReactionTooltip() {
         this.showReactionTooltip = false;
     }
-
+    */
 }

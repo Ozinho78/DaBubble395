@@ -176,7 +176,6 @@ export class MessageInputComponent {
 
     /** Nachricht für die Bearbeitung setzen */
     editMessage(messageId: string, text: string, type: 'message' | 'thread') {
-        debugger;
         this.editingMessageId = messageId;
         this.messageText = text;
         this.editingType = type;

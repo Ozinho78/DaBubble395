@@ -6,17 +6,18 @@ import { ReactionService } from '../../../../services/reaction.service';
 import { Reaction } from '../../../../models/reaction.class';
 import { Thread } from '../../../../models/thread.class';
 import { UserService } from '../../../../services/user.service';
-
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { PresenceService } from '../../../../services/presence.service';
 import { MessageInputComponent } from '../message-input/message-input.component';
+import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 
 @Component({
     selector: 'app-thread-message',
     imports: [
         CommonModule,
         ReactionsComponent,
-        ProfileViewComponent
+        ProfileViewComponent,
+        ReactionDisplayComponent
     ],
     templateUrl: './thread-message.component.html',
     styleUrls: ['../message/message.component.scss'],
@@ -30,12 +31,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     currentUser: any;
     userData$!: Observable<{ name: string, avatar: string }>;
     userNamesCache: { [userId: string]: string } = {};
-    reactions$!: Observable<Reaction[]>;
-    groupedReactions: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } = {};
     showReactionsOverlay: boolean = false;
-    showReactionTooltip: boolean = false;
-    tooltipEmoji: string = '';
-    tooltipText: string = '';
     menuOpen: boolean = false;
 
     selectedProfile: {
@@ -49,7 +45,7 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     selectedProfilePresence$: Observable<boolean> = of(false);
 
     constructor(
-        private userService: UserService,
+        public userService: UserService,
         private reactionService: ReactionService,
         public presenceService: PresenceService
     ) { }
@@ -57,13 +53,11 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
     ngOnInit() {
         this.initializeUser();
         this.subscribeToThreadChanges();
-        this.loadReactions();
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes['thread'] && changes['thread'].currentValue) {
             this.loadUserData();
-            this.loadReactions();
         }
     }
 
@@ -89,30 +83,6 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
                 this.currentUser = user;
             });
         }
-    }
-
-    loadReactions() {
-        if (!this.thread?.id) return;
-
-        this.reactions$ = this.reactionService.getReactions('threads', this.thread.id);
-        this.reactions$.subscribe(reactions => this.groupReactions(reactions));
-    }
-
-    groupReactions(reactions: Reaction[]) {
-        const groups = reactions.reduce((acc, reaction) => {
-            if (!acc[reaction.type]) {
-                acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
-            }
-            acc[reaction.type].count++;
-
-            this.processReactionUser(acc, reaction);
-            if (reaction.userId === this.currentUserId) {
-                acc[reaction.type].likedByMe = true;
-            }
-            return acc;
-        }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
-
-        this.groupedReactions = groups;
     }
 
     processReactionUser(
@@ -154,36 +124,6 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
 
     onOverlayClosed() {
         this.showReactionsOverlay = false;
-    }
-
-    removeMyReaction() {
-        this.reactionService.removeReaction('threads', this.thread.id!, this.currentUserId!)
-            .then(() => {
-                //console.log('Reaction entfernt!');
-                this.showReactionsOverlay = false;
-            })
-            .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
-    }
-
-    openReactionTooltip(emoji: string, userNames: string[]) {
-        this.tooltipEmoji = emoji;
-        const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
-
-        if (names.length === 1) {
-            this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
-        } else if (names.length === 2) {
-            this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
-        } else {
-            const allButLast = names.slice(0, -1).join(', ');
-            const last = names[names.length - 1];
-            this.tooltipText = `${allButLast} und ${last} haben reagiert`;
-        }
-
-        this.showReactionTooltip = true;
-    }
-
-    closeReactionTooltip() {
-        this.showReactionTooltip = false;
     }
 
     get currentUserName(): string {

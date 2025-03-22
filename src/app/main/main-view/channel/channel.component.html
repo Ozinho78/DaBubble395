@@ -118,6 +118,7 @@
 
 
                             <!-- reactions -->
+                            <!-- 
                             <div class="message-reactions" *ngIf="groupedReactionsMap[thread.docId] as reactionGroups">
                                 <ng-container *ngFor="let group of getReactionTypes(reactionGroups)">
                                     <div class="reaction" [class.liked]="reactionGroups[group].likedByMe"
@@ -128,7 +129,6 @@
                                         <img [src]="'img/emojis/' + group + '.svg'" [alt]="group" class="reaction-icon">
                                         <div class="counter">{{ reactionGroups[group].count }}</div>
 
-                                        <!-- Tooltip-Overlay -->
                                         <div class="reaction-tooltip"
                                             *ngIf="showReactionTooltip && tooltipEmoji === group">
                                             <div class="tooltip-content">
@@ -140,7 +140,6 @@
                                     </div>
                                 </ng-container>
 
-                                <!-- add reactions -->
                                 <div *ngIf="getReactionTypes(reactionGroups).length > 0" class="reaction-btn"
                                     (click)="toggleReactionsOverlay(thread.docId!)">
                                     <div class="svg-container">
@@ -160,10 +159,15 @@
                                 </div>
                             </div>
 
+                            -->
 
 
 
 
+
+
+                            <app-reaction-display [threadId]="thread.docId!" [currentUserId]="currentUserId!">
+                            </app-reaction-display>
 
 
 

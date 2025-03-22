@@ -1,0 +1,72 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+.reaction {
+    width: 64px;
+    height: 34px;
+    @include m.flexBox(row, center, center);
+    position: relative;
+    gap: 5px;
+    background-color: #FFFFFF;
+    border: 1px solid v.$purple_4;
+    border-radius: 20px;
+    cursor: pointer;
+
+    .counter {
+        @include m.styleFont("Nunito", 16px, 400, 21.82px);
+    }
+
+    &:hover {
+        border: 1px solid v.$purple_1;
+    }
+}
+
+.reaction-icon {
+    height: 24px;
+}
+
+.own-message {
+    .add-reactions {
+        right: unset;
+        left: 40px;
+    }
+}
+
+.reaction.liked {
+    border: 1px solid v.$purple_1;
+}
+
+.reaction-tooltip {
+    position: absolute;
+    @include m.flexBox(row, center, center);
+    min-height: 112px;
+    width: 158px;
+    left: 32px;
+    bottom: 35px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background: v.$purple_1;
+    pointer-events: none;
+}
+
+.reaction:hover .reaction-tooltip {
+    opacity: 1;
+}
+
+.tooltip-content {
+    @include m.flexBox(column, center, center);
+    gap: 5px;
+    text-align: center;
+}
+
+.tooltip-emoji {
+    width: 30px;
+    height: 30px;
+    padding: 8px 8px 0 8px;
+}
+
+.tooltip-names {
+    padding: 0px 8px 8px 8px;
+    @include m.styleFont("Nunito", 16px, 400, 21.82px, #FFFFFF);
+}
