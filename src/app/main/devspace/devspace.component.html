@@ -49,9 +49,8 @@
       <br />
 
       <div class="user-list-ctn">
-        <div class="user-header">
+        <div class="user-header" (click)="toggleUserVisibility()">
           <img
-            (click)="toggleUserVisibility()"
             [class.channel-rotate]="!isUserVisible"
             src="img/arrow_drop_down.png"
             alt="Drop Down Arrow"

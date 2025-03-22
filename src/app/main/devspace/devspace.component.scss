@@ -172,7 +172,8 @@ svg {
     }
 
     &:hover {
-      background-color: v.$purple_bg;
+      color: v.$purple_1;
+      // background-color: v.$purple_bg;
       cursor: pointer;
     }
 
@@ -188,6 +189,7 @@ svg {
     @include m.flexBox(row, flex-start, center, 25px);
     padding-top: 3px;
     padding-bottom: 25px;
+    border-radius: 30px;
 
     img {
       cursor: pointer;
@@ -198,6 +200,12 @@ svg {
       img {
         cursor: default;
       }
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: v.$purple_1;
+      // background-color: v.$purple_bg;
     }
   }
 
