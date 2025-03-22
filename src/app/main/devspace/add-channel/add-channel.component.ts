@@ -17,6 +17,7 @@ export class AddChannelComponent {
   nameInput = '';
   descriptionInput = '';
   memberDocIds: string[] = [];
+  userLoggedIn: string = '';
   @Input() usersArrayFromDevSpace: User[] = [];
   @Output() memberModalClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<Channel>();
@@ -27,7 +28,11 @@ export class AddChannelComponent {
 
   updatedUsers: User[] = [];
 
-  constructor(){}
+  constructor(){
+    setTimeout(() => {
+      this.userLoggedIn = localStorage.getItem('user-id') || '';
+    }, 500);
+  }
 
   handleUsersUpdate(updatedUsers: string[]) {
     // console.log(updatedUsers);
@@ -60,6 +65,7 @@ export class AddChannelComponent {
     // newChannel.creationDate = new Date();
     newChannel.creationDate = new Date().getTime().toString();
     newChannel.member = this.memberDocIds;
+    newChannel.userId = this.userLoggedIn;
     this.onSave.emit(newChannel);
     // console.log(newChannel);
   }
