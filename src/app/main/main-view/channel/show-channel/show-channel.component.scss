@@ -102,6 +102,7 @@ button, svg {
     padding: 2px 1px;
     @include m.flexBox(row, center, center, 10px);
     @include m.styleFont("Nunito", 18px, 400, 1.0, #000000);
+
   }
   
   /* Ligth purple (Lines) */
@@ -204,3 +205,37 @@ button, svg {
 
 }
 
+input {
+  /* 33. Text box + ICON */
+  box-sizing: border-box;
+  /* Auto layout */
+  @include m.flexBox(column, center, flex-start, 20px);
+  padding: 18px 20px;
+  // width: 792px;
+  width: 710px;
+  // width: 100%;
+  height: 60px;
+  /* Ligth purple (Lines) */
+  border: 1px solid #ADB0D9;
+  border-radius: 40px;
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+
+  ::placeholder {
+    /* reference text */
+    /* Auto layout */
+    @include m.flexBox(row, center, center, 15px);
+    padding: 0px;
+    width: 752px;
+    height: 25px;
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+  }
+
+}
