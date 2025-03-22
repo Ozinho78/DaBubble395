@@ -7,11 +7,12 @@ import { UserService } from '../../../services/user.service';
 
 import { Reaction } from '../../../models/reaction.class';
 import { User } from '../../../models/user.model';
+import { ReactionsComponent } from "./reactions.component";
 
 @Component({
     selector: 'app-reaction-display',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, ReactionsComponent],
     templateUrl: './reaction-display.component.html',
     styleUrls: ['./reaction-display.component.scss']
 })
@@ -28,6 +29,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         [type: string]: { count: number; likedByMe: boolean; userNames: string[] };
     } = {};
     isReady = false;
+    showReactionsOverlay = false;
 
     tooltipVisibleEmoji: string | null = null;
     tooltipTextMap: { [emoji: string]: string } = {};
@@ -158,5 +160,31 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
                 this.loadReactions();
             });
         }
+    }
+
+    hasReactions(): boolean {
+        return Object.keys(this.groupedReactions).length > 0;
+    }
+
+    toggleReactionsOverlay() {
+        this.showReactionsOverlay = !this.showReactionsOverlay;
+    }
+
+    onOverlayClosed() {
+        this.showReactionsOverlay = false;
+    }
+
+    async onEmojiSelected(emojiType: string) {
+        const reaction = new Reaction({
+            userId: this.currentUserId,
+            type: emojiType,
+            timestamp: Date.now()
+        });
+
+        await this.reactionService.addReaction(this.collectionName, this.threadId, reaction);
+
+        this.showReactionsOverlay = false;
+
+        this.loadReactions();
     }
 }

@@ -1,9 +1,6 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ReactionsComponent } from '../../reactions/reactions.component';
-import { ReactionService } from '../../../../services/reaction.service';
-import { Reaction } from '../../../../models/reaction.class';
 import { MessageInputComponent } from "../../thread/message-input/message-input.component";
 import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.model';
@@ -19,7 +16,7 @@ import { ReactionDisplayComponent } from '../../reactions/reaction-display.compo
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ReactionsComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent],
+    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -29,25 +26,14 @@ import { ReactionDisplayComponent } from '../../reactions/reaction-display.compo
 })
 export class ChannelComponent implements OnInit {
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
-    //@ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: "message" | "thread" }>();
-
-    
-    // fürs Modal
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
-    selectedChannelId: string = ''; // Speichert den ausgewählten Channel
-    
 
+    selectedChannelId: string = '';
     currentUser: any;
     currentUserId: string | null = null;
     activeReactionThreadId: string | null = null;
-    //reactionsMap: { [threadId: string]: Reaction[] } = {};
-    reactions$!: Observable<Reaction[]>;
-    groupedReactionsMap: { [threadId: string]: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } } = {};
     showReactionsOverlay: boolean = false;
-    showReactionTooltip: boolean = false;
-    tooltipEmoji: string = '';
-    tooltipText: string = '';
     menuOpen: boolean = false;
     channelId!: string;
     channel!: Channel | null;
@@ -69,7 +55,6 @@ export class ChannelComponent implements OnInit {
         public userService: UserService,
         private messageService: MessageService,
         private router: Router,
-        private reactionService: ReactionService,
         public presenceService: PresenceService
     ) { }
 
@@ -123,14 +108,6 @@ export class ChannelComponent implements OnInit {
 
             this.threads = filtered.map(obj => {
                 const thread = new Thread(obj, this.userService, this.messageService);
-
-                /*if (!this.reactionsMap[thread.docId]) {
-                    this.reactionService.getReactions('threads', thread.docId!).subscribe(reactions => {
-                        this.reactionsMap[thread.docId!] = reactions;
-                        this.groupReactions(thread.docId!, reactions);
-                    });
-                }*/
-
                 return thread;
             });
         });
@@ -193,8 +170,6 @@ export class ChannelComponent implements OnInit {
         try {
             const rawThreads = await this.firestoreService.getThreadsSorted(this.channelId);
             this.threads = rawThreads.map(obj => { return new Thread(obj, this.userService, this.messageService); });
-
-            //this.loadAllReactions();
 
             if (!this.threadId) {
                 setTimeout(() => this.scrollToBottom(), 200);
@@ -305,132 +280,8 @@ export class ChannelComponent implements OnInit {
         this.selectedProfile = null;
     }
 
-
     openModal(id: string): void {
-        this.selectedChannelId = id; // Setzt den aktuellen Channel
+        this.selectedChannelId = id;
         this.modal.openModal();
     }
-
-    /*loadAllReactions() {
-        for (const thread of this.threads) {
-            this.reactionService.getReactions('threads', thread.docId!).subscribe(reactions => {
-                this.reactionsMap[thread.docId!] = reactions;
-                this.groupReactions(thread.docId!, reactions);
-            });
-        }
-    }*/
-
-    groupReactions(threadId: string, reactions: Reaction[]) {
-        const groups = reactions.reduce((acc, reaction) => {
-            if (!acc[reaction.type]) {
-                acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
-            }
-            acc[reaction.type].count++;
-
-            const userName = this.getUserName(reaction.userId);
-            if (!acc[reaction.type].userNames.includes(userName)) {
-                acc[reaction.type].userNames.push(userName);
-            }
-
-            if (reaction.userId === this.currentUserId) {
-                acc[reaction.type].likedByMe = true;
-            }
-
-            return acc;
-        }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
-
-        this.groupedReactionsMap[threadId] = groups;
-    }
-
-    async onEmojiSelected(emojiType: string) {
-        if (!this.activeReactionThreadId) return;
-
-        const threadId = this.activeReactionThreadId;
-
-        const reaction = new Reaction({
-            userId: this.currentUserId,
-            type: emojiType,
-            timestamp: Date.now()
-        });
-
-        await this.reactionService.addReaction('threads', threadId, reaction);
-
-        this.showReactionsOverlay = false;
-        this.activeReactionThreadId = null;
-
-        if (this.showReactionTooltip && this.tooltipEmoji === emojiType) {
-            setTimeout(() => {
-                const grouped = this.groupedReactionsMap[threadId];
-                const userNames = grouped?.[emojiType]?.userNames ?? [];
-                //this.openReactionTooltip(emojiType, userNames);
-            }, 50);
-        }
-    }
-
-    async removeMyReaction(threadId: string) {
-        await this.reactionService.removeReaction('threads', threadId, this.currentUserId!);
-
-        const grouped = this.groupedReactionsMap[threadId];
-        if (this.showReactionTooltip && this.tooltipEmoji && grouped) {
-            const userNames = grouped[this.tooltipEmoji]?.userNames ?? [];
-            //setTimeout(() => { this.openReactionTooltip(this.tooltipEmoji, userNames); }, 50);
-        }
-    }
-
-    getReactionTypes(grouped: any): string[] {
-        return Object.keys(grouped);
-    }
-
-    getUserName(userId: string): string {
-        const user = this.userService.userArray.find(user => user.docId === userId);
-        return user?.name || 'Unbekannt';
-    }
-
-    onEmojiSelectedFromList(threadId: string, emojiType: string): void {
-        this.activeReactionThreadId = threadId;
-        this.reactionService.addReaction('threads', threadId, new Reaction({
-            userId: this.currentUserId,
-            type: emojiType,
-            timestamp: Date.now()
-        })).then(() => {
-            this.showReactionsOverlay = false;
-            this.activeReactionThreadId = null;
-
-            const subscription = this.reactionService.getReactions('threads', threadId).subscribe(reactions => {
-                this.groupReactions(threadId, reactions);
-
-                const grouped = this.groupedReactionsMap[threadId];
-                if (this.showReactionTooltip && this.tooltipEmoji === emojiType && grouped) {
-                    const userNames = grouped[emojiType]?.userNames ?? [];
-                    //this.openReactionTooltip(emojiType, userNames);
-                }
-
-                subscription.unsubscribe();
-            });
-        });
-    }
-
-    /*
-    openReactionTooltip(emoji: string, userNames: string[]) {
-        this.tooltipEmoji = emoji;
-        const names = userNames.map(name => (name === this.currentUser.name ? 'Du' : name));
-
-        if (names.length === 1) {
-            this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
-        } else if (names.length === 2) {
-            this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
-        } else {
-            const allButLast = names.slice(0, -1).join(', ');
-            const last = names[names.length - 1];
-            this.tooltipText = `${allButLast} und ${last} haben reagiert`;
-        }
-
-        this.showReactionTooltip = true;
-    }*/
-
-    /*    
-    closeReactionTooltip() {
-        this.showReactionTooltip = false;
-    }
-    */
 }

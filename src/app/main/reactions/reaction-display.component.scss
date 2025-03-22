@@ -1,6 +1,11 @@
 @use "../../../mixins.scss" as m;
 @use "../../../variables.scss" as v;
 
+.reactions-wrapper {
+    @include m.flexBox(row, normal, normal, 6px);
+    flex-wrap: wrap;
+}
+
 .reaction {
     width: 64px;
     height: 34px;
@@ -69,4 +74,36 @@
 .tooltip-names {
     padding: 0px 8px 8px 8px;
     @include m.styleFont("Nunito", 16px, 400, 21.82px, #FFFFFF);
+}
+
+.reaction-btn {
+    height: 34px;
+    width: 34px;
+    @include m.flexBox(row, center, center);
+    background: #FFFFFF;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.100s ease;
+
+    &:hover {
+        background: v.$purple_bg;
+
+        svg path {
+            fill: v.$purple_3;
+        }
+    }
+}
+
+.svg-container {
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+        border-radius: 50%;
+        background-color: v.$purple_bg;
+
+        path {
+            fill: v.$purple_3;
+        }
+    }
 }
