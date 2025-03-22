@@ -38,7 +38,8 @@
     <div class="channel-name-ctn">
       <div class="channel-name-header">
         <span>Channel-Name</span>
-        <span (click)="editChannelName()" class="name-edit">Bearbeiten</span>
+        <span *ngIf="!editNameMode" (click)="editChannelName()" class="name-edit">Bearbeiten</span>
+        <span *ngIf="editNameMode" (click)="editChannelName()" class="name-edit">Speichern</span>
       </div>
       <div class="channel-name-title">
         <span>#</span>
@@ -49,7 +50,8 @@
     <div class="channel-description-container">
       <div class="channel-description-header">
         <span>Beschreibung</span>
-        <span (click)="editChannelDescription()" class="description-edit">Bearbeiten</span>
+        <span *ngIf="!editDescriptionMode" (click)="editChannelDescription()" class="description-edit">Bearbeiten</span>
+        <span *ngIf="editDescriptionMode" (click)="editChannelDescription()" class="description-edit">Speichern</span>
       </div>
 
       <div class="channel-description-text">

@@ -12,15 +12,17 @@ import { User } from '../../../../../models/user.model';
 })
 export class ShowChannelComponent {
   isOpen = false; // Steuert, ob das Modal sichtbar ist
+  editNameMode = false;
+  editDescriptionMode = false;
 
   @Input() channelIdInput!: string;
   @Output() closeModal = new EventEmitter<void>();
 
   channelToChange!: Channel | null;
-  userToChange!: User | null; // Neuer User, der anhand der userId geladen wird
+  userToChange!: User | null;
 
   constructor(private firestore: Firestore) {
-  } // Firestore-Injektion
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['channelIdInput'] && this.channelIdInput) {
@@ -75,8 +77,6 @@ export class ShowChannelComponent {
     }
   }
 
-
-  
   openModal() {
     this.isOpen = true;
   }
@@ -86,10 +86,19 @@ export class ShowChannelComponent {
     this.closeModal.emit();
   }
 
-  editChannelName(){}
+  editChannelName(){
+    this.editNameMode = true;
+    setTimeout(() => {this.editNameMode = false}, 3000);
+  }
 
-  editChannelDescription(){}
+  editChannelDescription(){
+    this.editDescriptionMode = true;
+    setTimeout(() => {this.editDescriptionMode = false}, 3000);
+  }
 
-  leaveChannel(){}
+  leaveChannel(){
+    this.isOpen = false;
+    this.closeModal.emit();
+  }
 
 }
