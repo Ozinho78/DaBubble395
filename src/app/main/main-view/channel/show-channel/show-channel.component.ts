@@ -26,4 +26,6 @@ export class ShowChannelComponent {
 
   editChannelDescription(){}
 
+  leaveChannel(){}
+
 }
