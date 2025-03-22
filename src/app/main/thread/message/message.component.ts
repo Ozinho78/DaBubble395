@@ -6,10 +6,10 @@ import { ReactionService } from '../../../../services/reaction.service';
 import { Reaction } from '../../../../models/reaction.class';
 import { Message } from '../../../../models/message.class';
 import { UserService } from '../../../../services/user.service';
-
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { PresenceService } from '../../../../services/presence.service';
 import { ReactionDisplayComponent } from "../../reactions/reaction-display.component";
+import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
     selector: 'app-message',
@@ -17,7 +17,8 @@ import { ReactionDisplayComponent } from "../../reactions/reaction-display.compo
         CommonModule,
         ReactionsComponent,
         ProfileViewComponent,
-        ReactionDisplayComponent
+        ReactionDisplayComponent,
+        ReactionMenuComponent
     ],
     templateUrl: './message.component.html',
     styleUrls: ['./message.component.scss']
@@ -30,13 +31,7 @@ export class MessageComponent implements OnInit, OnChanges {
     currentUser: any;
     userData$!: Observable<{ name: string, avatar: string }>;
     userNamesCache: { [userId: string]: string } = {};
-    reactions$!: Observable<Reaction[]>;
-    groupedReactions: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } } = {};
     showReactionsOverlay: boolean = false;
-    showReactionTooltip: boolean = false;
-    tooltipEmoji: string = '';
-    tooltipText: string = '';
-    menuOpen: boolean = false;
 
     selectedProfile: {
         id: string;
@@ -48,6 +43,8 @@ export class MessageComponent implements OnInit, OnChanges {
     profileViewOpen: boolean = false;
     selectedProfilePresence$: Observable<boolean> = of(false);
 
+    hoveredThreadId: string | null = null;
+
     constructor(
         private userService: UserService,
         private reactionService: ReactionService,
@@ -57,7 +54,6 @@ export class MessageComponent implements OnInit, OnChanges {
     ngOnInit() {
         this.initializeUser();
         this.subscribeToThreadChanges();
-        //this.loadReactions();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -90,56 +86,11 @@ export class MessageComponent implements OnInit, OnChanges {
         }
     }
 
-    /*
-    loadReactions() {
-        if (!this.message.id) return;
-
-        this.reactions$ = this.reactionService.getReactions('messages', this.message.id);
-
-        this.reactions$.subscribe(reactions => this.groupReactions(reactions));
-    }
-
-    groupReactions(reactions: Reaction[]) {
-        const groups = reactions.reduce((acc, reaction) => {
-            if (!acc[reaction.type]) {
-                acc[reaction.type] = { count: 0, likedByMe: false, userNames: [] };
-            }
-            acc[reaction.type].count++;
-
-            this.processReactionUser(acc, reaction);
-            if (reaction.userId === this.currentUserId) {
-                acc[reaction.type].likedByMe = true;
-            }
-            return acc;
-        }, {} as { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } });
-
-        this.groupedReactions = groups;
-    }
-
-    processReactionUser(
-        acc: { [type: string]: { count: number, likedByMe: boolean, userNames: string[] } },
-        reaction: Reaction
-    ) {
-        if (!this.userNamesCache[reaction.userId]) {
-            this.userService.getUserById(reaction.userId).subscribe(userData => {
-                this.userNamesCache[reaction.userId] = userData.name;
-                if (!acc[reaction.type].userNames.includes(userData.name)) {
-                    acc[reaction.type].userNames.push(userData.name);
-                }
-            });
-        } else {
-            const name = this.userNamesCache[reaction.userId];
-            if (!acc[reaction.type].userNames.includes(name)) {
-                acc[reaction.type].userNames.push(name);
-            }
-        }
-    }*/
-
-    toggleReactionsOverlay(): void {
+    toggleReactionsOverlay() {
         this.showReactionsOverlay = !this.showReactionsOverlay;
     }
 
-    onEmojiSelected(emojiType: string): void {
+    onEmojiSelected(emojiType: string) {
         const reaction = new Reaction({
             userId: this.currentUserId,
             type: emojiType,
@@ -157,54 +108,7 @@ export class MessageComponent implements OnInit, OnChanges {
         this.showReactionsOverlay = false;
     }
 
-    /*
-    removeMyReaction() {
-        this.reactionService.removeReaction('messages', this.message.id!, this.currentUserId!)
-            .then(() => {
-                console.log('Reaction entfernt!');
-                this.showReactionsOverlay = false;
-            })
-            .catch(error => console.error('Fehler beim Entfernen der Reaction:', error));
-    }
-
-    openReactionTooltip(emoji: string, userNames: string[]) {
-        this.tooltipEmoji = emoji;
-        const names = userNames.map(name => (name === this.currentUserName ? 'Du' : name));
-
-        if (names.length === 1) {
-            this.tooltipText = names[0] === 'Du' ? 'Du hast reagiert' : `${names[0]} hat reagiert`;
-        } else if (names.length === 2) {
-            this.tooltipText = `${names[0]} und ${names[1]} haben reagiert`;
-        } else {
-            const allButLast = names.slice(0, -1).join(', ');
-            const last = names[names.length - 1];
-            this.tooltipText = `${allButLast} und ${last} haben reagiert`;
-        }
-
-        this.showReactionTooltip = true;
-    }
-
-    closeReactionTooltip() {
-        this.showReactionTooltip = false;
-    }
-
-    get currentUserName(): string {
-        return this.currentUser?.name || 'Unbekannter Nutzer';
-    }*/
-
-    toggleMenu() {
-        this.menuOpen = !this.menuOpen;
-    }
-
-    requestEdit() {
-        this.editRequest.emit({ id: this.message.id!, text: this.message.text, type: 'message' });
-    }
-
-    closeMenu() {
-        this.menuOpen = false;
-    }
-
-    showProfile(userId: string | undefined): void {
+    showProfile(userId: string | undefined) {
         if (!userId) return;
 
         this.userService.getUserById(userId).subscribe((userData) => {
@@ -222,8 +126,12 @@ export class MessageComponent implements OnInit, OnChanges {
         });
     }
 
-    closeProfile(): void {
+    closeProfile() {
         this.profileViewOpen = false;
         this.selectedProfile = null;
+    }
+
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+        this.editRequest.emit(event);
     }
 }

@@ -34,7 +34,7 @@ export class ChannelComponent implements OnInit {
     selectedChannelId: string = '';
     currentUser: any;
     currentUserId: string | null = null;
-    activeReactionThreadId: string | null = null;
+    //activeReactionThreadId: string | null = null;
 
     channelId!: string;
     channel!: Channel | null;
@@ -184,7 +184,7 @@ export class ChannelComponent implements OnInit {
         }
     }
 
-    getFormattedDate(timestamp: number | null | undefined): string {
+    getFormattedDate(timestamp: number | null | undefined) {
         if (timestamp === undefined || timestamp === null) return '';
         return new Date(timestamp).toLocaleDateString('de-DE', {
             day: '2-digit',
@@ -194,11 +194,6 @@ export class ChannelComponent implements OnInit {
     }
 
     openThread(threadId: string) {
-        if (!threadId) {
-            console.error('❌ Fehler: threadId ist undefined oder leer!');
-            return;
-        }
-
         this.router.navigate([], {
             queryParams: { channel: this.channelId, thread: threadId },
             queryParamsHandling: 'merge',
@@ -235,7 +230,7 @@ export class ChannelComponent implements OnInit {
         }, 100);
     }
 
-    showProfile(userId: string | undefined): void {
+    showProfile(userId: string | undefined) {
         if (!userId) return;
 
         this.userService.getUserById(userId).subscribe((userData) => {
@@ -253,13 +248,12 @@ export class ChannelComponent implements OnInit {
         });
     }
 
-    closeProfile(): void {
+    closeProfile() {
         this.profileViewOpen = false;
         this.selectedProfile = null;
     }
 
-    openModal(id: string): void {
-        debugger;
+    openModal(id: string) {
         this.selectedChannelId = id;
         this.modal.openModal();
     }

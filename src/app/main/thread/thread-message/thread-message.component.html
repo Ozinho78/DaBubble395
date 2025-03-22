@@ -1,4 +1,4 @@
-<!-- Datum über dem Thread-Text -->
+<!-- date -->
 <div class="date-header">
     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
 </div>
@@ -12,6 +12,7 @@
         [isOwnMessage]="thread.userId === currentUserId" (editRequest)="handleEditRequest($event)">
     </app-reaction-menu>
 
+    <!-- reply -->
     <div class="reply">
         <img [src]="(userData$ | async)?.avatar" alt="Avatar" class="avatar">
         <div class="message">
@@ -31,9 +32,10 @@
     </div>
 </div>
 
-<!-- Reactions Overlay einblenden -->
+<!-- reactions overlay -->
 <app-reactions *ngIf="showReactionsOverlay" (emojiSelected)="onEmojiSelected($event)" (closed)="onOverlayClosed()">
 </app-reactions>
 
+<!-- profile view -->
 <app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
     [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
