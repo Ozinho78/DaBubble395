@@ -210,6 +210,7 @@ input {
   box-sizing: border-box;
   /* Auto layout */
   @include m.flexBox(column, center, flex-start, 20px);
+  @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
   padding: 18px 20px;
   // width: 792px;
   width: 710px;
