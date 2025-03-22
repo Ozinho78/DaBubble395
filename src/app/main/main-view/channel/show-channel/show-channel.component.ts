@@ -3,17 +3,20 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { Channel } from '../../../../../models/channel.model';
 import { doc, Firestore, getDoc, updateDoc } from '@angular/fire/firestore';
 import { User } from '../../../../../models/user.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-show-channel',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './show-channel.component.html',
   styleUrl: './show-channel.component.scss'
 })
 export class ShowChannelComponent {
   isOpen = false; // Steuert, ob das Modal sichtbar ist
-  editNameMode = false;
+  editNameMode = false; // Bearbeitungsmodus für den Namen
+  editedChannelName = ''; // Temporärer neuer Name
   editDescriptionMode = false;
+  editedChannelDescription = ''; // Temporäre neue Beschreibung
 
   @Input() channelIdInput!: string;
   @Output() closeModal = new EventEmitter<void>();
@@ -49,6 +52,9 @@ export class ShowChannelComponent {
       this.channelToChange.description = data['description'];
       this.channelToChange.member = data['member'] || [];
       this.channelToChange.userId = data['userId'];
+
+      this.editedChannelName = this.channelToChange.name; // Standardwert setzen
+      this.editedChannelDescription = this.channelToChange.description; // Standardwert setzen
 
       // Lade den User basierend auf userId
       if (this.channelToChange.userId) {
@@ -91,15 +97,59 @@ export class ShowChannelComponent {
     this.closeModal.emit();
   }
 
-  editChannelName(){
-    this.editNameMode = true;
-    setTimeout(() => {this.editNameMode = false}, 3000);
+  toggleEditMode(field: number) {
+    if(field === 1) {
+      this.editNameMode = !this.editNameMode;
+      if (!this.editNameMode && this.channelToChange) {
+        this.updateChannelName();
+      }
+    }
+    if(field === 2) {
+      this.editDescriptionMode = !this.editDescriptionMode;
+      if (!this.editDescriptionMode && this.channelToChange) {
+        this.updateChannelDescription();
+      }
+    }
   }
 
-  editChannelDescription(){
-    this.editDescriptionMode = true;
-    setTimeout(() => {this.editDescriptionMode = false}, 3000);
+  async updateChannelName() {
+    if (!this.channelToChange || !this.channelToChange.docId) {
+      console.log('Channel nicht vorhanden oder hat keine docId!');
+      return;
+    }
+
+    const channelRef = doc(this.firestore, 'channels', this.channelToChange.docId);
+    try {
+      await updateDoc(channelRef, {
+        name: this.editedChannelName
+      });
+      console.log('Channel-Name erfolgreich aktualisiert!');
+
+      this.channelToChange.name = this.editedChannelName; // UI aktualisieren
+    } catch (error) {
+      console.error('Fehler beim Speichern des Channel-Namens:', error);
+    }
   }
+
+  async updateChannelDescription(){
+    if (!this.channelToChange || !this.channelToChange.docId) {
+      console.log('Channel nicht vorhanden oder hat keine docId!');
+      return;
+    }
+
+    const channelRef = doc(this.firestore, 'channels', this.channelToChange.docId);
+    try {
+      await updateDoc(channelRef, {
+        description: this.editedChannelDescription
+      });
+      console.log('Channel-Name erfolgreich aktualisiert!');
+
+      this.channelToChange.description = this.editedChannelDescription; // UI aktualisieren
+    } catch (error) {
+      console.error('Fehler beim Speichern der Channel-Description:', error);
+    }
+  }
+
 
   async leaveChannel(){
     if (!this.channelToChange || !this.userToChange) {
@@ -131,6 +181,9 @@ export class ShowChannelComponent {
     this.closeModal.emit();
   }
 
-  // userId Michael Fiebelkorn ktUA231gfQVPbWIyhBU8
+  
 
 }
+
+
+// userId Michael Fiebelkorn ktUA231gfQVPbWIyhBU8
