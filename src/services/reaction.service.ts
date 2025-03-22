@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Firestore, doc, setDoc, collection, collectionData, deleteDoc } from '@angular/fire/firestore';
 import { Reaction } from '../models/reaction.class';
 import { Observable } from 'rxjs';
@@ -7,8 +7,6 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class ReactionService {
-    private injector = inject(Injector);
-
     constructor(private firestore: Firestore) { }
 
     addReaction(collectionName: string, documentId: string, reaction: Reaction): Promise<void> {
@@ -18,9 +16,7 @@ export class ReactionService {
 
     getReactions(collectionName: string, documentId: string): Observable<Reaction[]> {
         const reactionsRef = collection(this.firestore, collectionName, documentId, 'reactions');
-        return runInInjectionContext(this.injector, () =>
-            collectionData(reactionsRef, { idField: 'id' }) as Observable<Reaction[]>
-        );
+        return collectionData(reactionsRef, { idField: 'id' }) as Observable<Reaction[]>;
     }
 
     removeReaction(collectionName: string, documentId: string, userId: string): Promise<void> {
