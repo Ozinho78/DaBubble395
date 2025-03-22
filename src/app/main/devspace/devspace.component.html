@@ -32,9 +32,8 @@
             *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
           }
         </div>
-        <div class="add-channel-ctn">
+        <div class="add-channel-ctn" (click)="openChannelDialog()">
           <img
-            (click)="openChannelDialog()"
             src="img/add_circle.png"
             alt="Add Circle Icon"
           />
