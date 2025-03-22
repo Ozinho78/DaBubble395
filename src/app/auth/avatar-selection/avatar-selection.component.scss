@@ -14,7 +14,7 @@
 
     .logo {
       @include m.flexBox(row, flex-start, center);
-      margin-left: 75px;
+      margin-left: 50px;
 
       .logo-logo {
         width: 70px;

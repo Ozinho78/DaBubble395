@@ -62,6 +62,7 @@ export class DevspaceComponent implements OnInit {
   users: User[] = [];
   userJson: [{}] = [{}];
   channels: Channel[] = [];
+  userChannels: Channel[] = [];
   docId: string | null = null;
   channelId: string | null = null;
 
@@ -100,6 +101,7 @@ export class DevspaceComponent implements OnInit {
     });
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
+      this.filterUserChannels();
     }, 500);
   }
 
@@ -117,6 +119,14 @@ export class DevspaceComponent implements OnInit {
     this.userService.currentChannelIdFromDevSpace.subscribe(
       (id) => (this.channelId = id)
     );
+  }
+
+  filterUserChannels() {
+    if (!this.userLoggedIn) return;
+    this.userChannels = this.channels.filter(channel =>
+      channel.member.includes(this.userLoggedIn)
+    );
+    // console.log(this.userChannels);
   }
 
   toggleChannelVisibility() {
@@ -147,6 +157,7 @@ export class DevspaceComponent implements OnInit {
 
   async saveChannelToFirestore(channel: Channel) {
     await addDoc(this.channelDatabase, channel.toJson());
+    this.filterUserChannels();
   }
 
   selectUserForDirectMessage(user: User) {

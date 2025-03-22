@@ -29,8 +29,14 @@ import { ReactionDisplayComponent } from '../../reactions/reaction-display.compo
 })
 export class ChannelComponent implements OnInit {
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
-    @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    //@ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: "message" | "thread" }>();
+
+    
+    // fürs Modal
+    @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    selectedChannelId: string = ''; // Speichert den ausgewählten Channel
+    
 
     currentUser: any;
     currentUserId: string | null = null;
@@ -299,7 +305,9 @@ export class ChannelComponent implements OnInit {
         this.selectedProfile = null;
     }
 
-    openModal() {
+
+    openModal(id: string): void {
+        this.selectedChannelId = id; // Setzt den aktuellen Channel
         this.modal.openModal();
     }
 

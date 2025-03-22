@@ -27,7 +27,7 @@
         </div>
 
         <div class="channel-list">
-          @for (channel of channels$ | async; track $index){
+          @for (channel of userChannels; track $index){
             <span (click)="selectChannel(channel)" class="single-channel"
             *ngIf="isChannelVisible" [@fadeOut]>#{{ channel.name }}</span>
           }
