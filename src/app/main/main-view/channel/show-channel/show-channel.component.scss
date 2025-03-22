@@ -35,8 +35,8 @@ button, svg {
 
 .show-channel-content {
   position: relative;
-  width: 872px;
-  height: 616px;
+  // width: 872px;
+  // height: 616px;
   // width: 100%;
   // width: 100%;
   /* White */
@@ -69,19 +69,20 @@ button, svg {
 
   }
 
-  padding-bottom: 40px;
+  padding-bottom: 20px;
 }
 
 
 .channel-name-ctn {
   /* 71. Channel name */
   box-sizing: border-box;
-  @include m.flexBox(column, center, flex-start, 20px);
+  @include m.flexBox(column, center, flex-start, 10px);
   padding: 20px;
   
   .channel-name-header {
     width: 100%;
     @include m.flexBox(row, space-between, center);
+    @include m.styleFont("Nunito", 18px, 700, 1.0, #000000);
 
     .name-edit {
       @include m.styleFont("Nunito", 18px, 600, 1.0, v.$purple_3);
@@ -96,17 +97,109 @@ button, svg {
 
     }
   }
+
+  .channel-name-title {
+    padding: 2px 1px;
+    @include m.flexBox(row, center, center, 10px);
+    @include m.styleFont("Nunito", 18px, 400, 1.0, #000000);
+  }
   
   /* Ligth purple (Lines) */
   border: 1px solid v.$purple_4;
   border-radius: 20px;
+}
 
+
+.channel-description-container {
+  box-sizing: border-box;
+  margin-top: 20px;
+  padding: 20px;
+  @include m.flexBox(column, center, flex-start, 20px);
+
+  .channel-description-header{
+    width: 100%;
+    @include m.flexBox(row, space-between, center);
+    @include m.styleFont("Nunito", 18px, 700, 1.0, #000000);
+
+    .description-edit {
+      @include m.styleFont("Nunito", 18px, 600, 1.0, v.$purple_3);
+      padding: 8px 12px;
+
+      &:hover {
+        background-color: v.$purple_bg;
+        border-radius: 12px;
+        cursor: pointer;
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  .channel-description-text {
+    @include m.styleFont("Nunito", 18px, 400, 1.0, #000000);
+    padding-bottom: 10px;
+  }
+
+  .channel-description-line {
+    /* Line */
+    // width: 739px;
+    // height: 0px;
+    margin: auto;
+    width: 95%;
+    /* Ligth purple (Lines) */
+    border: 1px solid #ADB0D9;
+    /* Inside auto layout */
+    // flex: none;
+    // order: 1;
+    // flex-grow: 0;
+  }
+
+  .channel-creator-ctn {
+    padding-top: 10px;
+    @include m.flexBox(column, center, flex-start, 20px);
+
+    .channel-creator-title {
+      @include m.styleFont("Nunito", 18px, 700, 1.0, #000000);
+    }
+
+    .channel-creator-name {
+      @include m.styleFont("Nunito", 24px, 400, 1.0, v.$purple_3);
+    }
+  }
+
+  /* Ligth purple (Lines) */
+  border: 1px solid v.$purple_4;
+  border-radius: 20px;
 
 }
 
 
+.channel-leave-ctn {
+  /* 10. Button primary */
+  /* Auto layout */
+  width: 100%;
+  position: absolute;
+  right: 60px;
+  @include m.flexBox(row, center, center, 10px);
+  padding: 12px 25px;
+  margin-top: 20px;
+  // position: absolute;
+  // left: 628px;
+  // top: 527px;
+  width: 204px;
+  height: 49px;
+  
+  /* Purple 1 */
+  background: v.$purple_1;
+  border-radius: 25px;
 
+  button {
+    @include m.styleFont("Nunito", 18px, 700, 1.0, #FFFFFF);
+    background: v.$purple_1;
+  }
 
+  &:hover {
+    transform: scale(1.05);
+  }
 
-
+}
 
