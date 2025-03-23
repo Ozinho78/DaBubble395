@@ -297,3 +297,84 @@
         margin-right: 20px;
     }
 }
+
+.message.editing {
+    height: 180px;
+    justify-content: space-between !important;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid v.$purple_4;
+    padding: 16px 20px;
+}
+
+.edit-full {
+    width: 100%;
+    height: 100%;
+    @include m.styleFont("Nunito", 18px, 400);
+    border: none;
+    resize: none;
+    outline: none;
+}
+
+.edit-toolbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.emoji-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.cancel-btn {
+    height: 49px;
+    padding: 0 20px;
+    background: transparent;
+    @include m.styleFont("Nunito", 18px, 400);
+    color: #444DF2;
+    border: 1px solid #797EF3;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: #535AF1;
+        color: #FFFFFF;
+    }
+}
+
+.save-btn {
+    height: 49px;
+    padding: 0 20px;
+    background-color: #444DF2;
+    @include m.styleFont("Nunito", 18px, 400);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: #797EF3;
+    }
+}
+
+.save-btn:disabled {
+    background-color: #686868;
+    color: #FFFFFF;
+    cursor: not-allowed;
+}

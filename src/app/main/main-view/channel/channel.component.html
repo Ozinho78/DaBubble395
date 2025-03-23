@@ -45,9 +45,11 @@
                 <div class="reply-container" [ngClass]="{'own-message': thread.userId === currentUserId}"
                     (mouseenter)="hoveredThreadId = thread.docId" (mouseleave)="hoveredThreadId = null">
 
+                    <!-- reaction-menu -->
                     <app-reaction-menu [docId]="thread.docId" [userId]="thread.userId" [currentUserId]="currentUserId!"
                         [text]="thread.thread" [type]="'thread'" [isHovered]="hoveredThreadId === thread.docId"
-                        [isOwnMessage]="thread.userId === currentUserId" (editRequest)="handleEditRequest($event)">
+                        [isOwnMessage]="thread.userId === currentUserId" [isEditing]="editingThreadId === thread.docId"
+                        (editRequest)="handleEditRequest($event)">
                     </app-reaction-menu>
 
                     <div class="reply">

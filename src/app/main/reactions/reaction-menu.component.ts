@@ -19,6 +19,7 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
     @Input() type: 'message' | 'thread' = 'thread';
     @Input() isHovered: boolean = false;
     @Input() isOwnMessage: boolean = false;
+    @Input() isEditing: boolean = false;
 
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
 
