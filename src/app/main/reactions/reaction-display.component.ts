@@ -120,10 +120,9 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     openTooltip(emoji: string, userNames: string[]) {
         this.tooltipVisibleEmoji = emoji;
 
-        const names = userNames.map(name => {
-            const mapped = name === this.currentUserName ? 'Du' : name;
-            return mapped;
-        });
+        const names = userNames.map(name =>
+            name === this.currentUserName ? 'Du' : name
+        );
 
         let tooltip = '';
         if (names.length === 1) {
@@ -137,6 +136,8 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.tooltipTextMap[emoji] = tooltip;
+
+        setTimeout(() => this.adjustTooltipPosition(emoji), 0);
     }
 
     closeTooltip() {
@@ -187,4 +188,30 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
 
         this.loadReactions();
     }
+
+    adjustTooltipPosition(emoji: string) {
+        setTimeout(() => {
+            const tooltip = document.querySelector(`.reaction-tooltip[data-emoji="${emoji}"]`) as HTMLElement;
+            const container = tooltip?.closest('.reply-container') as HTMLElement;
+
+            if (!tooltip || !container) return;
+
+            // Reset Klassen
+            tooltip.classList.remove('tooltip-left', 'tooltip-right');
+
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            const spaceRight = containerRect.right - tooltipRect.right;
+            const spaceLeft = tooltipRect.left - containerRect.left;
+
+            if (spaceRight < 0 && spaceLeft > spaceRight) {
+                tooltip.classList.add('tooltip-left');
+            } else {
+                tooltip.classList.add('tooltip-right');
+            }
+        }, 0); // warten bis DOM gerendert
+    }
+
+
 }

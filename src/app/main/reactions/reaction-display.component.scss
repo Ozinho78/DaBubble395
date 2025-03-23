@@ -41,6 +41,18 @@
     border: 1px solid v.$purple_1;
 }
 
+@keyframes tooltipFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .reaction-tooltip {
     position: absolute;
     @include m.flexBox(row, center, center);
@@ -48,11 +60,31 @@
     width: 158px;
     left: 32px;
     bottom: 35px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
     background: v.$purple_1;
     pointer-events: none;
+    z-index: 1000;
+
+    &.tooltip-animate-in {
+        animation: tooltipFadeIn 0.25s ease forwards;
+    }
+}
+
+.tooltip-right {
+    left: 32px;
+    right: auto;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: 30px;
+}
+
+.tooltip-left {
+    right: 32px;
+    left: auto;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: unset;
 }
 
 .reaction:hover .reaction-tooltip {
