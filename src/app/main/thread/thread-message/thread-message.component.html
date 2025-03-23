@@ -3,8 +3,10 @@
     <div class="date">{{ thread.creationDate | date:'dd.MM.yyyy' }}</div>
 </div>
 
-<div class="reply-container" [ngClass]="{'own-message': thread.userId === currentUserId}"
-    (mouseenter)="hoveredThreadId = thread.docId" (mouseleave)="hoveredThreadId = null">
+<div class="reply-container" [ngClass]="{
+       'own-message': thread.userId === currentUserId,
+       'being-edited': editingTarget?.id === thread.id
+     }" (mouseenter)="hoveredThreadId = thread.docId" (mouseleave)="hoveredThreadId = null">
 
     <!-- add reactions -->
     <app-reaction-menu [docId]="thread.id" [userId]="thread.userId" [currentUserId]="currentUserId!"

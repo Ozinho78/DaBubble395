@@ -20,8 +20,9 @@
         <!-- Thread -->
         <div class="thread">
             <div class="replies">
-                <app-thread-message *ngIf="thread" [thread]="thread"
-                    (editRequest)="handleEditRequest($event)"></app-thread-message>
+                <app-thread-message *ngIf="thread" [thread]="thread" [editingTarget]="editingTarget"
+                    (editRequest)="handleEditRequest($event)">
+                </app-thread-message>
             </div>
 
             <!-- Anzahl der Nachrichten immer direkt darunter -->
@@ -50,7 +51,9 @@
         </div>
     </div>
 
-    <!-- Nachrichteneingabe -->
-    <app-message-input [threadId]="thread?.id ?? null" #messageInput></app-message-input>
+    <!-- Input -->
+    <app-message-input [editingMessageId]="editingTarget?.id || null" [editingText]="editingTarget?.text || ''"
+        [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()" (editCancelled)="clearEditState()">
+    </app-message-input>
 
 </div>
