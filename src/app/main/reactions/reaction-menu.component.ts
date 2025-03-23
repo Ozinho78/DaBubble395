@@ -25,6 +25,8 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
     showReactionsOverlay: boolean = false;
     menuOpen: boolean = false;
     hoverTimeout: any;
+    isAnimatingOut: boolean = false;
+    isFadingIn: boolean = false;
 
     constructor(
         private reactionService: ReactionService,
@@ -66,11 +68,28 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     toggleMenu(): void {
-        this.menuOpen = !this.menuOpen;
+        if (this.menuOpen) {
+            this.closeMenu();
+        } else {
+            this.menuOpen = true;
+            this.isAnimatingOut = false;
+
+            setTimeout(() => {
+                this.isFadingIn = true;
+            }, 10);
+        }
     }
 
     closeMenu(): void {
-        this.menuOpen = false;
+        if (!this.menuOpen) return;
+
+        this.isAnimatingOut = true;
+        this.isFadingIn = false;
+
+        setTimeout(() => {
+            this.menuOpen = false;
+            this.isAnimatingOut = false;
+        }, 200);
     }
 
     requestEdit(): void {

@@ -31,7 +31,9 @@
         </div>
 
         <!-- Dropdown-Menü -->
-        <div *ngIf="menuOpen" class="menu-dropdown">
+        <div *ngIf="menuOpen || isAnimatingOut" class="menu-dropdown" [ngClass]="{
+          'fade-in': isFadingIn && !isAnimatingOut,
+          'fade-out': isAnimatingOut}">
             <div (click)="requestEdit()">Nachricht bearbeiten</div>
         </div>
     </div>
