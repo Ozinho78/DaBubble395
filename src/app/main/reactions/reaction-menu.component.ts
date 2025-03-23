@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, AfterViewInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from './reactions.component';
 import { ReactionService } from '../../../services/reaction.service';
@@ -11,7 +11,7 @@ import { Reaction } from '../../../models/reaction.class';
     templateUrl: './reaction-menu.component.html',
     styleUrls: ['./reaction-menu.component.scss']
 })
-export class ReactionMenuComponent {
+export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
     @Input() docId!: string;
     @Input() userId!: string;
     @Input() currentUserId!: string;
@@ -24,8 +24,38 @@ export class ReactionMenuComponent {
 
     showReactionsOverlay: boolean = false;
     menuOpen: boolean = false;
+    hoverTimeout: any;
 
-    constructor(private reactionService: ReactionService) { }
+    constructor(
+        private reactionService: ReactionService,
+        private renderer: Renderer2,
+        private elRef: ElementRef
+    ) { }
+
+    ngAfterViewInit(): void {
+        const replyContainer = this.elRef.nativeElement.closest('.reply-container');
+
+        if (replyContainer) {
+            this.renderer.listen(replyContainer, 'mouseleave', () => {
+                this.hoverTimeout = setTimeout(() => {
+                    this.closeMenu();
+                }, 200);
+            });
+
+            this.renderer.listen(replyContainer, 'mouseenter', () => {
+                if (this.hoverTimeout) {
+                    clearTimeout(this.hoverTimeout);
+                    this.hoverTimeout = null;
+                }
+            });
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.hoverTimeout) {
+            clearTimeout(this.hoverTimeout);
+        }
+    }
 
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;

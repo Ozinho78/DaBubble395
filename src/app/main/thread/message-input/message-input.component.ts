@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit } from '@angular/core';
 import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './message-input.component.html',
     styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {
+export class MessageInputComponent implements AfterViewInit, OnDestroy {
     @Input() threadId!: string | null;
     //@Input() channelId!: string;
     @Input() channelName: string | null | undefined = null;
@@ -34,10 +34,14 @@ export class MessageInputComponent {
     allUsers$: Observable<any[]>; // Alle Nutzer
     currentUserId: string | null = null;
 
+    private globalClickListener?: () => void;
+
     constructor(
         private firestore: Firestore,
         private userService: UserService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private renderer: Renderer2,
+        private hostElement: ElementRef
     ) {
         this.allUsers$ = this.userService.getAllUsers();
         this.currentUserId = this.userService.getCurrentUserId();
@@ -50,28 +54,21 @@ export class MessageInputComponent {
         });
     }
 
-    /*
-    setUser() {
-      this.authService.user$.subscribe(user => {
-        if (user) {
-          this.matchAuthUser(user.email);
-        }
-      });
+    ngAfterViewInit() {
+        this.globalClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+            const clickedInside = this.hostElement.nativeElement.contains(event.target);
+
+            // Wenn Klick außerhalb der Komponente → schließe Picker & Mention
+            if (!clickedInside) {
+                this.showEmojiPicker = false;
+                this.showMentionList = false;
+            }
+        });
     }
-  
-    matchAuthUser(email: string) {
-      if (!email) return;
-  
-      this.userService.getUserByEmail(email).subscribe(userData => {
-        if (userData) {
-          this.currentUserId = userData.uid;
-          this.currentUserData = userData;
-        } else {
-          console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
-        }
-      });
+
+    ngOnDestroy() {
+        if (this.globalClickListener) this.globalClickListener();
     }
-    */
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
