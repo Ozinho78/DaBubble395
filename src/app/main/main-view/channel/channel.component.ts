@@ -15,9 +15,20 @@ import { ShowChannelComponent } from "./show-channel/show-channel.component";
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent, ReactionMenuComponent],
+    imports: [
+        CommonModule,
+        MessageInputComponent,
+        ProfileViewComponent,
+        ShowChannelComponent,
+        ReactionDisplayComponent,
+        ReactionMenuComponent,
+
+        FormsModule
+    ],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -49,8 +60,10 @@ export class ChannelComponent implements OnInit {
     selectedProfilePresence$: Observable<boolean> = of(false);
     loggedInUserId: string = '';
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
-
     hoveredThreadId: string | null = null;
+
+    editingThreadId: string | null = null;
+    editedThreadText: string = '';
 
     constructor(
         private route: ActivatedRoute,
@@ -259,6 +272,32 @@ export class ChannelComponent implements OnInit {
     }
 
     handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
-        this.editRequest.emit(event);
+        this.editingThreadId = event.id;
+        this.editedThreadText = event.text;
+    }
+
+    setThreadEdit(threadId: string) {
+        this.editingThreadId = threadId;
+    }
+
+    cancelEdit() {
+        this.editingThreadId = null;
+        this.editedThreadText = '';
+    }
+
+    saveThreadEdit(thread: Thread) {
+        if (!thread?.docId) return;
+
+        thread.thread = this.editedThreadText;
+        this.firestoreService.updateDocument('threads', thread.docId, {
+            thread: thread.thread
+        }).then(() => {
+            this.editingThreadId = null;
+            this.editedThreadText = '';
+        }).catch(err => console.error('Fehler beim Speichern der Änderung:', err));
+    }
+
+    isThreadValid(thread: Thread): boolean {
+        return thread.thread.trim().length > 0;
     }
 }
