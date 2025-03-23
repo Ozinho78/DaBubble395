@@ -310,7 +310,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
 
     onKeyDown(event: KeyboardEvent) {
         if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault(); // verhindert Zeilenumbruch
+            event.preventDefault();
 
             if (this.editingMessageId) {
                 this.submitEdit();

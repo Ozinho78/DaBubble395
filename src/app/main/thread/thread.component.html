@@ -52,8 +52,9 @@
     </div>
 
     <!-- Input -->
-    <app-message-input [editingMessageId]="editingTarget?.id || null" [editingText]="editingTarget?.text || ''"
-        [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()" (editCancelled)="clearEditState()">
+    <app-message-input [threadId]="thread?.id ?? null" [editingMessageId]="editingTarget?.id || null"
+        [editingText]="editingTarget?.text || ''" [editingType]="editingTarget?.type || null"
+        (editSaved)="clearEditState()" (editCancelled)="clearEditState()">
     </app-message-input>
 
 </div>
