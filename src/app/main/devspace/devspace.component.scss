@@ -167,11 +167,14 @@ svg {
     padding: 10px 10px;
     border-radius: 30px;
 
-    img {
+    svg, img {
       cursor: pointer;
     }
 
     &:hover {
+      svg path {
+        fill: v.$purple_1;
+      }
       color: v.$purple_1;
       // background-color: v.$purple_bg;
       cursor: pointer;
@@ -205,6 +208,9 @@ svg {
     &:hover {
       cursor: pointer;
       color: v.$purple_1;
+      svg path {
+        fill: v.$purple_1;
+      }
       // background-color: v.$purple_bg;
     }
   }
