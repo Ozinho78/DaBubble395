@@ -164,7 +164,7 @@
           line-height: 1.2;
         }
         @media (max-width: 390px) {
-          font-size: 16px;
+          font-size: 24px;
         }
       }
 
@@ -331,6 +331,9 @@
           height: 50px;
           margin-bottom: 20px;
         }
+        @media (max-width: 390px) {
+          margin-bottom: 0;
+        }
 
         .login-btn-register,
         .login-btn-guest {
@@ -350,7 +353,8 @@
             background-color: v.$purple_2;
           }
           @media (max-width: 390px) {
-            font-size: 14px;
+            font-size: 14px;            
+            padding: 6px 10px;
           }
         }
 
@@ -358,6 +362,10 @@
           @include m.styleFont("Nunito", 18px, 700, 24.55px, v.$purple_1);
           box-shadow: 0 0 0 1px v.$purple_1;
           background-color: white;
+          @media (max-width: 390px) {
+            font-size: 14px;                      
+            padding: 6px 10px;
+          }
 
           &:hover {
             background-color: v.$purple_1;
@@ -372,6 +380,9 @@
       width: 250px;
       position: fixed;
       bottom: 20px;
+      @media (max-width: 390px) {
+        bottom: 10px;
+      }
 
       a {
         @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
