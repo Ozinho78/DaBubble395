@@ -120,16 +120,30 @@ svg {
     @include m.flexBox(row, space-between, center);
     img {
       cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        transform: scale(1.2);
+      }
     }
 
     .channel-sub-header {
       @include m.flexBox(row, center, center, 15px);
+      transition: all 125ms ease-in-out;
 
       div {
         @include m.flexBox(row, center, center, 10px);
         img {
           cursor: default;
         }
+      }
+
+      &:hover {
+        svg path {
+          fill: v.$purple_1;
+        }
+        color: v.$purple_1;
+        // background-color: v.$purple_bg;
+        cursor: pointer;
       }
     }
     padding-bottom: 20px;
