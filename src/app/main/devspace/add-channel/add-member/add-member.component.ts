@@ -35,8 +35,14 @@ export class AddMemberComponent implements OnInit {
   users: User[] = [];
   channels: Channel[] = [];
 
+  userLoggedIn: string = '';
 
-  constructor(private dataService: FirestoreService) {}
+
+  constructor(private dataService: FirestoreService) {
+    setTimeout(() => {
+      this.userLoggedIn = localStorage.getItem('user-id') || '';
+    }, 750);
+  }
 
   ngOnInit(): void {
     this.users$ = this.dataService.users$;
@@ -51,18 +57,12 @@ export class AddMemberComponent implements OnInit {
     if (changes['usersArrayFromAddChannel'] && changes['usersArrayFromAddChannel'].currentValue) {
       this.storedUsersFromAddChannel = [...changes['usersArrayFromAddChannel'].currentValue];
     }
-    // if (changes['users'] && changes['users'].currentValue) {
-    //   this.storedUsersFromAddChannel = [...changes['users'].currentValue];
-    // }
   }
 
   get filteredUsers(): User[] {
     return this.usersArrayFromAddChannel.filter(user =>
       user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-    // return this.users.filter(user =>
-    //   user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    // );
   }
 
   selectUser(user: User): void {
@@ -89,7 +89,6 @@ export class AddMemberComponent implements OnInit {
   
   closeMemberModal() {
     this.memberModalClosed.emit();
-    // console.log(this.memberModalClosed);
   }
 
   selectAllUsers(){
@@ -105,6 +104,11 @@ export class AddMemberComponent implements OnInit {
     this.selectedUsersDocId = [];
     for (let i = 0; i < arrLength; i++) {
       this.selectedUsersDocId.push(this.selectedUsers[i].docId || '');
+    }
+
+     // Prüfen, ob userLoggedIn bereits im Array ist, falls nicht, hinzufügen
+    if (!this.selectedUsersDocId.includes(this.userLoggedIn)) {
+      this.selectedUsersDocId.push(this.userLoggedIn);
     }
   }
 
