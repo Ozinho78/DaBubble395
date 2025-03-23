@@ -191,3 +191,27 @@
         color: v.$purple_3;
     }
 }
+
+.reply-container.being-edited {
+    background-color: #f9f9ff;
+    border-left: 4px solid #444DF2;
+    padding-left: 12px;
+    position: relative;
+
+
+    .message-text {
+        background-color: v.$grey !important;
+        font-style: italic;
+        color: #FFFFFF;
+    }
+
+
+    &::before {
+        content: 'Bearbeitung läuft...';
+        position: absolute;
+        top: -20px;
+        left: 0;
+        font-size: 12px;
+        color: #444DF2;
+    }
+}
