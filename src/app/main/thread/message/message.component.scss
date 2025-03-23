@@ -309,9 +309,10 @@
 
     &::before {
         content: 'Wird bearbeitet...';
+        @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);
         position: absolute;
-        top: -20px;
-        left: 0;
+        top: -22px;
+        left: 5px;
         font-size: 12px;
         color: #797EF3;
     }

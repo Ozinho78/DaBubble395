@@ -43,7 +43,7 @@
 
                     <!-- Nachrichten innerhalb dieses Tages -->
                     <app-message *ngFor="let message of group.messages" [message]="message"
-                        (editRequest)="handleEditRequest($event)">
+                        [editingTarget]="editingTarget" (editRequest)="handleEditRequest($event)">
                     </app-message>
                 </div>
             </div>
