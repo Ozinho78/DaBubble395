@@ -19,7 +19,7 @@
     </div>
 
     <textarea #inputElement type="text" [(ngModel)]="messageText" (input)="onTextChange($event)"
-        [placeholder]="channelName ? 'Nachricht an #' + channelName : 'Antworten...'" (keyup.enter)="sendMessage()">
+        [placeholder]="channelName ? 'Nachricht an #' + channelName : 'Antworten...'" (keydown)="onKeyDown($event)">
     </textarea>
 
     <div class="input-area-btns">
