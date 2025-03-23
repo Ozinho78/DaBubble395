@@ -2,11 +2,17 @@
   <div class="new-msg-content">
     <div class="new-msg-header">
       <span>Neue Nachricht</span>
+      <!-- !!targetUser und !!targetChannel konvertieren die Objekte in Boolean-Werte -->
       <input
+        *ngIf="enableInputTop"
         type="text"
         [formControl]="inputControl"
         placeholder="An: #channel oder @jemand oder E-Mail-Adresse"
       />
+      <div *ngIf="!enableInputTop" class="user-channel-list-top">
+        <span>{{ targetUser?.name || targetChannel?.name }}</span>
+        <button (click)="removeSelection()">❌</button>
+      </div>
     </div>
 
     <div class="input-bottom-ctn">

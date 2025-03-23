@@ -85,6 +85,17 @@
   }
 }
 
+.user-channel-list-top {
+  @include m.styleFont("Nunito", 24px, 400, 1.36, white);
+  @include m.flexBox(row, center, center);
+  button {
+    cursor: pointer;
+    font-size: 18px;
+    border: unset;
+    background-color: white;
+  }
+}
+
 
 .input-bottom-ctn {
   /* 61. Message box main */

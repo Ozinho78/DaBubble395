@@ -44,7 +44,8 @@ export class NewMessagesComponent implements OnInit {
 
   targetUser: User | null = null;
   targetChannel: Channel | null = null;
-
+  
+  enableInputTop: Boolean = true;
   enableInputBottom: Boolean = false;
   inputBottomValue: string = '';
 
@@ -163,6 +164,7 @@ export class NewMessagesComponent implements OnInit {
     this.findAndSaveTargetUser();
     this.inputControl.setValue(currentValue.replace(/@\w*$/, `@${user.name} `)); // @ wird ersetzt durch Namen des Benutzer (aber mit @ davor)
     this.showUsers = false; // Liste danach wieder ausblenden
+    this.toggleInputTop();
   }
 
   // Kanalname einfügen und Liste ausblenden
@@ -173,6 +175,7 @@ export class NewMessagesComponent implements OnInit {
       currentValue.replace(/#\w*$/, `#${channel.name} `)
     );
     this.showChannels = false;
+    this.toggleInputTop();
   }
 
   findAndSaveTargetUser() {
@@ -182,7 +185,6 @@ export class NewMessagesComponent implements OnInit {
 
       // Null-Sicherheit hinzufügen (falls value null ist, wird ein leerer String verwendet)
       const trimmedValue = value?.trim() || '';
-      // const trimmedValue = this.inputControl.value?.trim() || '';
 
       // Falls ein User mit genau diesem Namen existiert, speichern
       const foundUser = this.users.find(
@@ -222,6 +224,10 @@ export class NewMessagesComponent implements OnInit {
     this.enableInputBottom = !this.enableInputBottom;
   }
 
+  toggleInputTop() {
+    this.enableInputTop = !this.enableInputTop;
+  }
+
   createNewThread() {
     const date = new Date();
     this.newThread = new Thread({
@@ -240,7 +246,6 @@ export class NewMessagesComponent implements OnInit {
     const date = new Date();
     // userLoggedIn ermitteln
     const senderUser = this.users.find((user) => user.docId);
-    // console.log(senderUser);
     this.newMessage = new Message({
       id: '1',
       creationDate: date.getTime(),
@@ -280,7 +285,6 @@ export class NewMessagesComponent implements OnInit {
       } else if (this.targetUser) {
         this.createNewMessage();
       } else {
-        // alert("Ungültiger Channel oder User");
         this.errorMessageChannelUser = true;
         setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
       }
@@ -288,10 +292,10 @@ export class NewMessagesComponent implements OnInit {
       this.inputBottomValue = ''; // Eingabe leeren
       this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
     } else {
-      // alert("Bitte mal was eingeben, Junge!");
       this.errorMessageEmpty = true;
       setTimeout(() => {this.errorMessageEmpty = false}, 3000);
     }
+    this.toggleInputTop();
     this.inputControl.setValue('');  // Für FormControl
     this.inputBottomValue = '';      // Für ngModel
   }
@@ -318,28 +322,14 @@ export class NewMessagesComponent implements OnInit {
     this.targetUser = null;
   }
 
-
-}
-
-
-
-
-/* altes Input
-addInput() {
-  if (this.inputBottomValue.trim() != '') {
-    if (this.targetChannel != null) {
-      this.createNewThread();
-    } else if (this.targetUser != null) {
-      this.createNewMessage();
-    } else {
-        alert("Ungültiger Channel oder User");
-      }
-  } else {
-    alert("Bitte mal was eingeben, Junge!");
+  removeSelection() {
+    this.targetUser = null;
+    this.targetChannel = null;
+    this.inputControl.enable(); // Eingabe wieder aktivieren
+    this.inputControl.setValue(''); // Input-Feld leeren
+    this.toggleInputTop();
   }
-  this.sendMessagesArray.push(this.inputBottomValue);
-  // console.log(this.sendMessagesArray);
-  this.inputBottomValue = ""; // Eingabe leeren
-  // this.toggleInputBottom();
+
 }
-*/
+
+
