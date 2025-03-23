@@ -121,7 +121,12 @@ export class ChannelComponent implements OnInit {
                 const thread = new Thread(obj, this.userService, this.messageService);
                 return thread;
             });
+
+            if (!this.threadId) {
+                setTimeout(() => this.scrollToBottom(), 200);
+            }
         });
+
     }
 
     async loadChannel() {
