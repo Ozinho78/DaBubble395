@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
 import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,17 +16,23 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './message-input.component.html',
     styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {
+export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, OnDestroy {
     @Input() threadId!: string | null;
     //@Input() channelId!: string;
     @Input() channelName: string | null | undefined = null;
     @Input() isDirectMessage: boolean = false;
+
+    @Input() editingText: string = '';
+    @Input() editingMessageId: string | null = null;
+    @Input() editingType: 'message' | 'thread' | null = null;
+    @Output() editSaved = new EventEmitter<void>();
+    @Output() editCancelled = new EventEmitter<void>();
+
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
 
     channelId!: string;
-    editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
-    editingType: 'message' | 'thread' | null = null;
+
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
     showEmojiPicker: boolean = false;
     showMentionList: boolean = false; // Zeigt die Erwähnungsliste an
@@ -34,10 +40,14 @@ export class MessageInputComponent {
     allUsers$: Observable<any[]>; // Alle Nutzer
     currentUserId: string | null = null;
 
+    private globalClickListener?: () => void;
+
     constructor(
         private firestore: Firestore,
         private userService: UserService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private renderer: Renderer2,
+        private hostElement: ElementRef
     ) {
         this.allUsers$ = this.userService.getAllUsers();
         this.currentUserId = this.userService.getCurrentUserId();
@@ -50,28 +60,27 @@ export class MessageInputComponent {
         });
     }
 
-    /*
-    setUser() {
-      this.authService.user$.subscribe(user => {
-        if (user) {
-          this.matchAuthUser(user.email);
-        }
-      });
+    ngAfterViewInit() {
+        this.globalClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+            const clickedInside = this.hostElement.nativeElement.contains(event.target);
+
+            // Wenn Klick außerhalb der Komponente → schließe Picker & Mention
+            if (!clickedInside) {
+                this.showEmojiPicker = false;
+                this.showMentionList = false;
+            }
+        });
     }
-  
-    matchAuthUser(email: string) {
-      if (!email) return;
-  
-      this.userService.getUserByEmail(email).subscribe(userData => {
-        if (userData) {
-          this.currentUserId = userData.uid;
-          this.currentUserData = userData;
-        } else {
-          console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
+
+    ngOnChanges() {
+        if (this.editingMessageId && this.editingText) {
+            this.messageText = this.editingText;
         }
-      });
     }
-    */
+
+    ngOnDestroy() {
+        if (this.globalClickListener) this.globalClickListener();
+    }
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
@@ -278,5 +287,36 @@ export class MessageInputComponent {
                 this.inputElement.nativeElement.focus();
             }
         }, 100);
+    }
+
+    submitEdit() {
+        if (!this.editingMessageId || !this.messageText.trim()) return;
+
+        const updateTarget = this.editingType === 'thread' ? 'threads' : 'messages';
+        const updateField = this.editingType === 'thread' ? 'thread' : 'text';
+
+        updateDoc(doc(this.firestore, updateTarget, this.editingMessageId), {
+            [updateField]: this.messageText
+        }).then(() => {
+            this.resetInput();
+            this.editSaved.emit();
+        }).catch(err => console.error('Fehler beim Bearbeiten:', err));
+    }
+
+    cancelEdit() {
+        this.resetInput();
+        this.editCancelled.emit();
+    }
+
+    onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+
+            if (this.editingMessageId) {
+                this.submitEdit();
+            } else {
+                this.sendMessage();
+            }
+        }
     }
 }

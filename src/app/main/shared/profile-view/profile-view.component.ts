@@ -1,12 +1,15 @@
 import { EventEmitter, Output, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-profile-view',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './profile-view.component.html',
-  styleUrl: './profile-view.component.scss',
+  styleUrls: ['./profile-view.component.scss'],
 })
 export class ProfileViewComponent {
   @Input() userName!: {
@@ -22,6 +25,8 @@ export class ProfileViewComponent {
 
   closeImgSrc: string = '/img/header-img/close.png';
 
+  constructor(private router: Router, private userService: UserService) {}
+
   onMouseEnterClose(): void {
     this.closeImgSrc = '/img/header-img/close-hover.png';
   }
@@ -32,5 +37,13 @@ export class ProfileViewComponent {
 
   onClose(): void {
     this.close.emit();
+  }
+
+  openDirectMessage(): void {
+    if (this.userName) {
+      this.userService.setDocIdFromDevSpace(this.userName.id);
+      this.router.navigate(['/main'], { replaceUrl: true });
+      this.close.emit();
+    }
   }
 }

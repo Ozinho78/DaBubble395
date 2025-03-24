@@ -17,7 +17,14 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent, ReactionMenuComponent],
+    imports: [
+        CommonModule,
+        MessageInputComponent,
+        ProfileViewComponent,
+        ShowChannelComponent,
+        ReactionDisplayComponent,
+        ReactionMenuComponent
+    ],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -49,8 +56,9 @@ export class ChannelComponent implements OnInit {
     selectedProfilePresence$: Observable<boolean> = of(false);
     loggedInUserId: string = '';
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
-
     hoveredThreadId: string | null = null;
+
+    editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -113,7 +121,12 @@ export class ChannelComponent implements OnInit {
                 const thread = new Thread(obj, this.userService, this.messageService);
                 return thread;
             });
+
+            if (!this.threadId) {
+                setTimeout(() => this.scrollToBottom(), 200);
+            }
         });
+
     }
 
     async loadChannel() {
@@ -259,6 +272,11 @@ export class ChannelComponent implements OnInit {
     }
 
     handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
-        this.editRequest.emit(event);
+        this.editingTarget = event;
     }
+
+    clearEditState() {
+        this.editingTarget = null;
+    }
+
 }

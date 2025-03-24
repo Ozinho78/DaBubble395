@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ThreadService } from '../../../services/thread.service';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
@@ -19,13 +19,14 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
+    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
     @ViewChild('messageInput') messageInput!: MessageInputComponent;
 
     channelId!: string;
     threadId!: string;
 
     groupedMessages$!: Observable<{ date: string, messages: Message[] }[]>;
-    totalMessagesCount$!: Observable<number>; // ✅ Neue Variable für Gesamtanzahl
+    totalMessagesCount$!: Observable<number>;
     channelName$!: Observable<string>;
     thread: Thread | null = null;
     newMessageText: string = '';
@@ -126,10 +127,6 @@ export class ThreadComponent implements OnInit {
         );
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
-        this.messageInput.editMessage(event.id, event.text, event.type);
-    }
-
     closeThread() {
         this.router.navigate([], {
             queryParams: { channel: this.channelId },
@@ -155,6 +152,14 @@ export class ThreadComponent implements OnInit {
                 });
             }
         }, 100);
+    }
+
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+        this.editingTarget = event;
+    }
+
+    clearEditState() {
+        this.editingTarget = null;
     }
 
 }

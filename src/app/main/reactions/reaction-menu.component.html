@@ -1,5 +1,6 @@
 <!-- add reactions -->
-<div class="add-reactions-container" [ngClass]="{ 'own-message': isOwnMessage, 'visible': isHovered }">
+<div *ngIf="!isEditing" class="add-reactions-container"
+    [ngClass]="{ 'own-message': isOwnMessage, 'visible': isHovered }">
     <div class="add-reactions">
         <div class="svg-container" (click)="toggleReactionsOverlay()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,7 +32,9 @@
         </div>
 
         <!-- Dropdown-Menü -->
-        <div *ngIf="menuOpen" class="menu-dropdown">
+        <div *ngIf="menuOpen || isAnimatingOut" class="menu-dropdown" [ngClass]="{
+          'fade-in': isFadingIn && !isAnimatingOut,
+          'fade-out': isAnimatingOut}">
             <div (click)="requestEdit()">Nachricht bearbeiten</div>
         </div>
     </div>

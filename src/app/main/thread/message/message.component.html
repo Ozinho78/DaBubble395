@@ -1,10 +1,14 @@
-<div class="reply-container" [ngClass]="{'own-message': message.userId === currentUserId}"
-    (mouseenter)="hoveredThreadId = message.id!" (mouseleave)="hoveredThreadId = null">
+<div class="reply-container" [ngClass]="{
+    'own-message': message.userId === currentUserId,
+    'being-edited': editingTarget?.id === message.id && editingTarget?.type === 'message'
+  }" (mouseenter)="hoveredThreadId = message.id!" (mouseleave)="hoveredThreadId = null">
 
     <!-- add reactions -->
     <app-reaction-menu [docId]="message.id!" [userId]="message.userId" [currentUserId]="currentUserId!"
         [text]="message.text" [type]="'message'" [isHovered]="hoveredThreadId === message.id"
-        [isOwnMessage]="message.userId === currentUserId" (editRequest)="handleEditRequest($event)">
+        [isOwnMessage]="message.userId === currentUserId"
+        [isEditing]="editingTarget?.id === message.id && editingTarget?.type === 'message'"
+        (editRequest)="handleEditRequest($event)">
     </app-reaction-menu>
 
     <!-- reply -->

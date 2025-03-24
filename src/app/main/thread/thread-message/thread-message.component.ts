@@ -27,6 +27,7 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 export class ThreadMessageComponent implements OnInit, OnChanges {
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
     @Input() thread!: Thread & { id: string };
+    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' }>();
 
     currentUserId: string | null = null;
@@ -136,5 +137,9 @@ export class ThreadMessageComponent implements OnInit, OnChanges {
 
     handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
         this.editRequest.emit(event);
+    }
+
+    clearEditState() {
+        this.editingTarget = null;
     }
 }

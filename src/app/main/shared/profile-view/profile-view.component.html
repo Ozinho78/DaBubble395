@@ -26,7 +26,7 @@
             <ng-container *ngIf="onlineStatus$ | async; else offlineTemplate">
               <div class="online">
                 <img
-                  src="/img/header-img/online.png"
+                  src="img/header-img/online.png"
                   alt="Status Icon"
                   class="status-icon"
                 />
@@ -36,7 +36,7 @@
             <ng-template #offlineTemplate>
               <div class="offline">
                 <img
-                  src="/img/header-img/away.png"
+                  src="img/header-img/away.png"
                   alt="Status Icon"
                   class="status-icon"
                 />
@@ -48,7 +48,7 @@
 
         <div class="email">
           <div>
-            <img src="/img/header-img/header-mail.png" alt="" />
+            <img src="img/header-img/header-mail.png" alt="" />
             <span>E-Mail-Adresse</span>
           </div>
           <a class="user-email" href="mailto:{{ user.email }}">{{
@@ -57,7 +57,9 @@
         </div>
       </div>
       <div class="btn-container">
-        <button class="btn-2">Nachricht</button>
+        <button (click)="openDirectMessage()" class="btn-2">
+          <img src="img/mode_comment.png" alt="" />Nachricht
+        </button>
       </div>
     </ng-container>
   </div>

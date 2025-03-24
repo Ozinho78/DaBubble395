@@ -8,7 +8,6 @@
     .message-text {
         word-wrap: break-word;
         text-wrap: auto;
-        max-width: 285px;
     }
 
     &:hover {
@@ -295,5 +294,26 @@
         height: 1px;
         background-color: v.$purple_4;
         margin-right: 20px;
+    }
+}
+
+.reply-container.being-edited {
+    background-color: #f9f9ff;
+    border-left: 4px solid #797EF3;
+    padding-left: 12px;
+    position: relative;
+
+    .message-text {
+        font-style: italic;
+    }
+
+    &::before {
+        content: 'Wird bearbeitet...';
+        @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);
+        position: absolute;
+        top: -22px;
+        left: 5px;
+        font-size: 12px;
+        color: #797EF3;
     }
 }
