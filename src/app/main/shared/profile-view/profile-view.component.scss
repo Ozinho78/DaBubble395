@@ -138,6 +138,10 @@
   border: 1px solid v.$purple_1;
   transition: background-color 0.1s ease-in-out, border 0.1s ease-in-out;
 
+  img {
+    width: 24px;
+  }
+
   &:hover {
     background-color: v.$purple_2;
     border: 1px solid v.$purple_2;
