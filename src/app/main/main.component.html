@@ -3,7 +3,7 @@
     <app-sidebar></app-sidebar>
     <div class="main-content">
         <app-devspace></app-devspace>
-        <app-main-view></app-main-view>
-        <app-thread *ngIf="threadId"></app-thread>
+        <app-main-view *ngIf="showMainView()"></app-main-view>
+        <app-thread *ngIf="showThread() && threadId"></app-thread>
     </div>
 </div>

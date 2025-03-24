@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './main-view.component.scss'
 })
 export class MainViewComponent implements OnInit {
-  @ViewChild('channelComp') channelComp!: ChannelComponent;
+  //@ViewChild('channelComp') channelComp!: ChannelComponent;
 
   visibleComponent: string = '';
 
@@ -40,12 +40,12 @@ export class MainViewComponent implements OnInit {
     this.visibilityService.setVisibleComponent(component);
   }
 
-  handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+  /*handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
     if (this.channelComp?.messageInput) {
       this.channelComp.messageInput.editMessage(event.id, event.text, event.type);
     } else {
       console.warn('messageInput nicht gefunden');
     }
-  }
+  }*/
 
 }
