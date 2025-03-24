@@ -8,9 +8,10 @@
         type="text"
         [formControl]="inputControl"
         placeholder="An: #channel oder @jemand oder E-Mail-Adresse"
+        (blur)="checkEmailAndLockInput()"
       />
       <div *ngIf="!enableInputTop" class="user-channel-list-top">
-        <span>{{ targetUser?.name || targetChannel?.name }}</span>
+        <span>{{ targetUser?.name || targetChannel?.name || enteredEmail }}</span>
         <button (click)="removeSelection()">❌</button>
       </div>
     </div>
