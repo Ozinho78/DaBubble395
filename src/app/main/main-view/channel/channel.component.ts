@@ -38,7 +38,7 @@ export class ChannelComponent implements OnInit {
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
 
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
-    @ViewChild(ShowChannelComponent) modalEditChannel!: ShowChannelComponent;
+    @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
     @ViewChild(AddUserComponent) modalAddUser!: AddUserComponent;
 
     selectedChannelId: string = '';
@@ -269,9 +269,9 @@ export class ChannelComponent implements OnInit {
         this.selectedProfile = null;
     }
 
-    openModalEditChannel(id: string) {
+    openModal(id: string) {
         this.selectedChannelId = id;
-        this.modalEditChannel.openModal();
+        this.modal.openModal();
     }
 
     openModalAddUser(id: string) {

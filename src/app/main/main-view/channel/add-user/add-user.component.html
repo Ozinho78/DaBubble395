@@ -36,61 +36,11 @@
     </div>
 
 
-    <!-- Channel-Name -->
-    <div class="channel-name-ctn">
-      <div class="channel-name-header">
-        <span>Channel-Name</span>
-        <span *ngIf="!editNameMode" (click)="toggleEditMode(1)" class="name-edit">Bearbeiten</span>
-        <span *ngIf="editNameMode" (click)="toggleEditMode(1)" class="name-edit">Speichern</span>
-      </div>
-      <div class="channel-name-title">
-        <span *ngIf="!editNameMode">#</span>
-
-        <!-- Bearbeiten-Modus: Zeige Input -->
-        <input *ngIf="editNameMode" [(ngModel)]="editedChannelName" type="text" class="channel-input" placeholder="# {{ channelToChange?.name }}"/>
     
-        <!-- Anzeigemodus: Zeige normalen Text -->
-        <span *ngIf="!editNameMode">{{ channelToChange?.name }}</span>
-      </div>
-    <!-- End of Channel-Name -->
-    </div>
-
-
-
-    <!-- Channel-Description -->
-    <div class="channel-description-container">
-      <div class="channel-description-header">
-        <span>Beschreibung</span>
-        <span *ngIf="!editDescriptionMode" (click)="toggleEditMode(2)" class="description-edit">Bearbeiten</span>
-        <span *ngIf="editDescriptionMode" (click)="toggleEditMode(2)" class="description-edit">Speichern</span>
-      </div>
-
-      <div class="channel-description-text">
-        <input *ngIf="editDescriptionMode" [(ngModel)]="editedChannelDescription" type="text" class="channel-input" placeholder="Dein Text hier"/>
-        <span *ngIf="!editDescriptionMode">{{ channelToChange?.description }}</span>
-      </div>
-
-      <div class="channel-description-line">
-      </div>
-
-      <div class="channel-creator-ctn">
-        <span class="channel-creator-title">Erstellt von</span>
-        <!-- <span class="channel-creator-name">{{ channelToChange?.userId }}</span> -->
-        <span class="channel-creator-name">{{ userToChange?.name }}</span>
-      </div>
-
-    <!-- channel-description-container -->
-    </div>
-
-    <div (click)="leaveChannel()" class="channel-leave-ctn">
-      <button>Channel verlassen</button>
-    </div>
-
 
   <!-- show-channel-content -->
   </div>
 <!-- show-channel-container -->
 </div>
-
 
 

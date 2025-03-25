@@ -48,7 +48,6 @@ export class NewMessagesComponent implements OnInit {
   enableInputTop: Boolean = true;
   enableInputBottom: Boolean = false;
   inputBottomValue: string = '';
-  enteredEmail: string | null = null; // Speichert die erkannte E-Mail
 
   newThread: Thread | null = null;
   newMessage: Message | null = null;
@@ -125,8 +124,7 @@ export class NewMessagesComponent implements OnInit {
 
   // Filtert User, wenn "@" erkannt wird
   private filterUsers(value: string) {
-    // const match = value.match(/@(\w*)$/); // sucht nach @ am Ende der Eingabe
-    const match = value.match(/(?:^|\s)@(\w*)$/); // `@` muss am Anfang oder nach einem Leerzeichen stehen
+    const match = value.match(/@(\w*)$/); // sucht nach @ am Ende der Eingabe
     this.showUsers = !!match; // Zeige User-Liste nur, wenn "@" eingegeben wurde
     if (!match) {
       // Kein "@" eingegeben
@@ -324,27 +322,9 @@ export class NewMessagesComponent implements OnInit {
     this.targetUser = null;
   }
 
-  // Prüft, ob die Eingabe eine gültige E-Mail-Adresse ist.
-  // Falls ja, sperrt das Input-Feld.
-  checkEmailAndLockInput() {
-    const inputValue = this.inputControl.value?.trim() ?? '';
-    if (this.isValidEmail(inputValue)) {
-      this.enteredEmail = inputValue;  // Speichert die E-Mail
-      this.enableInputTop = false;     // Sperrt das Feld
-    }
-  }
-
-  // Prüft, ob ein String eine gültige E-Mail-Adresse ist.
-  isValidEmail(email: string): boolean {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-  }
-  
-
   removeSelection() {
     this.targetUser = null;
     this.targetChannel = null;
-    this.enteredEmail = null;
     this.inputControl.enable(); // Eingabe wieder aktivieren
     this.inputControl.setValue(''); // Input-Feld leeren
     this.toggleInputTop();
