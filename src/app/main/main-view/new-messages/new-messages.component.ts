@@ -48,6 +48,8 @@ export class NewMessagesComponent implements OnInit {
   enableInputTop: Boolean = true;
   enableInputBottom: Boolean = false;
   inputBottomValue: string = '';
+  enteredEmail: string | null = null; // Speichert die erkannte E-Mail
+  errorMessage: string | null = null; // Variable für Fehlermeldung
 
   newThread: Thread | null = null;
   newMessage: Message | null = null;
@@ -124,7 +126,7 @@ export class NewMessagesComponent implements OnInit {
 
   // Filtert User, wenn "@" erkannt wird
   private filterUsers(value: string) {
-    const match = value.match(/@(\w*)$/); // sucht nach @ am Ende der Eingabe
+    const match = value.match(/(?:^|\s)@(\w*)$/); // `@` muss am Anfang oder nach einem Leerzeichen stehen
     this.showUsers = !!match; // Zeige User-Liste nur, wenn "@" eingegeben wurde
     if (!match) {
       // Kein "@" eingegeben
@@ -322,12 +324,60 @@ export class NewMessagesComponent implements OnInit {
     this.targetUser = null;
   }
 
+  /**
+   * Prüft, ob die Eingabe eine gültige E-Mail-Adresse ist.
+   * Falls ja, sperrt das Input-Feld.
+   */
+  checkEmailAndLockInput() {
+    const inputValue: string = this.inputControl.value?.trim() ?? '';
+
+    // setTimeout(() => {
+      if (this.isValidEmail(inputValue)) {
+        this.enteredEmail = inputValue;  // Speichert die E-Mail
+        this.enableInputTop = false;     // Sperrt das Feld
+        this.errorMessage = null; // Keine Fehlermeldung
+        return;
+      }
+    // }, 1000);
+    
+    setTimeout(() => {
+      // Falls ein User oder Channel ausgewählt wurde, Input sperren
+      if (this.targetUser || this.targetChannel || this.isValidUserOrChannel(inputValue)) {
+        this.enableInputTop = false;
+        this.errorMessage = null;
+        return;
+      } else {
+        // Falls nichts davon zutrifft -> Fehlermeldung anzeigen
+        this.errorMessage = "Bitte eine gültige E-Mail, einen User (@user) oder einen Channel (#channel) eingeben!";
+      }
+    }, 1000);    
+  }
+
+  /**
+   * Prüft, ob ein String eine gültige E-Mail-Adresse ist.
+   */
+  isValidEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  }
+
+  /**
+  * Prüft, ob ein gültiger User (@user) oder ein Channel (#channel) eingegeben wurde.
+  */
+  isValidUserOrChannel(input: string): boolean {
+    const userMatch = input.match(/^@\w+$/); // Prüft auf @username
+    const channelMatch = input.match(/^#\w+$/); // Prüft auf #channel
+    return userMatch !== null || channelMatch !== null;
+  }
+
   removeSelection() {
     this.targetUser = null;
     this.targetChannel = null;
+    this.enteredEmail = null;
     this.inputControl.enable(); // Eingabe wieder aktivieren
     this.inputControl.setValue(''); // Input-Feld leeren
     this.toggleInputTop();
+    this.errorMessage = null; // Fehlermeldung zurücksetzen
   }
 
 }
