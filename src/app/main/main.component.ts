@@ -5,29 +5,45 @@ import { DevspaceComponent } from "./devspace/devspace.component";
 import { MainViewComponent } from "./main-view/main-view.component";
 import { ThreadComponent } from "./thread/thread.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-main',
-  imports: [CommonModule, HeaderComponent, DevspaceComponent, MainViewComponent, ThreadComponent, SidebarComponent],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+    selector: 'app-main',
+    imports: [CommonModule, HeaderComponent, DevspaceComponent, MainViewComponent, ThreadComponent, SidebarComponent],
+    templateUrl: './main.component.html',
+    styleUrl: './main.component.scss'
 })
 export class MainComponent implements OnInit {
-  channelId: string | null = null;
-  threadId: string | null = null;
+    channelId: string | null = null;
+    threadId: string | null = null;
+    chatId: string | null = null;
+    isMobile = false;
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+    constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    this.subscribeRouteParams();
-  }
+    ngOnInit() {  
+        this.checkScreenSize();
+        window.addEventListener('resize', () => this.checkScreenSize());
+        this.subscribeRouteParams();
+    }
 
-  subscribeRouteParams() {
-    this.route.queryParamMap.subscribe(params => {
-      this.channelId = params.get('channel');
-      this.threadId = params.get('thread');
-    });
-  }
+    subscribeRouteParams() {
+        this.route.queryParamMap.subscribe(params => {
+            this.channelId = params.get('channel');
+            this.threadId = params.get('thread');
+            this.chatId = params.get('chat');
+        });
+    }
 
+    checkScreenSize() {
+        this.isMobile = window.innerWidth <= 1400;
+    }
+
+    showMainView(): boolean {
+        return !this.isMobile || !this.threadId;
+    }
+
+    showThread(): boolean {
+        return !this.isMobile || !!this.threadId;
+    }
 }

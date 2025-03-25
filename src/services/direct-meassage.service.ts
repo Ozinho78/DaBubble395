@@ -17,13 +17,13 @@ import { Message } from '../models/message.class';
   providedIn: 'root',
 })
 export class ChatService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) { }
 
   // Ermittelt, ob bereits ein Chat zwischen zwei Usern existiert und gibt ihn zurück,
   // ansonsten wird ein neuer Chat erstellt.
   async getOrCreateChat(userId1: string, userId2: string): Promise<string> {
-    const normalizedUserId1 = userId1.trim().toLowerCase();
-    const normalizedUserId2 = userId2.trim().toLowerCase();
+    const normalizedUserId1 = userId1.trim();//.toLowerCase();
+    const normalizedUserId2 = userId2.trim();//.toLowerCase();
     const chatId = [normalizedUserId1, normalizedUserId2].sort().join('_');
     const chatDocRef = doc(this.firestore, 'chats', chatId);
     const chatSnap = await getDoc(chatDocRef);

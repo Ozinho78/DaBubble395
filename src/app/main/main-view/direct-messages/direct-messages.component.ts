@@ -9,6 +9,8 @@ import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { User } from '../../../../models/user.model';
 
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-direct-messages',
   imports: [CommonModule, MessageInputComponent, ProfileViewComponent],
@@ -33,17 +35,20 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
-    private chatService: ChatService
-  ) {}
+    private chatService: ChatService,
+    private route: ActivatedRoute
+  ) { }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
   ngOnInit(): void {
+    //console.log('Direct Messages Log');
     this.loggedInUserId = localStorage.getItem('user-id') || '';
     this.subscribeToSelectedUser();
-    this.initializeChat();
+    this.subscribeRouteParams();
+    //this.initializeChat();
   }
 
   private subscribeToSelectedUser(): void {
@@ -73,21 +78,35 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  private async initializeChat(): Promise<void> {
-    const loggedInUserId = localStorage.getItem('user-id');
-    if (!loggedInUserId) return;
+  subscribeRouteParams() {
+    this.route.queryParamMap.subscribe(params => {
+      this.chatId = params.get('chat') || '';
 
-    this.userService.currentDocIdFromDevSpace.subscribe(
-      async (selectedUserId) => {
-        if (selectedUserId) {
-          this.chatId = await this.chatService.getOrCreateChat(
-            loggedInUserId,
-            selectedUserId
-          );
-          this.messages$ = this.chatService.getMessages(this.chatId);
-        }
+      //debugger;
+
+      if (this.chatId) {
+        this.initializeChat();
       }
-    );
+    });
+  }
+
+  private async initializeChat(): Promise<void> {
+    this.messages$ = this.chatService.getMessages(this.chatId);
+    /*
+        const loggedInUserId = localStorage.getItem('user-id');
+        if (!loggedInUserId) return;
+    
+        this.userService.currentDocIdFromDevSpace.subscribe(
+          async (selectedUserId) => {
+            if (selectedUserId) {
+              this.chatId = await this.chatService.getOrCreateChat(
+                loggedInUserId,
+                selectedUserId
+              );
+              this.messages$ = this.chatService.getMessages(this.chatId);
+            }
+          }
+        );*/
   }
 
   async onNewMessage(newText: string) {
