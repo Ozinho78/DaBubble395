@@ -12,6 +12,10 @@ h2 {
     background-color: #FFFFFF;
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
+
+    @media (max-width: 1600px) {
+        width: unset;
+    }
 }
 
 .header {

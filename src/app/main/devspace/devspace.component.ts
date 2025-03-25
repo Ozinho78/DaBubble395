@@ -21,6 +21,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
+import { ChatService } from '../../../services/direct-meassage.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -77,7 +78,8 @@ export class DevspaceComponent implements OnInit {
     private userService: UserService,
     public userPresence: PresenceService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chat: ChatService
   ) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
@@ -160,13 +162,23 @@ export class DevspaceComponent implements OnInit {
     this.filterUserChannels();
   }
 
-  selectUserForDirectMessage(user: User) {
+  async selectUserForDirectMessage(user: User) {
     this.userService.setDocIdFromDevSpace(user.docId!);
     console.log(this.docId);
+
+    const chatId = await this.chat.getOrCreateChat(this.userLoggedIn, this.docId!);
+    console.log(chatId);
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { chat: chatId },
+      replaceUrl: true
+    });
+
     this.showComponent('directMessages');
 
     // 12.03.2025 - Alexander Riedel
-    this.router.navigate(['/main'], { replaceUrl: true });
+    //this.router.navigate(['/main'], { replaceUrl: true });
   }
 
   selectChannel(channel: any) {

@@ -29,9 +29,12 @@ export class MainViewComponent implements OnInit {
 
     this.route.queryParamMap.subscribe(params => {
       const channelId = params.get('channel');
+      const chatId = params.get('chat');
 
       if (channelId) {
         this.setVisibleComponent('channel');
+      } else if (chatId) {
+        this.setVisibleComponent('directMessages');
       }
     });
   }

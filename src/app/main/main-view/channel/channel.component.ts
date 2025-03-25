@@ -75,23 +75,6 @@ export class ChannelComponent implements OnInit {
         this.subscribeThreads();
     }
 
-    subscribeRouteParams() {
-        this.route.queryParamMap.subscribe(params => {
-            this.channelId = params.get('channel') || '';
-            this.threadId = params.get('thread') || null;
-
-            if (this.channelId) {
-                this.loadChannel();
-                this.loadThreads();
-
-                if (!this.threadId) {
-                    this.focusMessageInput();
-                    setTimeout(() => { this.scrollToBottom(); }, 200);
-                }
-            }
-        });
-    }
-
     initializeUser() {
         this.currentUserId = this.userService.getCurrentUserId();
         this.loadCurrentName();
@@ -108,6 +91,23 @@ export class ChannelComponent implements OnInit {
     loadUsersFromUserService() {
         this.userService.loadUsers().then(() => {
             this.subscribeRouteParams();
+        });
+    }
+
+    subscribeRouteParams() {
+        this.route.queryParamMap.subscribe(params => {
+            this.channelId = params.get('channel') || '';
+            this.threadId = params.get('thread') || null;
+
+            if (this.channelId) {
+                this.loadChannel();
+                this.loadThreads();
+
+                if (!this.threadId) {
+                    this.focusMessageInput();
+                    setTimeout(() => { this.scrollToBottom(); }, 200);
+                }
+            }
         });
     }
 

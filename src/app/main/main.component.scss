@@ -13,7 +13,7 @@
     gap: 20px;
 
     // Mobile Layout
-    @media (max-width: 1024px) {
+    @media (max-width: 1400px) {
         //margin: 0 10px 10px 10px;
         //gap: 10px;
     }
@@ -23,11 +23,11 @@ app-main-view {
     flex-grow: 1;
 }
 
-app-main-view,
-app-thread {
-    flex-grow: 1;
+@media (max-width: 1400px) {
 
-    @media (max-width: 1024px) {
-        width: 100%;
+    app-main-view,
+    app-thread {
+        flex-grow: 1;
+        //width: 100%;
     }
 }
