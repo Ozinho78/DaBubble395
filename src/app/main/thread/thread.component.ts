@@ -19,7 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
-    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
+    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
     @ViewChild('messageInput') messageInput!: MessageInputComponent;
 
     channelId!: string;
@@ -154,7 +154,7 @@ export class ThreadComponent implements OnInit {
         }, 100);
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
         this.editingTarget = event;
     }
 

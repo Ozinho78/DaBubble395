@@ -58,7 +58,7 @@ export class ChannelComponent implements OnInit {
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
     hoveredThreadId: string | null = null;
 
-    editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
+    editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -271,7 +271,7 @@ export class ChannelComponent implements OnInit {
         this.modal.openModal();
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
         this.editingTarget = event;
     }
 

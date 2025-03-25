@@ -19,15 +19,13 @@ import { ReactionsComponent } from "./reactions.component";
 export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() threadId!: string;
     @Input() currentUserId!: string;
-    @Input() collectionName: 'threads' | 'messages' = 'threads';
+    @Input() collectionName: 'threads' | 'messages' | 'chats' = 'threads';
 
     currentUserName: string = '';
     userArray: User[] = [];
 
     reactions: Reaction[] = [];
-    groupedReactions: {
-        [type: string]: { count: number; likedByMe: boolean; userNames: string[] };
-    } = {};
+    groupedReactions: { [type: string]: { count: number; likedByMe: boolean; userNames: string[] }; } = {};
     isReady = false;
     showReactionsOverlay = false;
 
@@ -112,7 +110,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.groupedReactions = groups;
     }
 
-    getUserName(userId: string): string {
+    getUserName(userId: string) {
         const user = this.userArray.find(u => u.docId === userId);
         return user?.name || 'Unbekannt';
     }
@@ -163,7 +161,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    hasReactions(): boolean {
+    hasReactions() {
         return Object.keys(this.groupedReactions).length > 0;
     }
 

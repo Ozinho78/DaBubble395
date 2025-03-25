@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, AfterViewInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from './reactions.component';
 import { ReactionService } from '../../../services/reaction.service';
@@ -11,17 +11,17 @@ import { Reaction } from '../../../models/reaction.class';
     templateUrl: './reaction-menu.component.html',
     styleUrls: ['./reaction-menu.component.scss']
 })
-export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
+export class ReactionMenuComponent {
     @Input() docId!: string;
     @Input() userId!: string;
     @Input() currentUserId!: string;
     @Input() text!: string;
-    @Input() type: 'message' | 'thread' = 'thread';
+    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
     @Input() isHovered: boolean = false;
     @Input() isOwnMessage: boolean = false;
     @Input() isEditing: boolean = false;
 
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     showReactionsOverlay: boolean = false;
     menuOpen: boolean = false;
@@ -31,11 +31,11 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
 
     constructor(
         private reactionService: ReactionService,
-        private renderer: Renderer2,
-        private elRef: ElementRef
+        //private renderer: Renderer2,
+        //private elRef: ElementRef
     ) { }
 
-    ngAfterViewInit(): void {
+    /*ngAfterViewInit(): void {
         const replyContainer = this.elRef.nativeElement.closest('.reply-container');
 
         if (replyContainer) {
@@ -52,13 +52,14 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
                 }
             });
         }
-    }
+    }*/
 
+    /*
     ngOnDestroy(): void {
         if (this.hoverTimeout) {
             clearTimeout(this.hoverTimeout);
         }
-    }
+    }*/
 
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;
@@ -111,7 +112,14 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
             timestamp: Date.now()
         });
 
-        this.reactionService.addReaction(this.type === 'message' ? 'messages' : 'threads', this.docId, reaction)
+        this.reactionService
+            .addReaction(
+                this.type === 'thread' ? 'threads' :
+                    this.type === 'message' ? 'messages' :
+                        'chats',
+                this.docId,
+                reaction
+            )
             .then(() => {
                 this.showReactionsOverlay = false;
             })

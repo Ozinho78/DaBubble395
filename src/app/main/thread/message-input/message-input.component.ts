@@ -24,7 +24,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
 
     @Input() editingText: string = '';
     @Input() editingMessageId: string | null = null;
-    @Input() editingType: 'message' | 'thread' | null = null;
+    @Input() editingType: 'message' | 'thread' | 'chat' | null = null;
     @Output() editSaved = new EventEmitter<void>();
     @Output() editCancelled = new EventEmitter<void>();
 
