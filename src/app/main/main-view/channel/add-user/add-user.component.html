@@ -1,11 +1,9 @@
-<div *ngIf="isOpen" class="show-channel-container">
-  <div class="show-channel-content">
+<div *ngIf="isOpen" class="add-user-container">
+  <div class="add-user-content">
     <div class="header">
-      <div class="header-left">
-        <span>#</span>
-        <span>{{ channelToChange?.name }}</span>
-      </div>
-      <svg
+      <div class="main-header">
+        <h2>Leute hinzufügen</h2>
+        <svg
           class="close-icon"
           (click)="close()"
           width="24"
@@ -32,15 +30,37 @@
             />
           </g>
         </svg>
-    <!-- end of header -->
+      </div>
+      <div class="channel-header">
+        <span>#</span>
+        <span>{{ channelToChange?.name }}</span>
+      </div>
+      <!-- End of header -->
     </div>
 
+    <div class="input-ctn">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="searchUsers()"
+        placeholder="Name eingeben"
+      />
+    </div>
 
-    
+    <div class="user-list">
+      <ul *ngIf="filteredUsers.length > 0" class="user-list">
+        <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" [class.selected]="selectedUser?.docId === user.docId">
+          <img [src]="'img/avatar/' + user.avatar" alt="Avatar">
+          <span>{{ user.name }}</span>
+        </li>
+      </ul>
+    </div>
 
-  <!-- show-channel-content -->
+    <div class="add-button-ctn">
+      <button [disabled]="!selectedUser" (click)="addUser()">Add User</button>
+    </div>
+
+    <!-- add-user-content -->
   </div>
-<!-- show-channel-container -->
+  <!-- add-user-container -->
 </div>
-
-
