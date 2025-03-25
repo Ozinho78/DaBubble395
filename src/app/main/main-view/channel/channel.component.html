@@ -1,5 +1,5 @@
 <div class="channel-container">
-    <div (click)="openModal(channelId)" class="header">
+    <div (click)="openModalEditChannel(channelId)" class="header">
 
         <div class="header-label">
             <span>#</span>
@@ -20,7 +20,7 @@
                 </div>
                 <span class="member-total">{{ channelMembers.length }}</span>
             </div>
-            <div class="add-member-container">
+            <div (click)="openModalAddUser(channelId)" class="add-member-container">
                 <svg class="add-member" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -112,4 +112,6 @@
 <app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
     [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
 
-<app-show-channel #modal [channelIdInput]="selectedChannelId"></app-show-channel>
+<app-show-channel #modalEditChannel [channelIdInput]="selectedChannelId"></app-show-channel>
+<app-add-user #modalAddUser [channelIdInput]="selectedChannelId"></app-add-user>
+

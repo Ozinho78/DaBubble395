@@ -14,6 +14,7 @@ import { PresenceService } from '../../../../services/presence.service';
 import { ShowChannelComponent } from "./show-channel/show-channel.component";
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
+import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
     selector: 'app-channel',
@@ -22,6 +23,7 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
         MessageInputComponent,
         ProfileViewComponent,
         ShowChannelComponent,
+        AddUserComponent,
         ReactionDisplayComponent,
         ReactionMenuComponent
     ],
@@ -36,7 +38,8 @@ export class ChannelComponent implements OnInit {
     @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
 
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
-    @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    @ViewChild(ShowChannelComponent) modalEditChannel!: ShowChannelComponent;
+    @ViewChild(AddUserComponent) modalAddUser!: AddUserComponent;
 
     selectedChannelId: string = '';
     currentUser: any;
@@ -266,9 +269,14 @@ export class ChannelComponent implements OnInit {
         this.selectedProfile = null;
     }
 
-    openModal(id: string) {
+    openModalEditChannel(id: string) {
         this.selectedChannelId = id;
-        this.modal.openModal();
+        this.modalEditChannel.openModal();
+    }
+
+    openModalAddUser(id: string) {
+        this.selectedChannelId = id;
+        this.modalAddUser.openModal();
     }
 
     handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
