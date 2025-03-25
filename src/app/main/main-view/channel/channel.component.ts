@@ -33,7 +33,7 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
     ]
 })
 export class ChannelComponent implements OnInit {
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;

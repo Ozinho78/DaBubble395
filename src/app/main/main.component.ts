@@ -17,11 +17,15 @@ export class MainComponent implements OnInit {
     channelId: string | null = null;
     threadId: string | null = null;
     chatId: string | null = null;
-    isMobile = false;
+
+    isMedium = false;
+    isSmall = false;
+
+    activeView: 'devspace' | 'main' | 'thread' = 'main';
 
     constructor(private route: ActivatedRoute) { }
 
-    ngOnInit() {  
+    ngOnInit() {
         this.checkScreenSize();
         window.addEventListener('resize', () => this.checkScreenSize());
         this.subscribeRouteParams();
@@ -36,14 +40,34 @@ export class MainComponent implements OnInit {
     }
 
     checkScreenSize() {
-        this.isMobile = window.innerWidth <= 1400;
+        const width = window.innerWidth;
+        this.isMedium = width <= 1400;
+        this.isSmall = width <= 992;
+
+        // Bei Wechsel auf small, nur main zeigen (außer Thread aktiv)
+        if (this.isSmall) {
+            if (this.threadId) {
+                this.activeView = 'thread';
+            } else {
+                this.activeView = 'main';
+            }
+        }
+    }
+
+    showDevspace(): boolean {
+        return !this.isSmall || this.activeView === 'devspace';
     }
 
     showMainView(): boolean {
-        return !this.isMobile || !this.threadId;
+        if (this.isSmall) return this.activeView === 'main';
+        if (this.isMedium && this.threadId) return false;
+        return true;
     }
 
     showThread(): boolean {
-        return !this.isMobile || !!this.threadId;
+        if (!this.threadId) return false;
+        if (this.isSmall) return this.activeView === 'thread';
+        if (this.isMedium) return true;
+        return true;
     }
 }

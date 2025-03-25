@@ -2,8 +2,19 @@
     <app-header></app-header>
     <app-sidebar></app-sidebar>
     <div class="main-content">
-        <app-devspace></app-devspace>
+        <app-devspace *ngIf="showDevspace()"></app-devspace>
         <app-main-view *ngIf="showMainView()"></app-main-view>
         <app-thread *ngIf="showThread() && threadId"></app-thread>
     </div>
+
+    <!-- ONLY TEST
+     25.03.2025 - Alexander Riedel 
+     VERY SMALL 992px -->
+    <div class="mobile-nav" *ngIf="isSmall">
+        <button (click)="activeView = 'devspace'">Menü</button>
+        <button (click)="activeView = 'main'">Channel</button>
+        <button (click)="activeView = 'thread'" [disabled]="!threadId">Thread</button>
+    </div>
+    <!-- ENDE -->
+
 </div>
