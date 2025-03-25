@@ -164,10 +164,10 @@ export class DevspaceComponent implements OnInit {
 
   async selectUserForDirectMessage(user: User) {
     this.userService.setDocIdFromDevSpace(user.docId!);
-    console.log(this.docId);
+    //console.log(this.docId);
 
     const chatId = await this.chat.getOrCreateChat(this.userLoggedIn, this.docId!);
-    console.log(chatId);
+    //console.log(chatId);
 
     this.router.navigate([], {
       relativeTo: this.route,

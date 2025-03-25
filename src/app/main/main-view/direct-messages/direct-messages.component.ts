@@ -44,7 +44,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit(): void {
-    console.log('Direct Messages Log');
+    //console.log('Direct Messages Log');
     this.loggedInUserId = localStorage.getItem('user-id') || '';
     this.subscribeToSelectedUser();
     this.subscribeRouteParams();
