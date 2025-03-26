@@ -175,7 +175,7 @@ export class UserService {
         } catch (error) {
             console.error('❌ Fehler beim Laden der User:', error);
         }
-        console.log(this.userArray);
+        //console.log(this.userArray);
     }
 
     /**

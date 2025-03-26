@@ -19,7 +19,7 @@ export class ShowChannelComponent {
   editedChannelDescription = ''; // Temporäre neue Beschreibung
 
   @Input() channelIdInput!: string;
-  @Output() closeModal = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>(); // Signalisiert das Schließen
 
   channelToChange!: Channel | null;
   userToChange!: User | null;
@@ -94,7 +94,7 @@ export class ShowChannelComponent {
 
   close() {
     this.isOpen = false;
-    this.closeModal.emit();
+    this.closeModal.emit(); // Sendet Event an Parent
   }
 
   toggleEditMode(field: number) {

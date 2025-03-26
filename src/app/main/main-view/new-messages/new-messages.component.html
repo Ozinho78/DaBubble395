@@ -13,6 +13,9 @@
       <div *ngIf="!enableInputTop" class="user-channel-list-top">
         <span>{{ targetUser?.name || targetChannel?.name || enteredEmail }}</span>
         <button (click)="removeSelection()">❌</button>
+
+        <!-- Fehlermeldung anzeigen, falls Eingabe ungültig ist -->
+        <span *ngIf="errorMessage" class="error-text">{{ errorMessage }}</span>
       </div>
     </div>
 
