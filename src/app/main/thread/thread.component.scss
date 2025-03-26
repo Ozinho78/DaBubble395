@@ -13,8 +13,17 @@ h2 {
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
 
-    @media (max-width: 1500px) {
+    @media (max-width: 1600px) {
+        max-width: 485px;
         width: unset;
+    }
+
+    @media (max-width: 1400px) {
+        max-width: unset;
+    }
+
+    @media (max-width: 768px) {
+        border-radius: unset;
     }
 }
 
@@ -54,6 +63,12 @@ h2 {
                 }
             }
         }
+    }
+
+    @media (max-width: 768px) {
+        min-height: 60px;
+        max-height: 60px;
+        margin: 0 40px;
     }
 }
 

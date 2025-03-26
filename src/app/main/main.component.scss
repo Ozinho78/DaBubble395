@@ -12,11 +12,9 @@
     @include m.flexBox(row, space-between, normal);
     gap: 20px;
 
-    // Small Layout
-    @media (max-width: 1400px) {}
-
-    // Very Small Layout
-    @media (max-width: 992px) {}
+    @media (max-width: 768px) {
+        margin: 0;
+    }
 }
 
 app-main-view {
@@ -38,12 +36,17 @@ app-main-view {
     app-main-view,
     app-thread {
         flex-grow: 1;
-
-        @media (max-width: 992px) {
-            width: 100%;
-        }
+        width: 100%;
     }
 }
+
+@media (max-width: 992px) {}
+
+@media (max-width: 768px) {}
+
+@media (max-width: 576px) {}
+
+@media (max-width: 460px) {}
 
 .mobile-nav {
     display: flex;

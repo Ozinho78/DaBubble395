@@ -7,6 +7,10 @@
     background-color: #FFFFFF;
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
+
+    @media (max-width: 768px) {
+        border-radius: unset;
+    }
 }
 
 .header-label {
@@ -18,7 +22,8 @@
     transition: background 0.1s ease-in;
 
     span {
-        @include m.styleFont("Nunito", 28px, 800);
+        //@include m.styleFont("Nunito", 28px, 800);
+        @include m.styleFont("Nunito", 1.556rem, 800);
     }
 
     &:hover {
@@ -60,6 +65,10 @@
         .member-total {
             color: v.$purple_3;
         }
+    }
+
+    @media (max-width: 768px) {
+        display: none;
     }
 }
 
