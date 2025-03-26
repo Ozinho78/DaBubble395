@@ -125,7 +125,7 @@ export class DevspaceComponent implements OnInit {
 
   filterUserChannels() {
     if (!this.userLoggedIn) return;
-    this.userChannels = this.channels.filter(channel =>
+    this.userChannels = this.channels.filter((channel) =>
       channel.member.includes(this.userLoggedIn)
     );
     // console.log(this.userChannels);
@@ -163,29 +163,22 @@ export class DevspaceComponent implements OnInit {
   }
 
   async selectUserForDirectMessage(user: User) {
-    this.userService.setDocIdFromDevSpace(user.docId!);
-    console.log(this.docId);
-
-    const chatId = await this.chat.getOrCreateChat(this.userLoggedIn, this.docId!);
-    console.log(chatId);
-
+    const chatId = await this.chat.getOrCreateChat(
+      this.userLoggedIn,
+      user.docId!
+    );
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { chat: chatId },
-      replaceUrl: true
+      replaceUrl: true,
     });
-
-    this.showComponent('directMessages');
-
-    // 12.03.2025 - Alexander Riedel
-    //this.router.navigate(['/main'], { replaceUrl: true });
   }
 
   selectChannel(channel: any) {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { channel: channel.docId },
-      replaceUrl: true
+      replaceUrl: true,
     });
     this.showComponent('channel');
   }
@@ -206,4 +199,3 @@ export class DevspaceComponent implements OnInit {
     }
   }
 }
-
