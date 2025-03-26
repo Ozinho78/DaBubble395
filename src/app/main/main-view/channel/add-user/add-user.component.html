@@ -45,6 +45,7 @@
         (input)="searchUsers()"
         placeholder="Name eingeben"
         [value]="selectedUser?.name || ''"
+        [ngClass]="{'user-selected': selectedUser}"
         readonly
       />
       <!-- Zeigt den Namen des ausgewählten Benutzers an -->
@@ -59,14 +60,23 @@
       </ul>
     </div>
 
-    <div class="add-button-ctn">
-      <button [disabled]="!selectedUser" (click)="addUser()">Add User</button>
+    <!-- Erfolg-Modal -->
+    <div *ngIf="showSuccessModal" class="success-modal">
+      <div class="modal-content">
+        <h3>Benutzer wurde hinzugefügt!</h3>
+        <button (click)="closeSuccessModal()">Schließen</button>
+      </div>
+    </div>
+
+    <div class="add-button-ctn" (click)="addUser()">
+      <button [disabled]="!selectedUser">Add User</button>
     </div>
 
     <!-- add-user-content -->
   </div>
   <!-- add-user-container -->
 </div>
+
 
 <ng-template #noResults>
   <p>Kein Benutzer gefunden oder alle sind bereits Mitglied.</p>

@@ -111,6 +111,10 @@ input {
   flex: none;
   order: 1;
   flex-grow: 0;
+
+  &.user-selected {
+    @include m.styleFont("Nunito", 24px, 500, 1.0, v.$purple_3);
+  }
 }
 
 .user-list {
@@ -135,6 +139,7 @@ input {
     &:hover {
       background-color: v.$purple_4;
       border-radius: 20px;
+      cursor: pointer;
     }
   }
 }
@@ -197,3 +202,41 @@ input {
 }
 
 
+.success-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8); /* Halbtransparenter Hintergrund */
+  width: 300px;
+  padding: 20px;
+  border-radius: 30px;
+  z-index: 1000; /* Modal oben anordnen */
+  @include m.flexBox(row, center, center);
+
+  .modal-content {
+    background: #fff;
+    text-align: center;
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    
+    h3 {
+      @include m.styleFont("Nunito", 18px, 700, 1.0, #6a4cf7);
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #6a4cf7;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      @include m.styleFont("Nunito", 16px, 500, 1.0, #FFFFFF);
+      
+      &:hover {
+        background-color: #5a3cc1;
+      }
+    }
+  }
+}

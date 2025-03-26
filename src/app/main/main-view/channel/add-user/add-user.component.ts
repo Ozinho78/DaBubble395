@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './add-user.component.scss'
 })
 export class AddUserComponent {
+  showSuccessModal: boolean = true;  // Variable, um das Modal zu steuern
   isOpen = false; // Steuert, ob das Modal sichtbar ist
 
   @Input() channelIdInput!: string;
@@ -63,12 +64,9 @@ export class AddUserComponent {
 
   searchUsers() {
     if (!this.channelToChange) return;
-    this.filteredUsers = this.users.filter(user => {
-      return (
-        user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
-        !this.channelToChange!.member.includes(user.docId!) // Nur Nicht-Mitglieder anzeigen
-      );
-    });
+    this.filteredUsers = this.users
+    .filter(user => user.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
+    .filter(user => user.docId && !this.channelToChange?.member.includes(user.docId)); // Nur Nicht-Mitglieder anzeigen
   }
 
   selectUser(user: User) {
@@ -88,20 +86,36 @@ export class AddUserComponent {
         member: arrayUnion(this.selectedUser.docId)
       });
   
+      // Benutzer zur Channel-Mitgliederliste hinzufügen
       if (this.selectedUser.docId) {
         this.channelToChange.member.push(this.selectedUser.docId);
       } else {
         console.error("Fehler: Der Benutzer hat keine docId.");
       }
+
+      // Nach dem Hinzufügen den Benutzer zurücksetzen
       this.selectedUser = null;
       this.searchQuery = '';
-      this.searchUsers(); // Aktualisiert die User-Liste sofort
-      alert('Benutzer wurde hinzugefügt!');
       this.filteredUsers = [];
-      alert('Benutzer wurde hinzugefügt!');
+      console.log('Benutzer wurde hinzugefügt!');
+      this.searchUsers(); // Liste der verfügbaren Benutzer neu berechnen
+
+      // Erfolg-Modal anzeigen
+      this.showSuccessModal = true;
+
+      // Modal nach 3 Sekunden automatisch schließen
+      setTimeout(() => {
+        this.closeSuccessModal();
+      }, 3000);
+
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
     }
+  }
+
+  // Methode zum Schließen des Modals
+  closeSuccessModal() {
+    this.showSuccessModal = false;
   }
 
   
