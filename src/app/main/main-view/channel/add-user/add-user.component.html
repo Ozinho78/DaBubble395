@@ -44,7 +44,10 @@
         [(ngModel)]="searchQuery"
         (input)="searchUsers()"
         placeholder="Name eingeben"
+        [value]="selectedUser?.name || ''"
+        readonly
       />
+      <!-- Zeigt den Namen des ausgewählten Benutzers an -->
     </div>
 
     <div class="user-list">

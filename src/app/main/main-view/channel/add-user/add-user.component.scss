@@ -142,86 +142,58 @@ input {
 .add-button-ctn {
   position: absolute;
   right: 40px;
-  // width: 100%;
-  /* 10. Button primary */
-  /* Auto layout */
   width: 147px;
   height: 49px;
   padding: 12px 25px;  
   @include m.flexBox(row, center, center, 10px);
-  /* Text gray */
-  background: #686868;
+  background: #686868;  /* Standard-Hintergrund für deaktiviert */
   border-radius: 25px;
-  /* Inside auto layout */
   flex: none;
   order: 2;
   flex-grow: 0;
   
+  &:hover {
+    cursor: not-allowed; /* Deaktivierter Hover */
+    transform: none; /* Kein Hover-Effekt für den Container, wenn der Button deaktiviert ist */
+  }
+
   button {
     @include m.styleFont("Nunito", 18px, 700, 1.0, #FFFFFF);
-    background: #686868;
-    // background: v.$purple_1;
+    background: #686868; /* Grauer Hintergrund, wenn der Button deaktiviert ist */
+    color: #b0b0b0; /* Graue Schrift für den deaktivierten Zustand */
+    cursor: not-allowed; /* Deaktivierter Cursor */
+    border: 1px solid #ccc; /* Grauer Rand für den deaktivierten Zustand */
+    border: unset;
+
     &:hover {
-      cursor: not-allowed;
-      transform: scale(1.05);
+      cursor: not-allowed; /* Kein Hover für den deaktivierten Zustand */
+      transform: none; /* Kein Hover-Effekt */
     }
   }
 
-  &:hover {
-    cursor: not-allowed;
-    transform: scale(1.05);
+  /* Wenn der Button aktiv ist, ändere das Styling */
+  &:not(:has(button:disabled)) {
+    background: transparent; /* Container-Hintergrund transparent */
+    border: 1px solid v.$purple_1; /* Lila Rand für den Container, wenn aktiv */
+    background-color: v.$purple_1;
+    
+
+    button {
+      background: v.$purple_1; /* Hintergrund lila, wenn aktiviert */
+      color: #FFFFFF; /* Weiße Schrift */
+      cursor: pointer; /* Normaler Cursor */
+      
+      &:hover {
+        // transform: scale(1.05); /* Hover-Effekt für den Button */
+        transform: none;
+      }
+    }
+
+    &:hover {
+      cursor: pointer; /* Cursor wird normal, wenn der Container aktiv ist */
+      transform: scale(1.05); /* Leichte Skalierung beim Hover auf den Container */
+    }
   }
 }
 
 
-
-// .input-ctn {
-//   position: relative;
-//   display: flex;
-//   align-items: center;
-// }
-
-// input[disabled] {
-//   background-color: #e0e0e0;
-//   cursor: not-allowed;
-// }
-
-// .clear-icon {
-//   cursor: pointer;
-//   color: red;
-//   font-size: 18px;
-//   margin-left: 8px;
-// }
-
-// .user-list {
-//   list-style: none;
-//   padding: 0;
-//   margin-top: 5px;
-//   max-height: 200px;
-//   overflow-y: auto;
-//   border: 1px solid #ccc;
-//   border-radius: 5px;
-// }
-
-// .user-list li {
-//   display: flex;
-//   align-items: center;
-//   padding: 8px;
-//   cursor: pointer;
-// }
-
-// .user-list li:hover {
-//   background-color: #f0f0f0;
-// }
-
-// .user-list img {
-//   width: 32px;
-//   height: 32px;
-//   border-radius: 50%;
-//   margin-right: 10px;
-// }
-
-// button:disabled {
-//   background-color: gray;
-//   cursor: not-allowed;
-// }

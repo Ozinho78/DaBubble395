@@ -72,7 +72,8 @@ export class AddUserComponent {
   }
 
   selectUser(user: User) {
-    this.selectedUser = user;
+    this.selectedUser = user;  // Setzt den ausgewählten Benutzer
+    this.searchQuery = user.name; // Setzt den Namen des Benutzers in das Suchfeld
   }
 
   async addUser() {
