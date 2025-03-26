@@ -3,7 +3,11 @@
 
 h2 {
     margin: 0;
-    @include m.styleFont("Nunito", 24px, 700, 37.74px);
+    @include m.styleFont("Nunito", 24px, 700);
+
+    @media (max-width: 768px) {
+        font-size: 20px;
+    }
 }
 
 .container {
@@ -68,7 +72,7 @@ h2 {
     @media (max-width: 768px) {
         min-height: 60px;
         max-height: 60px;
-        margin: 0 40px;
+        margin: 0 16px;
     }
 }
 
@@ -95,6 +99,10 @@ h2 {
             height: 1px;
             background-color: v.$purple_4;
             margin-left: 20px;
+        }
+
+        @media (max-width: 768px) {
+            margin: 10px 16px;
         }
     }
 
@@ -127,7 +135,7 @@ h2 {
 
 .date-header {
     padding: 5px 0;
-    @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);
+    @include m.styleFont("Nunito", 18px, 400, 24.55px);
     @include m.flexBox(row, center, center);
 
     .date {
@@ -153,6 +161,10 @@ h2 {
         height: 1px;
         background-color: v.$purple_4;
         margin-right: 20px;
+    }
+
+    @media (max-width: 768px) {
+        @include m.styleFont("Nunito", 17px, 400, 23px);
     }
 }
 
