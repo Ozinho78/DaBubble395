@@ -45,6 +45,8 @@ export class AddUserComponent {
       this.channelToChange.description = data['description'];
       this.channelToChange.member = data['member'] || [];
       this.channelToChange.userId = data['userId'];
+
+      this.searchUsers(); // Filter aktualisieren, sobald der Channel geladen ist
     }
   }
 
@@ -55,12 +57,18 @@ export class AddUserComponent {
       const data = doc.data();
       return { docId: doc.id, ...data } as User;
     });
+  
+    this.searchUsers(); // Aktualisiert die Liste mit den gefilterten Usern
   }
 
   searchUsers() {
-    this.filteredUsers = this.users
-      .filter(user => user.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
-      .filter(user => user.docId && !this.channelToChange?.member.includes(user.docId)); // Nur Nicht-Mitglieder anzeigen
+    if (!this.channelToChange) return;
+    this.filteredUsers = this.users.filter(user => {
+      return (
+        user.name.toLowerCase().includes(this.searchQuery.toLowerCase()) &&
+        !this.channelToChange!.member.includes(user.docId!) // Nur Nicht-Mitglieder anzeigen
+      );
+    });
   }
 
   selectUser(user: User) {
@@ -86,6 +94,8 @@ export class AddUserComponent {
       }
       this.selectedUser = null;
       this.searchQuery = '';
+      this.searchUsers(); // Aktualisiert die User-Liste sofort
+      alert('Benutzer wurde hinzugefügt!');
       this.filteredUsers = [];
       alert('Benutzer wurde hinzugefügt!');
     } catch (error) {

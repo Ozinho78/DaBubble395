@@ -15,6 +15,25 @@ button, svg {
   cursor: pointer;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: v.$purple_2;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: v.$purple_1;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background-color: v.$purple_4;
+  // margin: 30px;
+  border-radius: 5px;
+}
+
 .add-user-container {
   position: fixed;
   top: 0;
@@ -95,18 +114,26 @@ input {
 }
 
 .user-list {
-  @include m.styleFont("Nunito", 24px, 400, 1.0, v.$purple_2);
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  // background-color: v.$purple_bg;
+  background-color: #FFFFFF;
+  @include m.styleFont("Nunito", 16px, 400, 1.0, v.$purple_2);
   ul li {
-    @include m.flexBox(row, flex-start, center, 10px);
-    padding: 8px;
+    @include m.flexBox(row, flex-start, center, 6px);
+    padding: 6px;
+    transition: all 125ms ease-in-out;
 
     img {
-      width: 40px;
+      width: 30px;
       border-radius: 50%;
     }
 
     &:hover {
-      background-color: v.$purple_bg;
+      background-color: v.$purple_4;
       border-radius: 20px;
     }
   }
@@ -148,3 +175,53 @@ input {
 
 
 
+// .input-ctn {
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+// }
+
+// input[disabled] {
+//   background-color: #e0e0e0;
+//   cursor: not-allowed;
+// }
+
+// .clear-icon {
+//   cursor: pointer;
+//   color: red;
+//   font-size: 18px;
+//   margin-left: 8px;
+// }
+
+// .user-list {
+//   list-style: none;
+//   padding: 0;
+//   margin-top: 5px;
+//   max-height: 200px;
+//   overflow-y: auto;
+//   border: 1px solid #ccc;
+//   border-radius: 5px;
+// }
+
+// .user-list li {
+//   display: flex;
+//   align-items: center;
+//   padding: 8px;
+//   cursor: pointer;
+// }
+
+// .user-list li:hover {
+//   background-color: #f0f0f0;
+// }
+
+// .user-list img {
+//   width: 32px;
+//   height: 32px;
+//   border-radius: 50%;
+//   margin-right: 10px;
+// }
+
+// button:disabled {
+//   background-color: gray;
+//   cursor: not-allowed;
+// }
