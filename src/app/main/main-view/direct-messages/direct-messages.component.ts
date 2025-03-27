@@ -8,11 +8,12 @@ import { ChatService } from '../../../../services/direct-meassage.service';
 import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { User } from '../../../../models/user.model';
-
 import { ActivatedRoute } from '@angular/router';
+import { doc, getDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-direct-messages',
+  standalone: true,
   imports: [CommonModule, MessageInputComponent, ProfileViewComponent],
   templateUrl: './direct-messages.component.html',
   styleUrl: './direct-messages.component.scss',
@@ -27,134 +28,118 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     avatar: string;
     email?: string;
   } | null = null;
-  chatId: string = '';
-  profileViewOpen: boolean = false;
   selectedProfilePresence$: Observable<boolean> = of(false);
+  chatId: string = '';
   loggedInUserId: string = '';
+  profileViewOpen: boolean = false;
 
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
     private chatService: ChatService,
     private route: ActivatedRoute
-  ) { }
+  ) {}
+
+  ngOnInit(): void {
+    this.initLoggedInUser();
+    this.handleChatParams();
+  }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
 
-  ngOnInit(): void {
-    //console.log('Direct Messages Log');
+  private initLoggedInUser() {
     this.loggedInUserId = localStorage.getItem('user-id') || '';
-    this.subscribeToSelectedUser();
-    this.subscribeRouteParams();
-    //this.initializeChat();
   }
 
-  private subscribeToSelectedUser(): void {
-    this.userService.currentDocIdFromDevSpace.subscribe((selectedUserId) => {
-      if (selectedUserId) {
-        this.user$ = this.userService.getUserById(selectedUserId).pipe(
-          map((userData: any) => {
-            const user = new User();
-            user.name = userData.name || '';
-            user.avatar = userData.avatar || '';
-            user.email = userData.email || '';
-            // Falls userData.id als String vorliegt, kannst du ihn in eine Zahl umwandeln:
-            user.id = userData.id ? parseInt(userData.id, 10) : 0;
-            user.password = userData.password || '';
-            user.active =
-              userData.active !== undefined ? userData.active : false;
-            // Setze die docId, die du als Identifikator nutzen möchtest:
-            user.docId = selectedUserId;
-            return user;
-          })
-        );
-        this.onlineStatus$ =
-          this.presenceService.getUserPresence(selectedUserId);
-      } else {
-        this.user$ = of(new User());
-      }
-    });
-  }
-
-  subscribeRouteParams() {
-    this.route.queryParamMap.subscribe(params => {
+  private handleChatParams() {
+    this.route.queryParamMap.subscribe((params) => {
       this.chatId = params.get('chat') || '';
-
-      //debugger;
-
       if (this.chatId) {
-        this.initializeChat();
+        this.prepareChat();
       }
     });
   }
 
-  private async initializeChat(): Promise<void> {
+  private async prepareChat() {
+    await this.setUserFromChat();
+    this.loadChatData();
+  }
+
+  private async setUserFromChat() {
+    const participants = await this.getParticipantsFromChat();
+    if (!participants.length) return;
+
+    const targetUserId = this.resolveChatPartner(participants);
+    if (!targetUserId) return;
+
+    this.loadUserData(targetUserId);
+  }
+
+  private async getParticipantsFromChat(): Promise<string[]> {
+    const docRef = doc(this.chatService.Firestore, 'chats', this.chatId);
+    const chatSnap = await getDoc(docRef);
+    if (!chatSnap.exists()) return [];
+    return chatSnap.data()?.['participants'] || [];
+  }
+
+  private resolveChatPartner(participants: string[]): string | null {
+    const isSelfChat =
+      participants.length === 1 ||
+      participants.every((id: string) => id === this.loggedInUserId);
+    return isSelfChat
+      ? this.loggedInUserId
+      : participants.find((id: string) => id !== this.loggedInUserId) || null;
+  }
+
+  private loadUserData(userId: string) {
+    this.user$ = this.userService
+      .getUserById(userId)
+      .pipe(map((userData) => this.mapUser(userData, userId)));
+    this.onlineStatus$ = this.presenceService.getUserPresence(userId);
+  }
+
+  private loadChatData() {
     this.messages$ = this.chatService.getMessages(this.chatId);
-    /*
-        const loggedInUserId = localStorage.getItem('user-id');
-        if (!loggedInUserId) return;
-    
-        this.userService.currentDocIdFromDevSpace.subscribe(
-          async (selectedUserId) => {
-            if (selectedUserId) {
-              this.chatId = await this.chatService.getOrCreateChat(
-                loggedInUserId,
-                selectedUserId
-              );
-              this.messages$ = this.chatService.getMessages(this.chatId);
-            }
-          }
-        );*/
   }
 
   async onNewMessage(newText: string) {
-    const loggedInUserId = localStorage.getItem('user-id');
-    if (!loggedInUserId) {
-      console.error('Kein eingeloggter User gefunden.');
-      return;
-    }
+    if (!this.loggedInUserId)
+      return console.error('Kein eingeloggter User gefunden.');
     const currentUser = await firstValueFrom(
-      this.userService.getUserById(loggedInUserId)
+      this.userService.getUserById(this.loggedInUserId)
     );
-
     const newMessage = new Message({
       creationDate: Date.now(),
       reactions: [],
       text: newText,
       threadId: this.chatId,
-      userId: loggedInUserId,
+      userId: this.loggedInUserId,
       senderName: currentUser.name,
       senderAvatar: currentUser.avatar,
     });
-
     await this.chatService.sendMessage(this.chatId, newMessage);
   }
 
   scrollToBottom() {
     const replies = document.getElementById('replies');
-    if (replies) {
-      replies.scrollTop = replies.scrollHeight;
-    }
+    if (replies) replies.scrollTop = replies.scrollHeight;
   }
 
-  showProfile(userId: string | undefined): void {
+  showProfile(userId?: string): void {
     if (!userId) return;
+    this.userService
+      .getUserById(userId)
+      .subscribe((user) => this.openProfile(user, userId));
+  }
 
-    this.userService.getUserById(userId).subscribe((userData) => {
-      if (userData) {
-        this.selectedProfile = {
-          ...userData,
-          id: this.selectedProfile?.id ?? userId, // 👈 Falls `id` fehlt, dann userId setzen
-        };
-        this.selectedProfilePresence$ =
-          this.presenceService.getUserPresence(userId);
-        this.profileViewOpen = true;
-      } else {
-        console.error('Fehler: User-Daten nicht gefunden.');
-      }
-    });
+  private openProfile(userData: any, userId: string) {
+    if (!userData) return console.error('Fehler: User-Daten nicht gefunden.');
+    this.selectedProfile = { ...userData, id: userId };
+    this.selectedProfilePresence$ =
+      this.presenceService.getUserPresence(userId);
+    this.profileViewOpen = true;
   }
 
   closeProfile(): void {
@@ -162,12 +147,22 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     this.selectedProfile = null;
   }
 
+  private mapUser(userData: any, docId: string): User {
+    const user = new User();
+    user.name = userData.name || '';
+    user.avatar = userData.avatar || '';
+    user.email = userData.email || '';
+    user.id = userData.id ? parseInt(userData.id, 10) : 0;
+    user.password = userData.password || '';
+    user.active = userData.active ?? false;
+    user.docId = docId;
+    return user;
+  }
+
   formatMessageDate(timestamp: any): string {
     const date = new Date(timestamp);
     const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
+    const yesterday = new Date(today.setDate(today.getDate() - 1));
     const formattedDate = date.toLocaleDateString('de-DE', {
       day: '2-digit',
       month: '2-digit',
@@ -179,17 +174,14 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       hour12: false,
     });
 
-    if (date.toDateString() === today.toDateString()) {
+    if (date.toDateString() === new Date().toDateString())
       return `Heute ${formattedTime} Uhr`;
-    } else if (date.toDateString() === yesterday.toDateString()) {
+    if (date.toDateString() === yesterday.toDateString())
       return `Gestern ${formattedTime} Uhr`;
-    } else {
-      return `${formattedDate} ${formattedTime} Uhr`;
-    }
+    return `${formattedDate} ${formattedTime} Uhr`;
   }
 
   getUserPresence(userId: string | undefined): Observable<boolean> {
-    if (!userId) return of(false); // Falls keine userId vorhanden ist, false zurückgeben
-    return this.presenceService.getUserPresence(userId);
+    return userId ? this.presenceService.getUserPresence(userId) : of(false);
   }
 }

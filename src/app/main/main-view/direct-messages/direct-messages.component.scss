@@ -121,9 +121,6 @@ h2 {
 }
 
 .sent {
-  // display: flex;
-  // flex-direction: row-reverse;
-
   .reply {
     flex-direction: row-reverse;
   }
@@ -135,15 +132,17 @@ h2 {
   .message-info {
     flex-direction: row-reverse;
   }
+}
 
-  .message-text {
-    color: white;
-    background-color: v.$purple_2;
-    border-top-right-radius: 0px;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-  }
+.message-text {
+  word-wrap: break-word;
+  white-space: pre-line;
+  color: white;
+  background-color: v.$purple_2;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .avatar {

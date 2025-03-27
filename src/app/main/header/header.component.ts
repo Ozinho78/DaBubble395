@@ -48,22 +48,35 @@ export class HeaderComponent {
 
   logout(): void {
     const userId = localStorage.getItem('user-id');
+
     if (userId) {
       this.presenceService
         .setUserOffline(userId)
-        .then(() => signOut(this.auth))
         .then(() => {
-          this.router.navigate(['/login']);
+          this.clearLocalStorage();
+          return signOut(this.auth);
         })
-        .catch((error) => {
-          console.error('Logout-Fehler:', error);
-        });
+        .then(() => this.navigateToLogin())
+        .catch((error) => this.handleLogoutError(error));
     } else {
-      // Falls keine User-ID vorhanden ist, einfach signOut
+      this.clearLocalStorage();
       signOut(this.auth)
-        .then(() => this.router.navigate(['/login']))
-        .catch((error) => console.error('Logout-Fehler:', error));
+        .then(() => this.navigateToLogin())
+        .catch((error) => this.handleLogoutError(error));
     }
+  }
+
+  private navigateToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
+  private handleLogoutError(error: any): void {
+    console.error('Logout-Fehler:', error);
+  }
+
+  private clearLocalStorage(): void {
+    localStorage.removeItem('user-id');
+    localStorage.removeItem('token');
   }
 
   toggleProfileEdit(): void {
