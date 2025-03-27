@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './add-user.component.scss'
 })
 export class AddUserComponent {
-  showSuccessModal: boolean = true;  // Variable, um das Modal zu steuern
+  showSuccessModal: boolean = false;  // Variable, um das Modal zu steuern
   isOpen = false; // Steuert, ob das Modal sichtbar ist
 
   @Input() channelIdInput!: string;
@@ -106,7 +106,7 @@ export class AddUserComponent {
       // Modal nach 3 Sekunden automatisch schließen
       setTimeout(() => {
         this.closeSuccessModal();
-      }, 3000);
+      }, 2000);
 
     } catch (error) {
       console.error("Fehler beim Hinzufügen des Benutzers:", error);
