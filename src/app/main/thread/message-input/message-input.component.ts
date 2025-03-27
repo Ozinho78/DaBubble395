@@ -89,6 +89,8 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         if (this.editingMessageId && this.editingType) {
             if (this.editingType === 'thread') {
                 this.updateThread();
+            } else if (this.editingType === 'chat') {
+                this.updateChatMessage(); // 👈 NEU
             } else {
                 this.updateMessage();
             }
@@ -120,6 +122,20 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         //  b) oder direkt über einen ChatService senden, falls du das hier machen möchtest.
         // Beispiel für Option (a):
         this.messageText = '';
+    }
+
+    private async updateChatMessage() {
+        if (!this.editingMessageId) return;
+
+        try {
+            const chatRef = doc(this.firestore, 'chats', this.editingMessageId);
+            await updateDoc(chatRef, { text: this.messageText });
+
+            this.resetInput();
+            this.scrollToBottom();
+        } catch (error) {
+            console.error('Fehler beim Bearbeiten der Direktnachricht:', error);
+        }
     }
 
     private async createThread() {
@@ -184,7 +200,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     }
 
     /** Nachricht für die Bearbeitung setzen */
-    editMessage(messageId: string, text: string, type: 'message' | 'thread') {
+    editMessage(messageId: string, text: string, type: 'message' | 'thread' | 'chat') {
         this.editingMessageId = messageId;
         this.messageText = text;
         this.editingType = type;

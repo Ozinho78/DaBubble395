@@ -17,6 +17,7 @@ export class ReactionMenuComponent {
     @Input() currentUserId!: string;
     @Input() text!: string;
     @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() parentId: string | null = null;
     @Input() isHovered: boolean = false;
     @Input() isOwnMessage: boolean = false;
     @Input() isEditing: boolean = false;
@@ -30,36 +31,8 @@ export class ReactionMenuComponent {
     isFadingIn: boolean = false;
 
     constructor(
-        private reactionService: ReactionService,
-        //private renderer: Renderer2,
-        //private elRef: ElementRef
+        private reactionService: ReactionService
     ) { }
-
-    /*ngAfterViewInit(): void {
-        const replyContainer = this.elRef.nativeElement.closest('.reply-container');
-
-        if (replyContainer) {
-            this.renderer.listen(replyContainer, 'mouseleave', () => {
-                this.hoverTimeout = setTimeout(() => {
-                    this.closeMenu();
-                }, 200);
-            });
-
-            this.renderer.listen(replyContainer, 'mouseenter', () => {
-                if (this.hoverTimeout) {
-                    clearTimeout(this.hoverTimeout);
-                    this.hoverTimeout = null;
-                }
-            });
-        }
-    }*/
-
-    /*
-    ngOnDestroy(): void {
-        if (this.hoverTimeout) {
-            clearTimeout(this.hoverTimeout);
-        }
-    }*/
 
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;
@@ -112,14 +85,11 @@ export class ReactionMenuComponent {
             timestamp: Date.now()
         });
 
+        const collectionName = this.type === 'chat' ? `chats/${this.parentId}/messages` :
+            this.type === 'message' ? 'messages' : 'threads';
+
         this.reactionService
-            .addReaction(
-                this.type === 'thread' ? 'threads' :
-                    this.type === 'message' ? 'messages' :
-                        'chats',
-                this.docId,
-                reaction
-            )
+            .addReaction(collectionName, this.docId, reaction)
             .then(() => {
                 this.showReactionsOverlay = false;
             })

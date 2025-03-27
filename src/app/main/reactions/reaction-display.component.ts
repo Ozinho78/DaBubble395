@@ -20,6 +20,8 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() threadId!: string;
     @Input() currentUserId!: string;
     @Input() collectionName: 'threads' | 'messages' | 'chats' = 'threads';
+    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() parentId?: string;
 
     currentUserName: string = '';
     userArray: User[] = [];
@@ -70,17 +72,20 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     async loadReactions() {
         this.reactionsSub?.unsubscribe(); // altes Abo schließen
 
-        if (!this.threadId) {
-            return;
-        }
+        if (!this.threadId) return;
 
-        this.reactionsSub = this.reactionService.getReactions(this.collectionName, this.threadId).subscribe(reactions => {
-            this.reactions = reactions;
-            this.groupReactions();
-            this.isReady = true;
-        }, error => {
-            console.error('[ReactionDisplay] Fehler beim Laden der Reaktionen:', error);
-        });
+        this.reactionsSub = this.reactionService
+            .getReactions(this.collectionName, this.threadId, this.parentId) // 👈 parentId wird mitgegeben
+            .subscribe(
+                reactions => {
+                    this.reactions = reactions;
+                    this.groupReactions();
+                    this.isReady = true;
+                },
+                error => {
+                    console.error('[ReactionDisplay] Fehler beim Laden der Reaktionen:', error);
+                }
+            );
     }
 
     async groupReactions() {
@@ -145,19 +150,25 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     handleReactionClick(type: string, likedByMe: boolean) {
         this.closeTooltip();
 
+        const collection = this.collectionName;
+        const docId = this.threadId;
+        const userId = this.currentUserId;
+        const parent = this.parentId;
+
         if (likedByMe) {
-            this.reactionService.removeReaction(this.collectionName, this.threadId, this.currentUserId).then(() => {
-                this.loadReactions();
-            });
+            this.reactionService
+                .removeReaction(collection, docId, userId, type, parent)
+                .then(() => this.loadReactions());
         } else {
             const reaction = new Reaction({
-                userId: this.currentUserId,
-                type,
+                userId: userId,
+                type: type,
                 timestamp: Date.now()
             });
-            this.reactionService.addReaction(this.collectionName, this.threadId, reaction).then(() => {
-                this.loadReactions();
-            });
+
+            this.reactionService
+                .addReaction(collection, docId, reaction, parent)
+                .then(() => this.loadReactions());
         }
     }
 

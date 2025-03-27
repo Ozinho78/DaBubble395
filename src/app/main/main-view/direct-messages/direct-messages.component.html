@@ -27,9 +27,9 @@
 
           <!-- reactions menu -->
           <app-reaction-menu [docId]="msg.id!" [userId]="msg.userId" [currentUserId]="loggedInUserId" [text]="msg.text"
-            [type]="'message'" [isHovered]="hoveredMessageId === msg.id! && editingTarget?.id !== msg.id!"
+            [type]="'chat'" [isHovered]="hoveredMessageId === msg.id! && editingTarget?.id !== msg.id!"
             [isOwnMessage]="msg.userId === loggedInUserId" [isEditing]="editingTarget?.id === msg.id!"
-            (editRequest)="handleEditRequest($event)">
+            [parentId]="chatId" (editRequest)="handleEditRequest($event)">
           </app-reaction-menu>
 
           <div class="reply" *ngIf="user$ | async as user">
@@ -48,7 +48,8 @@
               </div>
 
               <!-- reactions -->
-              <app-reaction-display [threadId]="msg.id!" [currentUserId]="loggedInUserId" collectionName="messages">
+              <app-reaction-display [threadId]="msg.id!" [currentUserId]="loggedInUserId" collectionName="chats"
+                [parentId]="chatId">
               </app-reaction-display>
 
             </div>
@@ -77,8 +78,9 @@
   </ng-template>
 
   <!-- input -->
-  <app-message-input *ngIf="true" [editingMessageId]="editingTarget?.id || null"
-    [editingText]="editingTarget?.text || ''" [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()"
+  <app-message-input *ngIf="true" [editingMessageId]="editingTarget?.id || null" [isDirectMessage]="true"
+    (newDirectMessage)="onNewMessage($event)" [editingText]="editingTarget?.text || ''"
+    [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()"
     (editCancelled)="clearEditState()"></app-message-input>
 
 </div>
