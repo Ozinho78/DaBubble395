@@ -331,14 +331,12 @@ export class NewMessagesComponent implements OnInit {
   checkEmailAndLockInput() {
     const inputValue: string = this.inputControl.value?.trim() ?? '';
 
-    // setTimeout(() => {
-      if (this.isValidEmail(inputValue)) {
-        this.enteredEmail = inputValue;  // Speichert die E-Mail
-        this.enableInputTop = false;     // Sperrt das Feld
-        this.errorMessage = null; // Keine Fehlermeldung
-        return;
-      }
-    // }, 1000);
+    if (this.isValidEmail(inputValue)) {
+      this.enteredEmail = inputValue;  // Speichert die E-Mail
+      this.enableInputTop = false;     // Sperrt das Feld
+      this.errorMessage = null; // Keine Fehlermeldung
+      return;
+    }
     
     setTimeout(() => {
       // Falls ein User oder Channel ausgewählt wurde, Input sperren
