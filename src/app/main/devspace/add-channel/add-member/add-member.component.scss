@@ -43,6 +43,17 @@ button, svg {
     width: 100%;
     @include m.flexBox(row, space-between, center);
     @include m.styleFont("Nunito", 24px, 700, 1.36, #000000);
+    svg {
+      box-sizing: content-box;
+      border-radius: 50%;
+      padding: 8px;
+      transition: all 125ms ease-in-out;
+      &:hover {
+        transform: scale(1.3);
+        fill: v.$purple_3;
+        background-color: v.$purple_bg;
+      }
+    }
   }
   .member-input1 {
     input {

@@ -1,5 +1,5 @@
-<div class="overlay-wrapper" *ngIf="isOpen">
-  <div class="dialog-content">
+<div class="overlay-wrapper" *ngIf="isOpen" (click)="close($event)">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
     <div class="dialog-header">
       <span>Channel erstellen</span>
       <svg
