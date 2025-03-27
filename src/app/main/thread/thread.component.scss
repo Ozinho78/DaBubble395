@@ -85,7 +85,7 @@ h2 {
     @include m.flexBox(column, normal, normal);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 5px 0 0 0;
+    padding: 15px 0 0 0;
     flex-grow: 1;
 
     .replies-spacer {

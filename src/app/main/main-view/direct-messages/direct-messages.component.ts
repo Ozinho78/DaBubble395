@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
@@ -10,18 +10,28 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 import { User } from '../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { doc, getDoc } from 'firebase/firestore';
+import { ReactionDisplayComponent } from "../../reactions/reaction-display.component";
+import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [CommonModule, MessageInputComponent, ProfileViewComponent],
+  imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ReactionDisplayComponent, ReactionMenuComponent],
   templateUrl: './direct-messages.component.html',
-  styleUrl: './direct-messages.component.scss',
+  styleUrls: [
+    './direct-messages.component.scss',
+    '../../thread/thread.component.scss',
+    '../../thread/message/message.component.scss'
+  ]
 })
-export class DirectMessagesComponent implements OnInit, AfterViewChecked {
+export class DirectMessagesComponent implements OnInit {
+  @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
+
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   onlineStatus$: Observable<boolean> = of(false);
   user$: Observable<User> = of(new User());
-  messages$: Observable<Message[]> = of([]);
+  messages: Message[] = [];
   selectedProfile: {
     id: string;
     name: string;
@@ -33,20 +43,19 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   loggedInUserId: string = '';
   profileViewOpen: boolean = false;
 
+  hoveredMessageId: string | null = null;
+  editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
+
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
     private chatService: ChatService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initLoggedInUser();
     this.handleChatParams();
-  }
-
-  ngAfterViewChecked() {
-    this.scrollToBottom();
   }
 
   private initLoggedInUser() {
@@ -56,13 +65,16 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   private handleChatParams() {
     this.route.queryParamMap.subscribe((params) => {
       this.chatId = params.get('chat') || '';
+
       if (this.chatId) {
         this.prepareChat();
+        setTimeout(() => this.scrollToBottom(), 200);
       }
     });
   }
 
   private async prepareChat() {
+    this.messages = [];
     await this.setUserFromChat();
     this.loadChatData();
   }
@@ -101,15 +113,35 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   }
 
   private loadChatData() {
-    this.messages$ = this.chatService.getMessages(this.chatId);
+    this.chatService.getMessages(this.chatId).subscribe((msgs) => {
+      const lastMsg = msgs[msgs.length - 1];
+      const lastExistingMsg = this.messages[this.messages.length - 1];
+
+      const isNew =
+        msgs.length > this.messages.length &&
+        lastMsg?.creationDate != null &&
+        lastExistingMsg?.creationDate != null &&
+        lastMsg.creationDate > lastExistingMsg.creationDate;
+
+      const wasScrolledToBottom = this.isScrolledToBottom();
+
+      const newMessages = msgs.slice(this.messages.length);
+      this.messages.push(...newMessages);
+
+      if (isNew && wasScrolledToBottom) {
+        setTimeout(() => this.scrollToBottom(), 100);
+      }
+    });
   }
 
   async onNewMessage(newText: string) {
     if (!this.loggedInUserId)
       return console.error('Kein eingeloggter User gefunden.');
+
     const currentUser = await firstValueFrom(
       this.userService.getUserById(this.loggedInUserId)
     );
+
     const newMessage = new Message({
       creationDate: Date.now(),
       reactions: [],
@@ -119,12 +151,26 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       senderName: currentUser.name,
       senderAvatar: currentUser.avatar,
     });
+
     await this.chatService.sendMessage(this.chatId, newMessage);
   }
 
   scrollToBottom() {
-    const replies = document.getElementById('replies');
-    if (replies) replies.scrollTop = replies.scrollHeight;
+    setTimeout(() => {
+      const el = this.chatContainer?.nativeElement;
+      if (el) {
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
+  }
+
+  isScrolledToBottom(): boolean {
+    const el = this.chatContainer?.nativeElement;
+    if (!el) return false;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
   }
 
   showProfile(userId?: string): void {
@@ -183,5 +229,13 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
 
   getUserPresence(userId: string | undefined): Observable<boolean> {
     return userId ? this.presenceService.getUserPresence(userId) : of(false);
+  }
+
+  handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
+    this.editingTarget = event;
+  }
+
+  clearEditState() {
+    this.editingTarget = null;
   }
 }

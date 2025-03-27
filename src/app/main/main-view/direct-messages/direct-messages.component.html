@@ -1,92 +1,63 @@
-<div class="container">
+<div class="direct-message-container">
   <div class="header">
     <ng-container *ngIf="user$ | async as user">
       <div class="header-label" (click)="showProfile(user.docId)">
         <div class="profile-pic-wrapper">
           <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
-          <ng-container
-            *ngIf="onlineStatus$ | async as online; else offlineBlock"
-          >
-            <img
-              class="profile-pic-online"
-              src="img/direct-messages-img/online.png"
-              alt="Online Indicator"
-            />
+          <ng-container *ngIf="onlineStatus$ | async as online; else offlineBlock">
+            <img class="profile-pic-online" src="img/direct-messages-img/online.png" alt="Online Indicator" />
           </ng-container>
           <ng-template #offlineBlock>
-            <img
-              class="profile-pic-offline"
-              src="img/direct-messages-img/offline.png"
-              alt="Offline Indicator"
-            />
+            <img class="profile-pic-offline" src="img/direct-messages-img/offline.png" alt="Offline Indicator" />
           </ng-template>
         </div>
         <h2>{{ user.name }}</h2>
       </div>
     </ng-container>
   </div>
+
   <div class="shadow"></div>
-  <ng-container *ngIf="messages$ | async as msgs">
-    <ng-container *ngIf="(msgs?.length ?? 0) > 0; else infoBlock">
-      <div id="chat-container" class="chat-container">
-        <div id="replies" class="replies">
-          <div
-            class="reply-container"
-            *ngFor="let msg of msgs"
-            [ngClass]="{
-              sent: msg?.userId === loggedInUserId,
-              received: msg?.userId !== loggedInUserId
-            }"
-          >
-            <div class="reply" *ngIf="user$ | async as user">
-              <div class="profile-message-wrapper">
-                <img
-                  class="profile-message-pic"
-                  [src]="msg?.senderAvatar"
-                  alt="Profilepicture"
-                />
-                <ng-container
-                  *ngIf="
-                    getUserPresence(msg?.userId) | async as online;
-                    else offlineBlock
-                  "
-                >
-                  <img
-                    class="profile-pic-online"
-                    src="img/header-img/profile-pic-online.png"
-                    alt="Online Indicator"
-                  />
-                </ng-container>
-                <ng-template #offlineBlock>
-                  <img
-                    class="profile-pic-message-offline"
-                    src="img/header-img/profile-pic-offline.png"
-                    alt="Offline Indicator"
-                  />
-                </ng-template>
-              </div>
-              <div class="message">
-                <div class="message-info">
-                  <div
-                    (click)="msg?.userId ? showProfile(msg.userId) : null"
-                    class="message-info-name"
-                  >
-                    {{ msg?.senderName || msg?.userId }}
-                  </div>
-                  <div class="message-info-time">
-                    {{ formatMessageDate(msg?.creationDate) }}
-                  </div>
+
+  <div id="chat-container" class="chat-container" #chatContainer>
+    <ng-container *ngIf="messages.length > 0; else infoBlock">
+      <div id="replies" class="replies">
+        <div class="reply-container" *ngFor="let msg of messages" [ngClass]="{
+          'own-message': msg?.userId === loggedInUserId
+        }" (mouseenter)="hoveredMessageId = msg.id!" (mouseleave)="hoveredMessageId = null">
+
+          <!-- reactions menu -->
+          <app-reaction-menu [docId]="msg.id!" [userId]="msg.userId" [currentUserId]="loggedInUserId" [text]="msg.text"
+            [type]="'message'" [isHovered]="hoveredMessageId === msg.id! && editingTarget?.id !== msg.id!"
+            [isOwnMessage]="msg.userId === loggedInUserId" [isEditing]="editingTarget?.id === msg.id!"
+            (editRequest)="handleEditRequest($event)">
+          </app-reaction-menu>
+
+          <div class="reply" *ngIf="user$ | async as user">
+            <img class="avatar" [src]="msg?.senderAvatar" alt="Profilepicture" />
+            <div class="message">
+              <div class="message-info">
+                <div (click)="msg?.userId ? showProfile(msg.userId) : null" class="message-info-name">
+                  {{ msg?.senderName || msg?.userId }}
                 </div>
-                <div class="message-text">
-                  {{ msg?.text }}
+                <div class="message-info-time">
+                  {{ formatMessageDate(msg?.creationDate) }}
                 </div>
               </div>
+              <div class="message-text">
+                {{ msg?.text }}
+              </div>
+
+              <!-- reactions -->
+              <app-reaction-display [threadId]="msg.id!" [currentUserId]="loggedInUserId" collectionName="messages">
+              </app-reaction-display>
+
             </div>
           </div>
         </div>
       </div>
     </ng-container>
-  </ng-container>
+  </div>
+
   <ng-template #infoBlock>
     <div class="info">
       <ng-container *ngIf="user$ | async as user">
@@ -104,17 +75,13 @@
       </ng-container>
     </div>
   </ng-template>
-  <div class="input-container">
-    <app-message-input
-      [isDirectMessage]="true"
-      (newDirectMessage)="onNewMessage($event)"
-    ></app-message-input>
-  </div>
+
+  <!-- input -->
+  <app-message-input *ngIf="true" [editingMessageId]="editingTarget?.id || null"
+    [editingText]="editingTarget?.text || ''" [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()"
+    (editCancelled)="clearEditState()"></app-message-input>
+
 </div>
 
-<app-profile-view
-  *ngIf="profileViewOpen && selectedProfile"
-  [userName]="selectedProfile"
-  [onlineStatus$]="selectedProfilePresence$"
-  (close)="closeProfile()"
-></app-profile-view>
+<app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
+  [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
