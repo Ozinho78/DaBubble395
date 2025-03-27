@@ -83,6 +83,12 @@ export class AddMemberComponent implements OnInit {
     }
   }
 
+  // closeMemberModal(event?: Event) {
+  //   if (!event || event.target === event.currentTarget) {
+  //     this.cancelMemberInputModal.emit();
+  //   }
+  // }
+
   cancelMemberModal(){
     this.cancelMemberInputModal.emit();
   }
@@ -129,10 +135,15 @@ export class AddMemberComponent implements OnInit {
       this.closeMemberModal();
     }
     if(this.selectedOption == 2){
-        this.selectSingleUsers();
-        this.usersUpdated.emit(this.selectedUsersDocId);
-        this.closeMemberModal();
+      this.selectSingleUsers();
+      this.usersUpdated.emit(this.selectedUsersDocId);
+      this.closeMemberModal();
     }
+    // Daten an Parent senden
+    // this.usersUpdated.emit(this.selectedUsersDocId);
+    // Modal schließen
+    // this.cancelMemberInputModal.emit();
+    // Button deaktivieren, falls nötig
     this.enableButton = false;
   }
 

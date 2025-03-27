@@ -49,8 +49,10 @@ export class AddChannelComponent {
     this.isOpen = true;
   }
 
-  close() {
-    this.isOpen = false;
+  close(event?: Event) {
+    if (!event || event.target === event.currentTarget) {
+      this.isOpen = false;
+    }
   }
 
   resetInputs() {
