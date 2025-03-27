@@ -114,21 +114,11 @@ export class DirectMessagesComponent implements OnInit {
 
   private loadChatData() {
     this.chatService.getMessages(this.chatId).subscribe((msgs) => {
-      const lastMsg = msgs[msgs.length - 1];
-      const lastExistingMsg = this.messages[this.messages.length - 1];
-
-      const isNew =
-        msgs.length > this.messages.length &&
-        lastMsg?.creationDate != null &&
-        lastExistingMsg?.creationDate != null &&
-        lastMsg.creationDate > lastExistingMsg.creationDate;
-
       const wasScrolledToBottom = this.isScrolledToBottom();
 
-      const newMessages = msgs.slice(this.messages.length);
-      this.messages.push(...newMessages);
+      this.messages = msgs;
 
-      if (isNew && wasScrolledToBottom) {
+      if (wasScrolledToBottom) {
         setTimeout(() => this.scrollToBottom(), 100);
       }
     });

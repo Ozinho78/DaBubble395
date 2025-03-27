@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from './reactions.component';
 import { ReactionService } from '../../../services/reaction.service';
@@ -31,8 +31,35 @@ export class ReactionMenuComponent {
     isFadingIn: boolean = false;
 
     constructor(
-        private reactionService: ReactionService
+        private reactionService: ReactionService,
+        private renderer: Renderer2,
+        private elRef: ElementRef
     ) { }
+
+    ngAfterViewInit(): void {
+        const replyContainer = this.elRef.nativeElement.closest('.reply-container');
+
+        if (replyContainer) {
+            this.renderer.listen(replyContainer, 'mouseleave', () => {
+                this.hoverTimeout = setTimeout(() => {
+                    this.closeMenu();
+                }, 100);
+            });
+
+            this.renderer.listen(replyContainer, 'mouseenter', () => {
+                if (this.hoverTimeout) {
+                    clearTimeout(this.hoverTimeout);
+                    this.hoverTimeout = null;
+                }
+            });
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.hoverTimeout) {
+            clearTimeout(this.hoverTimeout);
+        }
+    }
 
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;

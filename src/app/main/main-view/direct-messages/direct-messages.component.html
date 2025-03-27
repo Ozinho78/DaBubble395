@@ -22,7 +22,8 @@
     <ng-container *ngIf="messages.length > 0; else infoBlock">
       <div id="replies" class="replies">
         <div class="reply-container" *ngFor="let msg of messages" [ngClass]="{
-          'own-message': msg?.userId === loggedInUserId
+          'own-message': msg?.userId === loggedInUserId,
+          'being-edited': editingTarget?.id === msg.id
         }" (mouseenter)="hoveredMessageId = msg.id!" (mouseleave)="hoveredMessageId = null">
 
           <!-- reactions menu -->

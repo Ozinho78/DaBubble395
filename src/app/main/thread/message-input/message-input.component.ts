@@ -308,17 +308,30 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     submitEdit() {
         if (!this.editingMessageId || !this.messageText.trim()) return;
 
-        const updateTarget = this.editingType === 'thread' ? 'threads' : 'messages';
-        const updateField = this.editingType === 'thread' ? 'thread' : 'text';
+        let path: string;
+        let field: string = 'text';
 
-        updateDoc(doc(this.firestore, updateTarget, this.editingMessageId), {
-            [updateField]: this.messageText
-        }).then(() => {
-            this.resetInput();
-            this.editSaved.emit();
-        }).catch(err => console.error('Fehler beim Bearbeiten:', err));
+        if (this.editingType === 'chat') {
+            if (!this.route.snapshot.queryParamMap.get('chat')) {
+                console.error('Chat-ID fehlt für Bearbeitung.');
+                return;
+            }
+            const chatId = this.route.snapshot.queryParamMap.get('chat');
+            path = `chats/${chatId}/messages/${this.editingMessageId}`;
+        } else if (this.editingType === 'thread') {
+            path = `threads/${this.editingMessageId}`;
+            field = 'thread';
+        } else {
+            path = `messages/${this.editingMessageId}`;
+        }
+
+        updateDoc(doc(this.firestore, path), { [field]: this.messageText })
+            .then(() => {
+                this.resetInput();
+                this.editSaved.emit();
+            })
+            .catch(err => console.error('Fehler beim Bearbeiten:', err));
     }
-
     cancelEdit() {
         this.resetInput();
         this.editCancelled.emit();
