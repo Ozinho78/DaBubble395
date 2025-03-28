@@ -19,15 +19,15 @@ import { ReactionsComponent } from "./reactions.component";
 export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     @Input() threadId!: string;
     @Input() currentUserId!: string;
-    @Input() collectionName: 'threads' | 'messages' = 'threads';
+    @Input() collectionName: 'threads' | 'messages' | 'chats' = 'threads';
+    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() parentId?: string;
 
     currentUserName: string = '';
     userArray: User[] = [];
 
     reactions: Reaction[] = [];
-    groupedReactions: {
-        [type: string]: { count: number; likedByMe: boolean; userNames: string[] };
-    } = {};
+    groupedReactions: { [type: string]: { count: number; likedByMe: boolean; userNames: string[] }; } = {};
     isReady = false;
     showReactionsOverlay = false;
 
@@ -72,17 +72,20 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     async loadReactions() {
         this.reactionsSub?.unsubscribe(); // altes Abo schließen
 
-        if (!this.threadId) {
-            return;
-        }
+        if (!this.threadId) return;
 
-        this.reactionsSub = this.reactionService.getReactions(this.collectionName, this.threadId).subscribe(reactions => {
-            this.reactions = reactions;
-            this.groupReactions();
-            this.isReady = true;
-        }, error => {
-            console.error('[ReactionDisplay] Fehler beim Laden der Reaktionen:', error);
-        });
+        this.reactionsSub = this.reactionService
+            .getReactions(this.collectionName, this.threadId, this.parentId) // 👈 parentId wird mitgegeben
+            .subscribe(
+                reactions => {
+                    this.reactions = reactions;
+                    this.groupReactions();
+                    this.isReady = true;
+                },
+                error => {
+                    console.error('[ReactionDisplay] Fehler beim Laden der Reaktionen:', error);
+                }
+            );
     }
 
     async groupReactions() {
@@ -112,7 +115,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.groupedReactions = groups;
     }
 
-    getUserName(userId: string): string {
+    getUserName(userId: string) {
         const user = this.userArray.find(u => u.docId === userId);
         return user?.name || 'Unbekannt';
     }
@@ -147,23 +150,29 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     handleReactionClick(type: string, likedByMe: boolean) {
         this.closeTooltip();
 
+        const collection = this.collectionName;
+        const docId = this.threadId;
+        const userId = this.currentUserId;
+        const parent = this.parentId;
+
         if (likedByMe) {
-            this.reactionService.removeReaction(this.collectionName, this.threadId, this.currentUserId).then(() => {
-                this.loadReactions();
-            });
+            this.reactionService
+                .removeReaction(collection, docId, userId, type, parent)
+                .then(() => this.loadReactions());
         } else {
             const reaction = new Reaction({
-                userId: this.currentUserId,
-                type,
+                userId: userId,
+                type: type,
                 timestamp: Date.now()
             });
-            this.reactionService.addReaction(this.collectionName, this.threadId, reaction).then(() => {
-                this.loadReactions();
-            });
+
+            this.reactionService
+                .addReaction(collection, docId, reaction, parent)
+                .then(() => this.loadReactions());
         }
     }
 
-    hasReactions(): boolean {
+    hasReactions() {
         return Object.keys(this.groupedReactions).length > 0;
     }
 

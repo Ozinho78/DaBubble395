@@ -25,8 +25,8 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 })
 export class MessageComponent implements OnInit, OnChanges {
     @Input() message!: Message;
-    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' }>();
+    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' | 'chat' }>();
 
     currentUserId: string | null = null;
     currentUser: any;
@@ -130,7 +130,7 @@ export class MessageComponent implements OnInit, OnChanges {
         this.selectedProfile = null;
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
         this.editRequest.emit(event);
     }
 }

@@ -35,7 +35,7 @@ import { AddUserComponent } from './add-user/add-user.component';
     ]
 })
 export class ChannelComponent implements OnInit {
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
@@ -61,7 +61,7 @@ export class ChannelComponent implements OnInit {
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
     hoveredThreadId: string | null = null;
 
-    editingTarget: { id: string, text: string, type: 'message' | 'thread' } | null = null;
+    editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -273,13 +273,13 @@ export class ChannelComponent implements OnInit {
         this.selectedChannelId = id;
         this.modal.openModal();
     }
-
+    
     openModalAddUser(id: string) {
         this.selectedChannelId = id;
         this.modalAddUser.openModal();
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
         this.editingTarget = event;
     }
 

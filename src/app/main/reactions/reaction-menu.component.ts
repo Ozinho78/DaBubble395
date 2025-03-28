@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, AfterViewInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from './reactions.component';
 import { ReactionService } from '../../../services/reaction.service';
@@ -11,17 +11,18 @@ import { Reaction } from '../../../models/reaction.class';
     templateUrl: './reaction-menu.component.html',
     styleUrls: ['./reaction-menu.component.scss']
 })
-export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
+export class ReactionMenuComponent {
     @Input() docId!: string;
     @Input() userId!: string;
     @Input() currentUserId!: string;
     @Input() text!: string;
-    @Input() type: 'message' | 'thread' = 'thread';
+    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() parentId: string | null = null;
     @Input() isHovered: boolean = false;
     @Input() isOwnMessage: boolean = false;
     @Input() isEditing: boolean = false;
 
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     showReactionsOverlay: boolean = false;
     menuOpen: boolean = false;
@@ -42,7 +43,7 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
             this.renderer.listen(replyContainer, 'mouseleave', () => {
                 this.hoverTimeout = setTimeout(() => {
                     this.closeMenu();
-                }, 200);
+                }, 100);
             });
 
             this.renderer.listen(replyContainer, 'mouseenter', () => {
@@ -111,7 +112,11 @@ export class ReactionMenuComponent implements AfterViewInit, OnDestroy {
             timestamp: Date.now()
         });
 
-        this.reactionService.addReaction(this.type === 'message' ? 'messages' : 'threads', this.docId, reaction)
+        const collectionName = this.type === 'chat' ? `chats/${this.parentId}/messages` :
+            this.type === 'message' ? 'messages' : 'threads';
+
+        this.reactionService
+            .addReaction(collectionName, this.docId, reaction)
             .then(() => {
                 this.showReactionsOverlay = false;
             })

@@ -27,12 +27,21 @@
 .reply {
     margin: 10px 40px;
     @include m.flexBox(row, normal, normal, 20px);
+
+    @media (max-width: 768px) {
+        margin: 10px 16px;
+    }
 }
 
 .avatar {
     height: 70px;
     width: 70px;
     border-radius: 50%;
+
+    @media (max-width: 768px) {
+        height: 50px;
+        width: 50px;
+    }
 }
 
 .message {
@@ -67,10 +76,8 @@
     background-color: #ECEEFE;
     white-space: pre-line;
 
-    a {
-        text-decoration: none;
-        color: #000000;
-        font-weight: bold;
+    @media (max-width: 768px) {
+        @include m.styleFont("Nunito", 17px, 400, 23px);
     }
 }
 
@@ -268,7 +275,7 @@
 
 .date-header {
     padding: 5px 0;
-    @include m.styleFont("Nunito", 14px, 400, 24.55px, v.$purple_4);
+    @include m.styleFont("Nunito", 18px, 400, 24.55px);
     @include m.flexBox(row, center, center);
 
     .date {
@@ -294,6 +301,10 @@
         height: 1px;
         background-color: v.$purple_4;
         margin-right: 20px;
+    }
+
+    @media (max-width: 768px) {
+        @include m.styleFont("Nunito", 17px, 400, 23px);
     }
 }
 

@@ -12,10 +12,9 @@
     @include m.flexBox(row, space-between, normal);
     gap: 20px;
 
-    // Mobile Layout
-    @media (max-width: 1400px) {
-        //margin: 0 10px 10px 10px;
-        //gap: 10px;
+    @media (max-width: 768px) {
+        max-height: calc(100dvh - 80px);
+        margin: 0;
     }
 }
 
@@ -29,5 +28,31 @@ app-main-view {
     app-thread {
         flex-grow: 1;
         //width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+
+    app-devspace,
+    app-main-view,
+    app-thread {
+        flex-grow: 1;
+        width: 100%;
+    }
+}
+
+.mobile-nav {
+    //display: flex;
+    display: none;
+    justify-content: space-around;
+    background: #eee;
+    padding: 10px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1000;
+
+    button {
+        flex: 1;
+        margin: 0 5px;
     }
 }
