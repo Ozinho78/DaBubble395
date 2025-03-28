@@ -19,6 +19,7 @@ export class NewMessagesComponent implements OnInit {
   firestore: Firestore = inject(Firestore);
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
+  chatsDatabase = collection(this.firestore, 'chats');
   threadsDatabase = collection(this.firestore, 'threads');
   userLoggedIn: string = '';
   userLoggedInAvatar: string = '';
