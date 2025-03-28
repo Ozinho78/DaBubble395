@@ -1,5 +1,5 @@
-<div *ngIf="isOpen" class="show-channel-container">
-  <div class="show-channel-content">
+<div *ngIf="isOpen" class="show-channel-container" (click)="close()">
+  <div class="show-channel-content" (click)="$event.stopPropagation()">
     <div class="header">
       <div class="header-left">
         <span>#</span>
@@ -47,7 +47,7 @@
         <span *ngIf="!editNameMode">#</span>
 
         <!-- Bearbeiten-Modus: Zeige Input -->
-        <input *ngIf="editNameMode" [(ngModel)]="editedChannelName" type="text" class="channel-input" placeholder="# {{ channelToChange?.name }}"/>
+        <input *ngIf="editNameMode" [(ngModel)]="editedChannelName" type="text" class="channel-input channel-name-input" (ngModelChange)="validateChannelName()" [ngClass]="{'invalid-input': isInvalidChannelName}" placeholder="# {{ channelToChange?.name }}"/>
     
         <!-- Anzeigemodus: Zeige normalen Text -->
         <span *ngIf="!editNameMode">{{ channelToChange?.name }}</span>

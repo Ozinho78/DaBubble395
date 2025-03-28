@@ -92,6 +92,7 @@ export class ShowChannelComponent {
     this.isOpen = true;
   }
 
+  
   close() {
     this.isOpen = false;
     this.closeModal.emit(); // Sendet Event an Parent
@@ -187,7 +188,11 @@ export class ShowChannelComponent {
     this.closeModal.emit();
   }
 
-  
+  isInvalidChannelName = false; // Flag für die Klasse
+
+validateChannelName() {
+  this.isInvalidChannelName = this.editedChannelName.length < 3;
+}
 
 }
 
