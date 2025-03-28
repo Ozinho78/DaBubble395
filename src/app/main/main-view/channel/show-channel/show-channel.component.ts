@@ -100,12 +100,14 @@ export class ShowChannelComponent {
   toggleEditMode(field: number) {
     if(field === 1) {
       this.editNameMode = !this.editNameMode;
+      if(this.editNameMode && this.editDescriptionMode) {this.editDescriptionMode = !this.editDescriptionMode;}
       if (!this.editNameMode && this.channelToChange) {
         this.updateChannelName();
       }
     }
     if(field === 2) {
       this.editDescriptionMode = !this.editDescriptionMode;
+      if(this.editDescriptionMode && this.editNameMode) {this.editNameMode = !this.editNameMode;}
       if (!this.editDescriptionMode && this.channelToChange) {
         this.updateChannelDescription();
       }
