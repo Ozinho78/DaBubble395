@@ -123,10 +123,16 @@ export class AddUserComponent {
     this.isOpen = true;
   }
 
-  close() {
-    this.isOpen = false;
-    this.closeModal.emit(); // Sendet Event an Parent
+  close(event?: Event) {
+    if (!event || event.target === event.currentTarget) {
+      this.isOpen = false;
+    }
   }
+
+  // close() {
+  //   this.isOpen = false;
+  //   this.closeModal.emit(); // Sendet Event an Parent
+  // }
 }
   
   

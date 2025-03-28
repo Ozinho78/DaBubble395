@@ -59,7 +59,7 @@ export class NewMessagesComponent implements OnInit {
   constructor(private dataService: FirestoreService) {
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
-    }, 500);
+    }, 1000);
   }
 
   ngOnInit() {

@@ -114,13 +114,13 @@
       </div>
     </div>
 
-    <div *ngIf="errorMessageChannelUser" class=error-message>
+    <!-- <div *ngIf="errorMessageChannelUser" class=error-message>
       <p>Ungültiger Channel oder User</p>
     </div>
 
     <div *ngIf="errorMessageEmpty" class=error-message>
       <p>Bitte mal was eingeben, Junge!</p>
-    </div>
+    </div> -->
     
     <ul *ngIf="showUsersBottom" class="mention-list">
       <li *ngFor="let user of filteredUsersBottom" (click)="selectUserBottom(user)">

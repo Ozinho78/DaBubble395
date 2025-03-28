@@ -1,5 +1,5 @@
-<div *ngIf="isOpen" class="add-user-container">
-  <div class="add-user-content">
+<div *ngIf="isOpen" class="add-user-container" (click)="close($event)">
+  <div class="add-user-content" (click)="$event.stopPropagation()">
     <div class="header">
       <div class="main-header">
         <h2>Leute hinzufügen</h2>
