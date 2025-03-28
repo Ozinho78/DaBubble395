@@ -14,10 +14,19 @@ import { PresenceService } from '../../../../services/presence.service';
 import { ShowChannelComponent } from "./show-channel/show-channel.component";
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
+import { AddUserComponent } from './add-user/add-user.component';
 
 @Component({
     selector: 'app-channel',
-    imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ShowChannelComponent, ReactionDisplayComponent, ReactionMenuComponent],
+    imports: [
+        CommonModule,
+        MessageInputComponent,
+        ProfileViewComponent,
+        ShowChannelComponent,
+        AddUserComponent,
+        ReactionDisplayComponent,
+        ReactionMenuComponent
+    ],
     templateUrl: './channel.component.html',
     styleUrls: [
         './channel.component.scss',
@@ -26,10 +35,11 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
     ]
 })
 export class ChannelComponent implements OnInit {
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
+    @ViewChild(AddUserComponent) modalAddUser!: AddUserComponent;
 
     selectedChannelId: string = '';
     currentUser: any;
@@ -49,8 +59,9 @@ export class ChannelComponent implements OnInit {
     selectedProfilePresence$: Observable<boolean> = of(false);
     loggedInUserId: string = '';
     selectedProfile: { id: string; name: string; avatar: string; email?: string; } | null = null;
-
     hoveredThreadId: string | null = null;
+
+    editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
 
     constructor(
         private route: ActivatedRoute,
@@ -65,23 +76,6 @@ export class ChannelComponent implements OnInit {
         this.initializeUser();
         this.loadUsersFromUserService();
         this.subscribeThreads();
-    }
-
-    subscribeRouteParams() {
-        this.route.queryParamMap.subscribe(params => {
-            this.channelId = params.get('channel') || '';
-            this.threadId = params.get('thread') || null;
-
-            if (this.channelId) {
-                this.loadChannel();
-                this.loadThreads();
-
-                if (!this.threadId) {
-                    this.focusMessageInput();
-                    setTimeout(() => { this.scrollToBottom(); }, 200);
-                }
-            }
-        });
     }
 
     initializeUser() {
@@ -103,6 +97,23 @@ export class ChannelComponent implements OnInit {
         });
     }
 
+    subscribeRouteParams() {
+        this.route.queryParamMap.subscribe(params => {
+            this.channelId = params.get('channel') || '';
+            this.threadId = params.get('thread') || null;
+
+            if (this.channelId) {
+                this.loadChannel();
+                this.loadThreads();
+
+                if (!this.threadId) {
+                    this.focusMessageInput();
+                    setTimeout(() => { this.scrollToBottom(); }, 200);
+                }
+            }
+        });
+    }
+
     subscribeThreads() {
         this.firestoreService.subscribeToCollection<Thread>('threads', (allThreads) => {
             const filtered = allThreads
@@ -113,7 +124,12 @@ export class ChannelComponent implements OnInit {
                 const thread = new Thread(obj, this.userService, this.messageService);
                 return thread;
             });
+
+            if (!this.threadId) {
+                setTimeout(() => this.scrollToBottom(), 200);
+            }
         });
+
     }
 
     async loadChannel() {
@@ -257,8 +273,18 @@ export class ChannelComponent implements OnInit {
         this.selectedChannelId = id;
         this.modal.openModal();
     }
-
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
-        this.editRequest.emit(event);
+    
+    openModalAddUser(id: string) {
+        this.selectedChannelId = id;
+        this.modalAddUser.openModal();
     }
+
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
+        this.editingTarget = event;
+    }
+
+    clearEditState() {
+        this.editingTarget = null;
+    }
+
 }

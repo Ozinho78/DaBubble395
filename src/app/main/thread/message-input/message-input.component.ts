@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
 import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,17 +16,23 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './message-input.component.html',
     styleUrl: './message-input.component.scss',
 })
-export class MessageInputComponent {
+export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, OnDestroy {
     @Input() threadId!: string | null;
     //@Input() channelId!: string;
     @Input() channelName: string | null | undefined = null;
     @Input() isDirectMessage: boolean = false;
+
+    @Input() editingText: string = '';
+    @Input() editingMessageId: string | null = null;
+    @Input() editingType: 'message' | 'thread' | 'chat' | null = null;
+    @Output() editSaved = new EventEmitter<void>();
+    @Output() editCancelled = new EventEmitter<void>();
+
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
 
     channelId!: string;
-    editingMessageId: string | null = null; // Speichert die ID der bearbeiteten Nachricht
-    editingType: 'message' | 'thread' | null = null;
+
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
     showEmojiPicker: boolean = false;
     showMentionList: boolean = false; // Zeigt die Erwähnungsliste an
@@ -34,10 +40,14 @@ export class MessageInputComponent {
     allUsers$: Observable<any[]>; // Alle Nutzer
     currentUserId: string | null = null;
 
+    private globalClickListener?: () => void;
+
     constructor(
         private firestore: Firestore,
         private userService: UserService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private renderer: Renderer2,
+        private hostElement: ElementRef
     ) {
         this.allUsers$ = this.userService.getAllUsers();
         this.currentUserId = this.userService.getCurrentUserId();
@@ -50,28 +60,27 @@ export class MessageInputComponent {
         });
     }
 
-    /*
-    setUser() {
-      this.authService.user$.subscribe(user => {
-        if (user) {
-          this.matchAuthUser(user.email);
-        }
-      });
+    ngAfterViewInit() {
+        this.globalClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+            const clickedInside = this.hostElement.nativeElement.contains(event.target);
+
+            // Wenn Klick außerhalb der Komponente → schließe Picker & Mention
+            if (!clickedInside) {
+                this.showEmojiPicker = false;
+                this.showMentionList = false;
+            }
+        });
     }
-  
-    matchAuthUser(email: string) {
-      if (!email) return;
-  
-      this.userService.getUserByEmail(email).subscribe(userData => {
-        if (userData) {
-          this.currentUserId = userData.uid;
-          this.currentUserData = userData;
-        } else {
-          console.log('Kein User in der Datenbank mit dieser E-Mail gefunden.');
+
+    ngOnChanges() {
+        if (this.editingMessageId && this.editingText) {
+            this.messageText = this.editingText;
         }
-      });
     }
-    */
+
+    ngOnDestroy() {
+        if (this.globalClickListener) this.globalClickListener();
+    }
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
@@ -80,6 +89,8 @@ export class MessageInputComponent {
         if (this.editingMessageId && this.editingType) {
             if (this.editingType === 'thread') {
                 this.updateThread();
+            } else if (this.editingType === 'chat') {
+                this.updateChatMessage(); // 👈 NEU
             } else {
                 this.updateMessage();
             }
@@ -111,6 +122,20 @@ export class MessageInputComponent {
         //  b) oder direkt über einen ChatService senden, falls du das hier machen möchtest.
         // Beispiel für Option (a):
         this.messageText = '';
+    }
+
+    private async updateChatMessage() {
+        if (!this.editingMessageId) return;
+
+        try {
+            const chatRef = doc(this.firestore, 'chats', this.editingMessageId);
+            await updateDoc(chatRef, { text: this.messageText });
+
+            this.resetInput();
+            this.scrollToBottom();
+        } catch (error) {
+            console.error('Fehler beim Bearbeiten der Direktnachricht:', error);
+        }
     }
 
     private async createThread() {
@@ -175,7 +200,7 @@ export class MessageInputComponent {
     }
 
     /** Nachricht für die Bearbeitung setzen */
-    editMessage(messageId: string, text: string, type: 'message' | 'thread') {
+    editMessage(messageId: string, text: string, type: 'message' | 'thread' | 'chat') {
         this.editingMessageId = messageId;
         this.messageText = text;
         this.editingType = type;
@@ -278,5 +303,49 @@ export class MessageInputComponent {
                 this.inputElement.nativeElement.focus();
             }
         }, 100);
+    }
+
+    submitEdit() {
+        if (!this.editingMessageId || !this.messageText.trim()) return;
+
+        let path: string;
+        let field: string = 'text';
+
+        if (this.editingType === 'chat') {
+            if (!this.route.snapshot.queryParamMap.get('chat')) {
+                console.error('Chat-ID fehlt für Bearbeitung.');
+                return;
+            }
+            const chatId = this.route.snapshot.queryParamMap.get('chat');
+            path = `chats/${chatId}/messages/${this.editingMessageId}`;
+        } else if (this.editingType === 'thread') {
+            path = `threads/${this.editingMessageId}`;
+            field = 'thread';
+        } else {
+            path = `messages/${this.editingMessageId}`;
+        }
+
+        updateDoc(doc(this.firestore, path), { [field]: this.messageText })
+            .then(() => {
+                this.resetInput();
+                this.editSaved.emit();
+            })
+            .catch(err => console.error('Fehler beim Bearbeiten:', err));
+    }
+    cancelEdit() {
+        this.resetInput();
+        this.editCancelled.emit();
+    }
+
+    onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+
+            if (this.editingMessageId) {
+                this.submitEdit();
+            } else {
+                this.sendMessage();
+            }
+        }
     }
 }

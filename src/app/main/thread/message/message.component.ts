@@ -25,14 +25,14 @@ import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 })
 export class MessageComponent implements OnInit, OnChanges {
     @Input() message!: Message;
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' }>();
+    @Input() editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'thread' | 'message' | 'chat' }>();
 
     currentUserId: string | null = null;
     currentUser: any;
     userData$!: Observable<{ name: string, avatar: string }>;
     userNamesCache: { [userId: string]: string } = {};
     showReactionsOverlay: boolean = false;
-
     selectedProfile: {
         id: string;
         name: string;
@@ -42,7 +42,6 @@ export class MessageComponent implements OnInit, OnChanges {
     chatId: string = '';
     profileViewOpen: boolean = false;
     selectedProfilePresence$: Observable<boolean> = of(false);
-
     hoveredThreadId: string | null = null;
 
     constructor(
@@ -131,7 +130,7 @@ export class MessageComponent implements OnInit, OnChanges {
         this.selectedProfile = null;
     }
 
-    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' }) {
+    handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
         this.editRequest.emit(event);
     }
 }

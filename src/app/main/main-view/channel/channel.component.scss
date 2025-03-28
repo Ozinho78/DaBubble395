@@ -7,11 +7,16 @@
     background-color: #FFFFFF;
     border-radius: 30px;
     @include m.flexBox(column, normal, normal);
+
+    @media (max-width: 768px) {
+        height: calc(100dvh - 80px);
+        border-radius: unset;
+    }
 }
 
 .header-label {
-    height: 46px;
-    padding: 3px 10px;
+    height: 45px;
+    padding: 0px 30px;
     @include m.flexBox(row, center, center, 10px);
     border-radius: 30px;
     cursor: pointer;
@@ -19,6 +24,10 @@
 
     span {
         @include m.styleFont("Nunito", 28px, 800);
+
+        @media (max-width: 768px) {
+            font-size: 24px;
+        }
     }
 
     &:hover {
@@ -61,6 +70,10 @@
             color: v.$purple_3;
         }
     }
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 }
 
 .member-pics {
@@ -99,6 +112,16 @@
             path {
                 fill: v.$purple_3;
             }
+        }
+    }
+
+    @media (max-width: 768px) {
+        height: 34px;
+        width: 34px;
+
+        .add-member {
+            height: 18px;
+            width: 18px;
         }
     }
 }

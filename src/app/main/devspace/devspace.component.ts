@@ -5,14 +5,14 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { addDoc, Firestore } from '@angular/fire/firestore';
+import { addDoc, collectionData, Firestore, query, where } from '@angular/fire/firestore';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { User } from '../../../models/user.model';
 import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject, takeUntil } from 'rxjs';
 import {
   animate,
   state,
@@ -21,6 +21,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { UserService } from '../../../services/user.service';
+import { ChatService } from '../../../services/direct-meassage.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -55,7 +56,9 @@ export class DevspaceComponent implements OnInit {
   isChannelVisible = true;
   isUserVisible = true;
   firestore: Firestore = inject(Firestore);
-  userLoggedIn: string = '';
+  userLoggedIn = localStorage.getItem('user-id') || '';
+  userChannels$: Observable<any[]> | null = null; // Für die automatische Firestore-Aktualisierung
+  private unsubscribe$ = new Subject<void>(); // Verhindert Memory-Leaks
 
   userDatabase = collection(this.firestore, 'users');
   channelDatabase = collection(this.firestore, 'channels');
@@ -77,7 +80,8 @@ export class DevspaceComponent implements OnInit {
     private userService: UserService,
     public userPresence: PresenceService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private chat: ChatService
   ) {
     this.unsubUserNames = onSnapshot(this.userDatabase, (list) => {
       this.users = [];
@@ -101,8 +105,18 @@ export class DevspaceComponent implements OnInit {
     });
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
-      this.filterUserChannels();
-    }, 500);
+      // this.filterUserChannels();
+    }, 1000);
+  }
+
+
+  subscribeToUserChannels(firestore: Firestore, userId: string): Observable<Channel[]> {
+    if (!userId) return new Observable<Channel[]>(); // Falls userId fehlt, leeres Observable zurückgeben
+  
+    const channelsRef = collection(firestore, 'channels'); // Referenz zur Collection
+    const userChannelsQuery = query(channelsRef, where('member', 'array-contains', userId)); // Firestore Query
+  
+    return collectionData(userChannelsQuery, { idField: 'docId' }) as Observable<Channel[]>; // Observable zurückgeben
   }
 
   ngOnInit() {
@@ -119,14 +133,10 @@ export class DevspaceComponent implements OnInit {
     this.userService.currentChannelIdFromDevSpace.subscribe(
       (id) => (this.channelId = id)
     );
-  }
-
-  filterUserChannels() {
-    if (!this.userLoggedIn) return;
-    this.userChannels = this.channels.filter(channel =>
-      channel.member.includes(this.userLoggedIn)
-    );
-    // console.log(this.userChannels);
+    this.subscribeToUserChannels(this.firestore, this.userLoggedIn).subscribe((channels) => {
+      this.userChannels = channels;
+    });
+    // this.loadUserChannels();
   }
 
   toggleChannelVisibility() {
@@ -137,18 +147,12 @@ export class DevspaceComponent implements OnInit {
     this.isUserVisible = !this.isUserVisible;
   }
 
-  sortUsersByAvatar() {
-    this.users.sort((a, b) => {
-      const start = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
-      const end = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
-      return end - start; // Absteigende Sortierung
-    });
-  }
-
   ngOnDestroy(): void {
     this.unsubUserNames();
     this.unsubChannelNames();
     this.userLoggedIn = '';
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   openChannelDialog() {
@@ -157,23 +161,26 @@ export class DevspaceComponent implements OnInit {
 
   async saveChannelToFirestore(channel: Channel) {
     await addDoc(this.channelDatabase, channel.toJson());
-    this.filterUserChannels();
+    // this.filterUserChannels();
   }
 
-  selectUserForDirectMessage(user: User) {
-    this.userService.setDocIdFromDevSpace(user.docId!);
-    console.log(this.docId);
-    this.showComponent('directMessages');
-
-    // 12.03.2025 - Alexander Riedel
-    this.router.navigate(['/main'], { replaceUrl: true });
+  async selectUserForDirectMessage(user: User) {
+    const chatId = await this.chat.getOrCreateChat(
+      this.userLoggedIn,
+      user.docId!
+    );
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { chat: chatId },
+      replaceUrl: true,
+    });
   }
 
   selectChannel(channel: any) {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { channel: channel.docId },
-      replaceUrl: true
+      replaceUrl: true,
     });
     this.showComponent('channel');
   }
@@ -195,3 +202,44 @@ export class DevspaceComponent implements OnInit {
   }
 }
 
+
+
+
+
+
+
+
+
+
+// alte Methoden
+// loadUserChannels() {
+  //   if (!this.userLoggedIn) return;
+
+  //   // Firestore-Referenz mit Query: Nur Channels laden, in denen der User Mitglied ist
+  //   const channelsRef = collection(this.firestore, 'channels');
+  //   const userChannelsQuery = query(channelsRef, where('members', 'array-contains', this.userLoggedIn));
+
+  //   // Observable setzen (automatische Updates bei Firestore-Änderungen)
+  //   this.userChannels$ = collectionData(userChannelsQuery, { idField: 'id' });
+
+  //   // Falls du die Channels als normales Array brauchst:
+  //   this.userChannels$.pipe(takeUntil(this.unsubscribe$)).subscribe((channels) => {
+  //     console.log('User Channels:', channels);
+  //   });
+  // }
+
+    // filterUserChannels() {
+  //   if (!this.userLoggedIn) return;
+  //   this.userChannels = this.channels.filter((channel) =>
+  //     channel.member.includes(this.userLoggedIn)
+  //   );
+  //   // console.log(this.userChannels);
+  // }
+
+  // sortUsersByAvatar() {
+  //   this.users.sort((a, b) => {
+  //     const start = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
+  //     const end = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
+  //     return end - start; // Absteigende Sortierung
+  //   });
+  // }

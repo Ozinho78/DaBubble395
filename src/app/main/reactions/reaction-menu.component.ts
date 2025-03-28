@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactionsComponent } from './reactions.component';
 import { ReactionService } from '../../../services/reaction.service';
@@ -16,16 +16,50 @@ export class ReactionMenuComponent {
     @Input() userId!: string;
     @Input() currentUserId!: string;
     @Input() text!: string;
-    @Input() type: 'message' | 'thread' = 'thread';
+    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() parentId: string | null = null;
     @Input() isHovered: boolean = false;
     @Input() isOwnMessage: boolean = false;
+    @Input() isEditing: boolean = false;
 
-    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' }>();
+    @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
 
     showReactionsOverlay: boolean = false;
     menuOpen: boolean = false;
+    hoverTimeout: any;
+    isAnimatingOut: boolean = false;
+    isFadingIn: boolean = false;
 
-    constructor(private reactionService: ReactionService) { }
+    constructor(
+        private reactionService: ReactionService,
+        private renderer: Renderer2,
+        private elRef: ElementRef
+    ) { }
+
+    ngAfterViewInit(): void {
+        const replyContainer = this.elRef.nativeElement.closest('.reply-container');
+
+        if (replyContainer) {
+            this.renderer.listen(replyContainer, 'mouseleave', () => {
+                this.hoverTimeout = setTimeout(() => {
+                    this.closeMenu();
+                }, 100);
+            });
+
+            this.renderer.listen(replyContainer, 'mouseenter', () => {
+                if (this.hoverTimeout) {
+                    clearTimeout(this.hoverTimeout);
+                    this.hoverTimeout = null;
+                }
+            });
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.hoverTimeout) {
+            clearTimeout(this.hoverTimeout);
+        }
+    }
 
     toggleReactionsOverlay(): void {
         this.showReactionsOverlay = !this.showReactionsOverlay;
@@ -36,11 +70,28 @@ export class ReactionMenuComponent {
     }
 
     toggleMenu(): void {
-        this.menuOpen = !this.menuOpen;
+        if (this.menuOpen) {
+            this.closeMenu();
+        } else {
+            this.menuOpen = true;
+            this.isAnimatingOut = false;
+
+            setTimeout(() => {
+                this.isFadingIn = true;
+            }, 10);
+        }
     }
 
     closeMenu(): void {
-        this.menuOpen = false;
+        if (!this.menuOpen) return;
+
+        this.isAnimatingOut = true;
+        this.isFadingIn = false;
+
+        setTimeout(() => {
+            this.menuOpen = false;
+            this.isAnimatingOut = false;
+        }, 200);
     }
 
     requestEdit(): void {
@@ -61,7 +112,11 @@ export class ReactionMenuComponent {
             timestamp: Date.now()
         });
 
-        this.reactionService.addReaction(this.type === 'message' ? 'messages' : 'threads', this.docId, reaction)
+        const collectionName = this.type === 'chat' ? `chats/${this.parentId}/messages` :
+            this.type === 'message' ? 'messages' : 'threads';
+
+        this.reactionService
+            .addReaction(collectionName, this.docId, reaction)
             .then(() => {
                 this.showReactionsOverlay = false;
             })

@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
-import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, onSnapshot, orderBy, query, where } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, where, updateDoc } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.model';
 
 @Injectable({
@@ -157,6 +157,11 @@ export class FirestoreService implements OnDestroy {
                 ...data
             };
         });
+    }
+
+    updateDocument(collectionName: string, docId: string, data: any) {
+        const ref = doc(this.firestore, collectionName, docId);
+        return updateDoc(ref, data);
     }
 
     /**

@@ -5,29 +5,69 @@ import { DevspaceComponent } from "./devspace/devspace.component";
 import { MainViewComponent } from "./main-view/main-view.component";
 import { ThreadComponent } from "./thread/thread.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-main',
-  imports: [CommonModule, HeaderComponent, DevspaceComponent, MainViewComponent, ThreadComponent, SidebarComponent],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+    selector: 'app-main',
+    imports: [CommonModule, HeaderComponent, DevspaceComponent, MainViewComponent, ThreadComponent, SidebarComponent],
+    templateUrl: './main.component.html',
+    styleUrl: './main.component.scss'
 })
 export class MainComponent implements OnInit {
-  channelId: string | null = null;
-  threadId: string | null = null;
+    channelId: string | null = null;
+    threadId: string | null = null;
+    chatId: string | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+    isMedium = false;
+    isSmall = false;
 
-  ngOnInit() {
-    this.subscribeRouteParams();
-  }
+    activeView: 'devspace' | 'main' | 'thread' = 'main';
 
-  subscribeRouteParams() {
-    this.route.queryParamMap.subscribe(params => {
-      this.channelId = params.get('channel');
-      this.threadId = params.get('thread');
-    });
-  }
+    constructor(private route: ActivatedRoute) { }
 
+    ngOnInit() {
+        this.checkScreenSize();
+        window.addEventListener('resize', () => this.checkScreenSize());
+        this.subscribeRouteParams();
+    }
+
+    subscribeRouteParams() {
+        this.route.queryParamMap.subscribe(params => {
+            this.channelId = params.get('channel');
+            this.threadId = params.get('thread');
+            this.chatId = params.get('chat');
+        });
+    }
+
+    checkScreenSize() {
+        const width = window.innerWidth;
+        this.isMedium = width <= 1400;
+        this.isSmall = width <= 992;
+
+        // Bei Wechsel auf small, nur main zeigen (außer Thread aktiv)
+        if (this.isSmall) {
+            if (this.threadId) {
+                this.activeView = 'thread';
+            } else {
+                this.activeView = 'main';
+            }
+        }
+    }
+
+    showDevspace(): boolean {
+        return !this.isSmall || this.activeView === 'devspace';
+    }
+
+    showMainView(): boolean {
+        if (this.isSmall) return this.activeView === 'main';
+        if (this.isMedium && this.threadId) return false;
+        return true;
+    }
+
+    showThread(): boolean {
+        if (!this.threadId) return false;
+        if (this.isSmall) return this.activeView === 'thread';
+        if (this.isMedium) return true;
+        return true;
+    }
 }

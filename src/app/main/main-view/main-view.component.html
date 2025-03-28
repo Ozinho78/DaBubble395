@@ -1,6 +1,6 @@
 <div class="container">
     <app-direct-messages *ngIf="visibleComponent === 'directMessages'"></app-direct-messages>
     <app-new-messages class="new-messages" *ngIf="visibleComponent === 'newMessages'"></app-new-messages>
-    <app-channel *ngIf="visibleComponent === 'channel'" (editRequest)="handleEditRequest($event)" #channelComp>
+    <app-channel *ngIf="visibleComponent === 'channel'">
     </app-channel>
 </div>

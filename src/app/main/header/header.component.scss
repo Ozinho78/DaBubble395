@@ -4,6 +4,19 @@
 header {
   @include m.flexBox(row, space-between, center);
   padding: 25px 34px 20px 50px;
+
+  @media (max-width: 768px) {
+    height: 80px;
+    padding: 0 16px;
+  }
+}
+
+.header-img {
+  img {
+    @media (max-width: 768px) {
+      height: 45px;
+    }
+  }
 }
 
 .header-input {
@@ -35,6 +48,10 @@ header {
       box-shadow: 0 0 0 1px v.$purple_1;
     }
   }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 .header-profile {
@@ -50,6 +67,11 @@ header {
       height: 70px;
       width: 70px;
       border-radius: 50%;
+
+      @media (max-width: 768px) {
+        height: 50px;
+        width: 50px;
+      }
     }
 
     .profile-pic-online {
@@ -64,6 +86,10 @@ header {
     font-weight: 700;
     font-size: 32px;
     transition: color 0.1s ease-in-out;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   .arrow-wrapper {
@@ -81,6 +107,10 @@ header {
       left: 0;
       opacity: 0;
     }
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   &:hover {
@@ -88,10 +118,12 @@ header {
       .arrow-default {
         opacity: 0;
       }
+
       .arrow-hover {
         opacity: 1;
       }
     }
+
     span {
       color: v.$purple_2;
     }

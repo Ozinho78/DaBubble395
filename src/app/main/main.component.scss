@@ -11,8 +11,48 @@
     margin: 0 20px 20px 20px;
     @include m.flexBox(row, space-between, normal);
     gap: 20px;
+
+    @media (max-width: 768px) {
+        max-height: calc(100dvh - 80px);
+        margin: 0;
+    }
 }
 
 app-main-view {
-    flex-grow: 1; // Dehnt die Komponente auf volle Breite aus
+    flex-grow: 1;
+}
+
+@media (max-width: 1400px) {
+
+    app-main-view,
+    app-thread {
+        flex-grow: 1;
+        //width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+
+    app-devspace,
+    app-main-view,
+    app-thread {
+        flex-grow: 1;
+        width: 100%;
+    }
+}
+
+.mobile-nav {
+    //display: flex;
+    display: none;
+    justify-content: space-around;
+    background: #eee;
+    padding: 10px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1000;
+
+    button {
+        flex: 1;
+        margin: 0 5px;
+    }
 }

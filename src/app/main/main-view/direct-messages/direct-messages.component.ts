@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
@@ -8,96 +8,128 @@ import { ChatService } from '../../../../services/direct-meassage.service';
 import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
 import { User } from '../../../../models/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { doc, getDoc } from 'firebase/firestore';
+import { ReactionDisplayComponent } from "../../reactions/reaction-display.component";
+import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 
 @Component({
   selector: 'app-direct-messages',
-  imports: [CommonModule, MessageInputComponent, ProfileViewComponent],
+  standalone: true,
+  imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ReactionDisplayComponent, ReactionMenuComponent],
   templateUrl: './direct-messages.component.html',
-  styleUrl: './direct-messages.component.scss',
+  styleUrls: [
+    './direct-messages.component.scss',
+    '../../thread/thread.component.scss',
+    '../../thread/message/message.component.scss'
+  ]
 })
-export class DirectMessagesComponent implements OnInit, AfterViewChecked {
+export class DirectMessagesComponent implements OnInit {
+  @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
+
+  @ViewChild('chatContainer') chatContainer!: ElementRef;
+
   onlineStatus$: Observable<boolean> = of(false);
   user$: Observable<User> = of(new User());
-  messages$: Observable<Message[]> = of([]);
+  messages: Message[] = [];
   selectedProfile: {
     id: string;
     name: string;
     avatar: string;
     email?: string;
   } | null = null;
-  chatId: string = '';
-  profileViewOpen: boolean = false;
   selectedProfilePresence$: Observable<boolean> = of(false);
+  chatId: string = '';
   loggedInUserId: string = '';
+  profileViewOpen: boolean = false;
+
+  hoveredMessageId: string | null = null;
+  editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
 
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
-    private chatService: ChatService
-  ) {}
-
-  ngAfterViewChecked() {
-    this.scrollToBottom();
-  }
+    private chatService: ChatService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-    this.loggedInUserId = localStorage.getItem('user-id') || '';
-    this.subscribeToSelectedUser();
-    this.initializeChat();
+    this.initLoggedInUser();
+    this.handleChatParams();
   }
 
-  private subscribeToSelectedUser(): void {
-    this.userService.currentDocIdFromDevSpace.subscribe((selectedUserId) => {
-      if (selectedUserId) {
-        this.user$ = this.userService.getUserById(selectedUserId).pipe(
-          map((userData: any) => {
-            const user = new User();
-            user.name = userData.name || '';
-            user.avatar = userData.avatar || '';
-            user.email = userData.email || '';
-            // Falls userData.id als String vorliegt, kannst du ihn in eine Zahl umwandeln:
-            user.id = userData.id ? parseInt(userData.id, 10) : 0;
-            user.password = userData.password || '';
-            user.active =
-              userData.active !== undefined ? userData.active : false;
-            // Setze die docId, die du als Identifikator nutzen möchtest:
-            user.docId = selectedUserId;
-            return user;
-          })
-        );
-        this.onlineStatus$ =
-          this.presenceService.getUserPresence(selectedUserId);
-      } else {
-        this.user$ = of(new User());
+  private initLoggedInUser() {
+    this.loggedInUserId = localStorage.getItem('user-id') || '';
+  }
+
+  private handleChatParams() {
+    this.route.queryParamMap.subscribe((params) => {
+      this.chatId = params.get('chat') || '';
+
+      if (this.chatId) {
+        this.prepareChat();
+        setTimeout(() => this.scrollToBottom(), 200);
       }
     });
   }
 
-  private async initializeChat(): Promise<void> {
-    const loggedInUserId = localStorage.getItem('user-id');
-    if (!loggedInUserId) return;
+  private async prepareChat() {
+    this.messages = [];
+    await this.setUserFromChat();
+    this.loadChatData();
+  }
 
-    this.userService.currentDocIdFromDevSpace.subscribe(
-      async (selectedUserId) => {
-        if (selectedUserId) {
-          this.chatId = await this.chatService.getOrCreateChat(
-            loggedInUserId,
-            selectedUserId
-          );
-          this.messages$ = this.chatService.getMessages(this.chatId);
-        }
+  private async setUserFromChat() {
+    const participants = await this.getParticipantsFromChat();
+    if (!participants.length) return;
+
+    const targetUserId = this.resolveChatPartner(participants);
+    if (!targetUserId) return;
+
+    this.loadUserData(targetUserId);
+  }
+
+  private async getParticipantsFromChat(): Promise<string[]> {
+    const docRef = doc(this.chatService.Firestore, 'chats', this.chatId);
+    const chatSnap = await getDoc(docRef);
+    if (!chatSnap.exists()) return [];
+    return chatSnap.data()?.['participants'] || [];
+  }
+
+  private resolveChatPartner(participants: string[]): string | null {
+    const isSelfChat =
+      participants.length === 1 ||
+      participants.every((id: string) => id === this.loggedInUserId);
+    return isSelfChat
+      ? this.loggedInUserId
+      : participants.find((id: string) => id !== this.loggedInUserId) || null;
+  }
+
+  private loadUserData(userId: string) {
+    this.user$ = this.userService
+      .getUserById(userId)
+      .pipe(map((userData) => this.mapUser(userData, userId)));
+    this.onlineStatus$ = this.presenceService.getUserPresence(userId);
+  }
+
+  private loadChatData() {
+    this.chatService.getMessages(this.chatId).subscribe((msgs) => {
+      const wasScrolledToBottom = this.isScrolledToBottom();
+
+      this.messages = msgs;
+
+      if (wasScrolledToBottom) {
+        setTimeout(() => this.scrollToBottom(), 100);
       }
-    );
+    });
   }
 
   async onNewMessage(newText: string) {
-    const loggedInUserId = localStorage.getItem('user-id');
-    if (!loggedInUserId) {
-      console.error('Kein eingeloggter User gefunden.');
-      return;
-    }
+    if (!this.loggedInUserId)
+      return console.error('Kein eingeloggter User gefunden.');
+
     const currentUser = await firstValueFrom(
-      this.userService.getUserById(loggedInUserId)
+      this.userService.getUserById(this.loggedInUserId)
     );
 
     const newMessage = new Message({
@@ -105,7 +137,7 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       reactions: [],
       text: newText,
       threadId: this.chatId,
-      userId: loggedInUserId,
+      userId: this.loggedInUserId,
       senderName: currentUser.name,
       senderAvatar: currentUser.avatar,
     });
@@ -114,28 +146,36 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
   }
 
   scrollToBottom() {
-    const replies = document.getElementById('replies');
-    if (replies) {
-      replies.scrollTop = replies.scrollHeight;
-    }
+    setTimeout(() => {
+      const el = this.chatContainer?.nativeElement;
+      if (el) {
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
   }
 
-  showProfile(userId: string | undefined): void {
-    if (!userId) return;
+  isScrolledToBottom(): boolean {
+    const el = this.chatContainer?.nativeElement;
+    if (!el) return false;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+  }
 
-    this.userService.getUserById(userId).subscribe((userData) => {
-      if (userData) {
-        this.selectedProfile = {
-          ...userData,
-          id: this.selectedProfile?.id ?? userId, // 👈 Falls `id` fehlt, dann userId setzen
-        };
-        this.selectedProfilePresence$ =
-          this.presenceService.getUserPresence(userId);
-        this.profileViewOpen = true;
-      } else {
-        console.error('Fehler: User-Daten nicht gefunden.');
-      }
-    });
+  showProfile(userId?: string): void {
+    if (!userId) return;
+    this.userService
+      .getUserById(userId)
+      .subscribe((user) => this.openProfile(user, userId));
+  }
+
+  private openProfile(userData: any, userId: string) {
+    if (!userData) return console.error('Fehler: User-Daten nicht gefunden.');
+    this.selectedProfile = { ...userData, id: userId };
+    this.selectedProfilePresence$ =
+      this.presenceService.getUserPresence(userId);
+    this.profileViewOpen = true;
   }
 
   closeProfile(): void {
@@ -143,12 +183,22 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
     this.selectedProfile = null;
   }
 
+  private mapUser(userData: any, docId: string): User {
+    const user = new User();
+    user.name = userData.name || '';
+    user.avatar = userData.avatar || '';
+    user.email = userData.email || '';
+    user.id = userData.id ? parseInt(userData.id, 10) : 0;
+    user.password = userData.password || '';
+    user.active = userData.active ?? false;
+    user.docId = docId;
+    return user;
+  }
+
   formatMessageDate(timestamp: any): string {
     const date = new Date(timestamp);
     const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
+    const yesterday = new Date(today.setDate(today.getDate() - 1));
     const formattedDate = date.toLocaleDateString('de-DE', {
       day: '2-digit',
       month: '2-digit',
@@ -160,17 +210,22 @@ export class DirectMessagesComponent implements OnInit, AfterViewChecked {
       hour12: false,
     });
 
-    if (date.toDateString() === today.toDateString()) {
+    if (date.toDateString() === new Date().toDateString())
       return `Heute ${formattedTime} Uhr`;
-    } else if (date.toDateString() === yesterday.toDateString()) {
+    if (date.toDateString() === yesterday.toDateString())
       return `Gestern ${formattedTime} Uhr`;
-    } else {
-      return `${formattedDate} ${formattedTime} Uhr`;
-    }
+    return `${formattedDate} ${formattedTime} Uhr`;
   }
 
   getUserPresence(userId: string | undefined): Observable<boolean> {
-    if (!userId) return of(false); // Falls keine userId vorhanden ist, false zurückgeben
-    return this.presenceService.getUserPresence(userId);
+    return userId ? this.presenceService.getUserPresence(userId) : of(false);
+  }
+
+  handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
+    this.editingTarget = event;
+  }
+
+  clearEditState() {
+    this.editingTarget = null;
   }
 }
