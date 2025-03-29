@@ -48,6 +48,7 @@ export class ChannelComponent implements OnInit {
 
     channelId!: string;
     channel!: Channel | null;
+    channelSubscription: any;  // Speichern der Subscription, um sie später zu beenden
     editedChannel!: Channel | null;
     threads: Thread[] = [];
     threadId: any;
@@ -102,9 +103,14 @@ export class ChannelComponent implements OnInit {
             this.channelId = params.get('channel') || '';
             this.threadId = params.get('thread') || null;
 
+            if (this.channelSubscription) {
+                this.channelSubscription.unsubscribe();  // Alte Subscription beenden
+            }
+
             if (this.channelId) {
                 this.loadChannel();
                 this.loadThreads();
+                this.subscribeChannel();  // Neuen Listener für Änderungen setzen
 
                 if (!this.threadId) {
                     this.focusMessageInput();
@@ -285,6 +291,24 @@ export class ChannelComponent implements OnInit {
 
     clearEditState() {
         this.editingTarget = null;
+    }
+
+    subscribeChannel() {
+        if (this.channelId) {
+            this.channelSubscription = this.firestoreService.subscribeToDocument<Channel>(
+                'channels',
+                this.channelId,
+                (updatedChannel) => {
+                    this.channel = updatedChannel || null;
+                }
+            );
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.channelSubscription) {
+            this.channelSubscription.unsubscribe();
+        }
     }
 
 }

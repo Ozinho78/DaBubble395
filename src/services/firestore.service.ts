@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
-import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, where, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, where, updateDoc, docSnapshots } from '@angular/fire/firestore';
 import { Channel } from '../models/channel.model';
 
 @Injectable({
@@ -164,6 +164,17 @@ export class FirestoreService implements OnDestroy {
         return updateDoc(ref, data);
     }
 
+    subscribeToDocument<T>(collection: string, docId: string, callback: (data: T | undefined) => void) {
+        const documentRef = doc(this.firestore, `${collection}/${docId}`);
+        return docSnapshots(documentRef).subscribe(snapshot => {
+          if (snapshot.exists()) {
+            callback(snapshot.data() as T);
+          } else {
+            callback(undefined);
+          }
+        });
+      }
+      
     /**
     * Alle Abonnements beenden (wenn Service zerstört wird)
     */
