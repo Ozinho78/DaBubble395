@@ -37,7 +37,7 @@
       <div class="error-message" *ngIf="emailErrorMessage">
         {{ emailErrorMessage }}
       </div>
-      <input class="password" type="password" placeholder="Passwort" [(ngModel)]="password" />
+      <input class="password" type="password" placeholder="Passwort" [(ngModel)]="password" (keyup.enter)="login()"/>
       <div class="error-message" *ngIf="passwordErrorMessage">
         {{ passwordErrorMessage }}
       </div>
