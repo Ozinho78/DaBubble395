@@ -8,6 +8,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firestore';
 import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
+import { ChatService } from '../../../../services/direct-meassage.service';
 
 @Component({
   selector: 'app-new-messages',
@@ -57,7 +58,7 @@ export class NewMessagesComponent implements OnInit {
 
   sendMessagesArray: string[] = [];
 
-  constructor(private dataService: FirestoreService) {
+  constructor(private dataService: FirestoreService, private chatService: ChatService) {
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
     }, 1000);
@@ -232,26 +233,25 @@ export class NewMessagesComponent implements OnInit {
   }
 
   createNewThread() {
-    const date = new Date();
     this.newThread = new Thread({
       id: '1',
       channelId: this.targetChannel?.docId || '',
-      creationDate: date.getTime(),
+      creationDate: new Date().getTime(),
       reactions: [],
       thread: this.inputBottomValue,
       userId: this.userLoggedIn || '',
     });
     this.saveInputToThreads(this.newThread);
+    // console.log(this.newThread);
   }
   
 
   createNewMessage() {
-    const date = new Date();
     // userLoggedIn ermitteln
     const senderUser = this.users.find((user) => user.docId);
     this.newMessage = new Message({
       id: '1',
-      creationDate: date.getTime(),
+      creationDate: new Date().getTime(),
       reactions: [],
       text: this.inputBottomValue,
       threadId: '',
@@ -260,6 +260,25 @@ export class NewMessagesComponent implements OnInit {
       senderAvatar: senderUser?.avatar,
     });
     this.saveInputToMessages(this.newMessage);
+  }
+
+  async createNewMessageInChats() {
+    const senderUser = this.users.find((user) => user.docId);
+    const userIdSenderUser = this.userLoggedIn;
+    const userIdTargetUser = this.targetUser?.docId;
+    const chatId = await this.chatService.getOrCreateChat(userIdSenderUser, userIdTargetUser || '');
+    this.newMessage = new Message({
+      creationDate: new Date().getTime(),
+      reactions: [],
+      text: this.inputBottomValue,
+      threadId: '',
+      userId: userIdTargetUser,
+      senderName: userIdSenderUser,
+      senderAvatar: senderUser?.avatar,
+    });
+    await this.chatService.sendMessage(chatId, this.newMessage);
+    console.log("ChatId: ", chatId);
+    console.log("Message: ", this.newMessage);
   }
 
   onInputChange() {
@@ -286,7 +305,8 @@ export class NewMessagesComponent implements OnInit {
       if (this.targetChannel) {
         this.createNewThread();
       } else if (this.targetUser) {
-        this.createNewMessage();
+        this.createNewMessageInChats();
+        // this.createNewMessage();
       } else {
         this.errorMessageChannelUser = true;
         setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
