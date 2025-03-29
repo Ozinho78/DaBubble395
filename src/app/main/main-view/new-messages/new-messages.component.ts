@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { User } from '../../../../models/user.model';
 import { Channel } from '../../../../models/channel.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FirestoreService } from '../../../../services/firestore.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { addDoc, collection, doc, Firestore, getDoc } from '@angular/fire/firest
 import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
 import { ChatService } from '../../../../services/direct-meassage.service';
+import { UserService } from '../../../../services/user.service';
 
 @Component({
   selector: 'app-new-messages',
@@ -58,7 +59,9 @@ export class NewMessagesComponent implements OnInit {
 
   sendMessagesArray: string[] = [];
 
-  constructor(private dataService: FirestoreService, private chatService: ChatService) {
+  private inputSubscription?: Subscription;
+
+  constructor(private dataService: FirestoreService, private chatService: ChatService, private userService: UserService) {
     setTimeout(() => {
       this.userLoggedIn = localStorage.getItem('user-id') || '';
     }, 1000);
@@ -72,7 +75,7 @@ export class NewMessagesComponent implements OnInit {
     this.userLoggedIn = localStorage.getItem('user-id') || '';
     this.getAvatarByDocId(this.userLoggedIn).then(avatar => {
       if (avatar) {
-        console.log("Avatar-URL:", avatar);
+        // console.log("Avatar-URL:", avatar);
         this.userLoggedInAvatar = avatar;
       } else {
         console.log("Kein Avatar gefunden!");
@@ -92,7 +95,7 @@ export class NewMessagesComponent implements OnInit {
 
     // Filterung bei jeder Eingabe auslösen und an die Filtermethoden übergeben
     this.inputControl.valueChanges.subscribe((value) => {
-      console.log('Eingegebener Wert:', value);
+      // console.log('Eingegebener Wert:', value);
       this.filterUsers(value || '');
       this.filterChannels(value || '');
     });
@@ -183,6 +186,10 @@ export class NewMessagesComponent implements OnInit {
   }
 
   findAndSaveTargetUser() {
+    if (this.inputSubscription) {
+      this.inputSubscription.unsubscribe(); // Alte Subscription beenden
+    }
+
     this.inputControl.valueChanges.subscribe((value) => {
       console.log('Eingegebener Wert:', value);
       this.filterUsers(value || '');
@@ -242,7 +249,6 @@ export class NewMessagesComponent implements OnInit {
       userId: this.userLoggedIn || '',
     });
     this.saveInputToThreads(this.newThread);
-    // console.log(this.newThread);
   }
   
 
@@ -262,18 +268,27 @@ export class NewMessagesComponent implements OnInit {
     this.saveInputToMessages(this.newMessage);
   }
 
+  async getUserByIdAsync(userId: string): Promise<User | undefined> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const userSnapshot = await getDoc(userDocRef);
+    return userSnapshot.exists() ? (userSnapshot.data() as User) : undefined;
+  }
+
   async createNewMessageInChats() {
-    const senderUser = this.users.find((user) => user.docId);
     const userIdSenderUser = this.userLoggedIn;
     const userIdTargetUser = this.targetUser?.docId;
     const chatId = await this.chatService.getOrCreateChat(userIdSenderUser, userIdTargetUser || '');
+    const senderUser = await this.getUserByIdAsync(this.userLoggedIn);
+    // console.log("Sender: ", senderUser);
+    // console.log("Empfänger: ", this.targetUser);
     this.newMessage = new Message({
+      id: '1',
       creationDate: new Date().getTime(),
       reactions: [],
       text: this.inputBottomValue,
       threadId: '',
       userId: userIdTargetUser,
-      senderName: userIdSenderUser,
+      senderName: senderUser?.name,
       senderAvatar: senderUser?.avatar,
     });
     await this.chatService.sendMessage(chatId, this.newMessage);
