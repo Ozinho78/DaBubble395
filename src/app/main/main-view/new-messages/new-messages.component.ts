@@ -287,7 +287,7 @@ export class NewMessagesComponent implements OnInit {
       reactions: [],
       text: this.inputBottomValue,
       threadId: '',
-      userId: userIdTargetUser,
+      userId: userIdSenderUser,
       senderName: senderUser?.name,
       senderAvatar: 'img/avatar/' + senderUser?.avatar,
     });
