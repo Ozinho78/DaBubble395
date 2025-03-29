@@ -34,7 +34,7 @@
           </app-reaction-menu>
 
           <div class="reply" *ngIf="user$ | async as user">
-            <img class="avatar" [src]="msg?.senderAvatar" alt="Profilepicture" />
+            <img class="avatar" [src]="'img/avatar/' + msg?.senderAvatar" alt="Profilepicture" />
             <div class="message">
               <div class="message-info">
                 <div (click)="msg?.userId ? showProfile(msg.userId) : null" class="message-info-name">
