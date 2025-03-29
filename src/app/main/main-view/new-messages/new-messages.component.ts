@@ -313,9 +313,6 @@ export class NewMessagesComponent implements OnInit {
         setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
       }
       this.sendMessagesArray.push(this.inputBottomValue);
-      // setTimeout(() => {
-      //   this.inputBottomValue = ''; // Eingabe leeren
-      // }, 1000);
       this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
     } else {
       this.errorMessageEmpty = true;
