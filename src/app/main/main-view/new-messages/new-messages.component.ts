@@ -289,7 +289,7 @@ export class NewMessagesComponent implements OnInit {
       threadId: '',
       userId: userIdTargetUser,
       senderName: senderUser?.name,
-      senderAvatar: senderUser?.avatar,
+      senderAvatar: 'img/avatar/' + senderUser?.avatar,
     });
     await this.chatService.sendMessage(chatId, this.newMessage);
     console.log("ChatId: ", chatId);
