@@ -40,6 +40,7 @@
     <div class="channel-name-ctn">
       <div class="channel-name-header">
         <span>Channel-Name</span>
+        <span *ngIf="editedChannelName.length < 3" [style.color]="'#8a0000'">Bitte mindestens 3 Zeichen eingeben</span>
         <span *ngIf="!editNameMode" (click)="toggleEditMode(1)" class="name-edit">Bearbeiten</span>
         <span *ngIf="editNameMode" (click)="toggleEditMode(1)" class="name-edit">Speichern</span>
       </div>
@@ -47,7 +48,7 @@
         <span *ngIf="!editNameMode">#</span>
 
         <!-- Bearbeiten-Modus: Zeige Input -->
-        <input *ngIf="editNameMode" [(ngModel)]="editedChannelName" type="text" class="channel-input channel-name-input" (ngModelChange)="validateChannelName()" [ngClass]="{'invalid-input': isInvalidChannelName}" placeholder="# {{ channelToChange?.name }}"/>
+        <input *ngIf="editNameMode" [(ngModel)]="editedChannelName" type="text" class="channel-input channel-name-input" (ngModelChange)="validateChannelName()" [ngClass]="{'invalid-input': isInvalidChannelName}" placeholder="# {{ channelToChange?.name }}" (keydown.enter)="toggleEditMode(1)"/>
     
         <!-- Anzeigemodus: Zeige normalen Text -->
         <span *ngIf="!editNameMode">{{ channelToChange?.name }}</span>
@@ -66,7 +67,7 @@
       </div>
 
       <div class="channel-description-text">
-        <input *ngIf="editDescriptionMode" [(ngModel)]="editedChannelDescription" type="text" class="channel-input" placeholder="Dein Text hier"/>
+        <input *ngIf="editDescriptionMode" [(ngModel)]="editedChannelDescription" type="text" class="channel-input" placeholder="Dein Text hier" (keydown.enter)="toggleEditMode(2)"/>
         <span *ngIf="!editDescriptionMode">{{ channelToChange?.description }}</span>
       </div>
 
