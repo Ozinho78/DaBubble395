@@ -279,6 +279,7 @@ export class NewMessagesComponent implements OnInit {
     await this.chatService.sendMessage(chatId, this.newMessage);
     console.log("ChatId: ", chatId);
     console.log("Message: ", this.newMessage);
+    this.inputBottomValue = '';
   }
 
   onInputChange() {
@@ -312,7 +313,9 @@ export class NewMessagesComponent implements OnInit {
         setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
       }
       this.sendMessagesArray.push(this.inputBottomValue);
-      this.inputBottomValue = ''; // Eingabe leeren
+      // setTimeout(() => {
+      //   this.inputBottomValue = ''; // Eingabe leeren
+      // }, 1000);
       this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
     } else {
       this.errorMessageEmpty = true;
@@ -320,7 +323,9 @@ export class NewMessagesComponent implements OnInit {
     }
     this.toggleInputTop();
     this.inputControl.setValue('');  // Für FormControl
-    this.inputBottomValue = '';      // Für ngModel
+    setTimeout(() => {
+      this.inputBottomValue = '';
+    }, 1000);
   }
 
   async saveInputToThreads(thread: Thread) {
