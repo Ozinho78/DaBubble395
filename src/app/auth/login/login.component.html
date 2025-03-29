@@ -33,6 +33,7 @@
         type="email"
         placeholder="beispielname@email.com"
         [(ngModel)]="email"
+        (keyup.enter)="login()"
       />
       <div class="error-message" *ngIf="emailErrorMessage">
         {{ emailErrorMessage }}
