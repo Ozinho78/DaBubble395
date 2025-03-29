@@ -289,9 +289,9 @@ export class NewMessagesComponent implements OnInit {
       reactions: [],
       text: this.inputBottomValue,
       threadId: '',
-      userId: userIdTargetUser,
+      userId: userIdSenderUser,
       senderName: senderUser?.name,
-      senderAvatar: senderUser?.avatar,
+      senderAvatar: 'img/avatar/' + senderUser?.avatar,
     });
     await this.chatService.sendMessage(chatId, this.newMessage);
     console.log("ChatId: ", chatId);
