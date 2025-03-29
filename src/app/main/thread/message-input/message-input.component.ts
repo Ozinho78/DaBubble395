@@ -1,13 +1,16 @@
 import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
-import { Firestore, addDoc, collection, doc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../../../models/message.class';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { UserService } from '../../../../services/user.service';
+import { ChatService } from '../../../../services/direct-meassage.service';
 import { Observable } from 'rxjs';
 import { EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { User } from '../../../../models/user.model';
 
 @Component({
     selector: 'app-message-input',
@@ -18,9 +21,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, OnDestroy {
     @Input() threadId!: string | null;
-    //@Input() channelId!: string;
+    @Input() channelId!: string | undefined;
+
+    @Input() chatUserId!: string | undefined;
+
     @Input() channelName: string | null | undefined = null;
     @Input() isDirectMessage: boolean = false;
+    @Input() appNewMessage: boolean = false;
 
     @Input() editingText: string = '';
     @Input() editingMessageId: string | null = null;
@@ -31,7 +38,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
 
-    channelId!: string;
+    //channelId!: string;
 
     messageText: string = ''; // Eingabetext für neue oder bearbeitete Nachrichten
     showEmojiPicker: boolean = false;
@@ -47,7 +54,9 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         private userService: UserService,
         private route: ActivatedRoute,
         private renderer: Renderer2,
-        private hostElement: ElementRef
+        private hostElement: ElementRef,
+        private router: Router,
+        private chatService: ChatService
     ) {
         this.allUsers$ = this.userService.getAllUsers();
         this.currentUserId = this.userService.getCurrentUserId();
@@ -84,13 +93,14 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
+        //debugger;
         if (!this.messageText.trim()) return;
 
         if (this.editingMessageId && this.editingType) {
             if (this.editingType === 'thread') {
                 this.updateThread();
             } else if (this.editingType === 'chat') {
-                this.updateChatMessage(); // 👈 NEU
+                this.updateChatMessage();
             } else {
                 this.updateMessage();
             }
@@ -99,7 +109,9 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
             return;
         }
 
-        if (this.isDirectMessage) {
+        if (this.isDirectMessage && this.appNewMessage) {
+            this.createNewMessageInChats();
+        } else if (this.isDirectMessage && !this.appNewMessage) {
             this.sendDirectMessage();
         } else {
             if (!this.channelId) return;
@@ -145,21 +157,29 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
             const newThread = {
                 thread: this.messageText,
                 userId: this.currentUserId,
-                channelId: this.channelId, // Thread gehört zu einem Channel
+                channelId: this.channelId,
                 creationDate: Date.now(),
-                answerCount: 0, // Standardwert für neue Threads
-                lastAnswer: 0,
             };
 
-            const threadsRef = collection(this.firestore, 'threads'); // Firestore Collection für Threads
-            await addDoc(threadsRef, newThread);
+            const threadsRef = collection(this.firestore, 'threads');
+            const docRef = await addDoc(threadsRef, newThread);
+            const newThreadId = docRef.id;
 
             this.resetInput();
             this.scrollToBottom();
+
+            this.router.navigate(['/main'], {
+                queryParams: {
+                    channel: this.channelId,
+                    thread: newThreadId
+                }
+            });
+
         } catch (error) {
             console.error('Fehler beim Erstellen eines Threads:', error);
         }
     }
+
 
     /** Nachricht in Firestore aktualisieren */
     private async updateMessage() {
@@ -347,5 +367,39 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
                 this.sendMessage();
             }
         }
+    }
+
+    async createNewMessageInChats() {
+        const chatId = await this.chatService.getOrCreateChat(this.currentUserId!, this.chatUserId!);
+        console.log(chatId);
+
+        const senderUser = await this.getUserByIdAsync(this.currentUserId!);
+        // console.log("Sender: ", senderUser);
+        // console.log("Empfänger: ", this.targetUser);
+        const newMessage = new Message({
+            //id: '1',
+            creationDate: Date.now(),
+            text: this.messageText,
+            userId: this.currentUserId!,
+            senderName: senderUser?.name,
+            senderAvatar: "img/avatar/" + senderUser?.avatar,
+        });
+        await this.chatService.sendMessage(chatId, newMessage);
+
+        this.router.navigate(['/main'], {
+            queryParams: {
+                chat: chatId
+            }
+        });
+
+        //console.log("ChatId: ", chatId);
+        //console.log("Message: ", this.newMessage);
+        //this.inputBottomValue = '';
+    }
+
+    async getUserByIdAsync(userId: string): Promise<User | undefined> {
+        const userDocRef = doc(this.firestore, `users/${userId}`);
+        const userSnapshot = await getDoc(userDocRef);
+        return userSnapshot.exists() ? (userSnapshot.data() as User) : undefined;
     }
 }

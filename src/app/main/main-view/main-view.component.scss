@@ -16,7 +16,7 @@
     @include m.styleFont();
 
     .new-messages {
-        height: 100%;
+        height: calc(100dvh - 119px);
         width: 100%;
     }
 

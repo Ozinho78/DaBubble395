@@ -3,13 +3,9 @@
     <div class="new-msg-header">
       <span>Neue Nachricht</span>
       <!-- !!targetUser und !!targetChannel konvertieren die Objekte in Boolean-Werte -->
-      <input
-        *ngIf="enableInputTop"
-        type="text"
-        [formControl]="inputControl"
-        placeholder="An: #channel oder @jemand oder E-Mail-Adresse"
-        (blur)="checkEmailAndLockInput()"
-      />
+      <input *ngIf="enableInputTop" type="text" [formControl]="inputControl"
+        placeholder="An: #channel oder @jemand oder E-Mail-Adresse" (blur)="checkEmailAndLockInput()" />
+
       <div *ngIf="!enableInputTop" class="user-channel-list-top">
         <span>{{ targetUser?.name || targetChannel?.name || enteredEmail }}</span>
         <button (click)="removeSelection()">❌</button>
@@ -19,6 +15,26 @@
       </div>
     </div>
 
+    <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
+    <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
+      <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
+        &#64;{{ user.name }}
+      </div>
+    </div>
+
+    <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
+    <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">
+      <div *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
+        #{{ channel.name }}
+      </div>
+    </div>
+
+    <!-- input -->
+    <app-message-input *ngIf="true" [channelId]="targetChannel?.docId" [chatUserId]="targetUser?.docId"
+      [isDirectMessage]="!!targetUser?.docId" [appNewMessage]="true">
+    </app-message-input>
+
+    <!-- 
     <div class="input-bottom-ctn">
       <input
         [(ngModel)]="inputBottomValue"
@@ -113,6 +129,7 @@
         </div>
       </div>
     </div>
+    -->
 
     <!-- <div *ngIf="errorMessageChannelUser" class=error-message>
       <p>Ungültiger Channel oder User</p>
@@ -121,40 +138,19 @@
     <div *ngIf="errorMessageEmpty" class=error-message>
       <p>Bitte mal was eingeben, Junge!</p>
     </div> -->
-    
-    <ul *ngIf="showUsersBottom" class="mention-list">
+
+
+
+    <!-- <ul *ngIf="showUsersBottom" class="mention-list">
       <li *ngFor="let user of filteredUsersBottom" (click)="selectUserBottom(user)">
         {{ user.name }}
       </li>
-    </ul>
+    </ul> -->
 
-    <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
-    <div
-      class="filtered-users-list"
-      *ngIf="showUsers && filteredUsers.length > 0"
-    >
-      <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
-        &#64;{{ user.name }}
-      </div>
-    </div>
-
-    <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
-    <div
-      class="filtered-channels-list"
-      *ngIf="showChannels && filteredChannels.length > 0"
-    >
-      <div
-        *ngFor="let channel of filteredChannels"
-        (click)="insertChannel(channel)"
-      >
-        #{{ channel.name }}
-      </div>
-    </div>
-
-    <div class="send-messages-list" *ngFor="let message of sendMessagesArray">
+    <!-- <div class="send-messages-list" *ngFor="let message of sendMessagesArray">
       <img src="img/avatar/{{ userLoggedInAvatar }}" alt="User-Avatar">
       <span>{{ message }}</span>
-    </div>
+    </div>-->
 
     <!-- Check der vorhandenen User im Array -->
     <!-- <ul>

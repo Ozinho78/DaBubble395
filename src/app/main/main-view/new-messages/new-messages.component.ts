@@ -10,10 +10,11 @@ import { Thread } from '../../../../models/thread.class';
 import { Message } from '../../../../models/message.class';
 import { ChatService } from '../../../../services/direct-meassage.service';
 import { UserService } from '../../../../services/user.service';
+import { MessageInputComponent } from "../../thread/message-input/message-input.component";
 
 @Component({
   selector: 'app-new-messages',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MessageInputComponent],
   templateUrl: './new-messages.component.html',
   styleUrl: './new-messages.component.scss',
 })
@@ -274,6 +275,7 @@ export class NewMessagesComponent implements OnInit {
     return userSnapshot.exists() ? (userSnapshot.data() as User) : undefined;
   }
 
+  /*
   async createNewMessageInChats() {
     const userIdSenderUser = this.userLoggedIn;
     const userIdTargetUser = this.targetUser?.docId;
@@ -295,7 +297,7 @@ export class NewMessagesComponent implements OnInit {
     console.log("ChatId: ", chatId);
     console.log("Message: ", this.newMessage);
     this.inputBottomValue = '';
-  }
+  }*/
 
   onInputChange() {
     const atIndex = this.inputBottomValue.lastIndexOf('@');
@@ -316,6 +318,7 @@ export class NewMessagesComponent implements OnInit {
     this.showUsersBottom = false;
   }
 
+  /*
   addInput() {
     if (this.inputBottomValue.trim() !== '') {
       if (this.targetChannel) {
@@ -338,7 +341,7 @@ export class NewMessagesComponent implements OnInit {
     setTimeout(() => {
       this.inputBottomValue = '';
     }, 1000);
-  }
+  }*/
 
   async saveInputToThreads(thread: Thread) {
     try {
