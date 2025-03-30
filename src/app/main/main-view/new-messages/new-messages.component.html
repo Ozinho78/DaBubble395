@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <!--
+    <!---->
     <div class="mention-list-container" *ngIf="showUsers && filteredUsers.length > 0">
       <div class="mention-list-scroll-wrapper">
           <ul class="mention-list">
@@ -26,14 +26,15 @@
           </ul>
       </div>
     </div>
-    -->
+    
 
-    <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
+    <!-- User Autocomplete (nur wenn "@" eingegeben wurde) 
     <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
       <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
         &#64;{{ user.name }}
       </div>
     </div>
+    -->
 
     <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
     <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">

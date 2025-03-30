@@ -316,7 +316,7 @@ export class NewMessagesComponent implements OnInit {
         // Falls nichts davon zutrifft -> Fehlermeldung anzeigen
         this.errorMessage = "Bitte eine gültige E-Mail, einen User (@user) oder einen Channel (#channel) eingeben!";
       }
-    }, 1000);    
+    }, 200);    
   }
 
   /**
