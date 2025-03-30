@@ -53,8 +53,7 @@
     </div>
 
     <div *ngIf="showUserList" class="user-list">
-      <!-- <ul *ngIf="filteredUsers.length > 0; else noResults" class="user-list"> -->
-      <ul *ngIf="filteredUsers.length > 0" class="user-list">
+      <ul *ngIf="filteredUsers.length > 0; else noResults" class="user-list">
         <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" [class.selected]="selectedUser?.docId === user.docId">
           <img [src]="'img/avatar/' + user.avatar" alt="Avatar">
           <span>{{ user.name }}</span>
