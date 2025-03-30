@@ -27,6 +27,16 @@
       </div>
     </div>
     
+    <div class="mention-list-container" *ngIf="showChannels && filteredChannels.length > 0">
+      <div class="mention-list-scroll-wrapper">
+          <ul class="mention-list">
+              <li *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
+                  <span>#{{ channel.name }}</span>
+              </li>
+          </ul>
+      </div>
+    </div>
+
 
     <!-- User Autocomplete (nur wenn "@" eingegeben wurde) 
     <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
@@ -36,12 +46,13 @@
     </div>
     -->
 
-    <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
+    <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) 
     <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">
       <div *ngFor="let channel of filteredChannels" (click)="insertChannel(channel)">
         #{{ channel.name }}
       </div>
     </div>
+    -->
 
     <!-- input -->
     <app-message-input *ngIf="true" [channelId]="targetChannel?.docId" [chatUserId]="targetUser?.docId"
