@@ -4,7 +4,7 @@
       <span>Neue Nachricht</span>
       <!-- !!targetUser und !!targetChannel konvertieren die Objekte in Boolean-Werte -->
       <input *ngIf="enableInputTop" type="text" [formControl]="inputControl"
-        placeholder="An: #channel oder @jemand oder E-Mail-Adresse" (blur)="checkEmailAndLockInput()" />
+        placeholder="An: #channel oder @jemand" (blur)="checkEmailAndLockInput()" />
 
       <div *ngIf="!enableInputTop" class="user-channel-list-top">
         <span>{{ targetUser?.name || targetChannel?.name || enteredEmail }}</span>
@@ -16,11 +16,11 @@
     </div>
 
     <!--
-    <div class="mention-list-container" *ngIf="showUsers">
+    <div class="mention-list-container" *ngIf="showUsers && filteredUsers.length > 0">
       <div class="mention-list-scroll-wrapper">
           <ul class="mention-list">
               <li *ngFor="let user of filteredUsers" (click)="insertUser(user)">
-                  <img [src]="user.avatar" alt="Avatar" class="mention-avatar" />
+                  <img [src]="'img/avatar/' + user.avatar" alt="Avatar" class="mention-avatar" />
                   <span>{{ user.name }}</span>
               </li>
           </ul>
@@ -28,14 +28,12 @@
     </div>
     -->
 
-    
     <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
     <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
       <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
         &#64;{{ user.name }}
       </div>
     </div>
-    
 
     <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
     <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">
@@ -53,6 +51,11 @@
   </div>
   <!-- new-msg-wrapper -->
 </div>
+
+
+
+
+
 
 
 

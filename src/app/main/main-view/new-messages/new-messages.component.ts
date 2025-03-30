@@ -121,7 +121,6 @@ export class NewMessagesComponent implements OnInit {
     }
   }
 
-
   filterUserChannels() {
     if (!this.userLoggedIn) return;
     this.userChannels = this.channels.filter(channel =>
@@ -252,53 +251,6 @@ export class NewMessagesComponent implements OnInit {
     this.saveInputToThreads(this.newThread);
   }
   
-
-  createNewMessage() {
-    // userLoggedIn ermitteln
-    const senderUser = this.users.find((user) => user.docId);
-    this.newMessage = new Message({
-      id: '1',
-      creationDate: new Date().getTime(),
-      reactions: [],
-      text: this.inputBottomValue,
-      threadId: '',
-      userId: this.targetUser?.docId,
-      senderName: this.userLoggedIn || '',
-      senderAvatar: senderUser?.avatar,
-    });
-    this.saveInputToMessages(this.newMessage);
-  }
-
-  async getUserByIdAsync(userId: string): Promise<User | undefined> {
-    const userDocRef = doc(this.firestore, `users/${userId}`);
-    const userSnapshot = await getDoc(userDocRef);
-    return userSnapshot.exists() ? (userSnapshot.data() as User) : undefined;
-  }
-
-  /*
-  async createNewMessageInChats() {
-    const userIdSenderUser = this.userLoggedIn;
-    const userIdTargetUser = this.targetUser?.docId;
-    const chatId = await this.chatService.getOrCreateChat(userIdSenderUser, userIdTargetUser || '');
-    const senderUser = await this.getUserByIdAsync(this.userLoggedIn);
-    // console.log("Sender: ", senderUser);
-    // console.log("Empfänger: ", this.targetUser);
-    this.newMessage = new Message({
-      id: '1',
-      creationDate: new Date().getTime(),
-      reactions: [],
-      text: this.inputBottomValue,
-      threadId: '',
-      userId: userIdSenderUser,
-      senderName: senderUser?.name,
-      senderAvatar: 'img/avatar/' + senderUser?.avatar,
-    });
-    await this.chatService.sendMessage(chatId, this.newMessage);
-    console.log("ChatId: ", chatId);
-    console.log("Message: ", this.newMessage);
-    this.inputBottomValue = '';
-  }*/
-
   onInputChange() {
     const atIndex = this.inputBottomValue.lastIndexOf('@');
     if (atIndex !== -1) {
@@ -317,31 +269,6 @@ export class NewMessagesComponent implements OnInit {
     }
     this.showUsersBottom = false;
   }
-
-  /*
-  addInput() {
-    if (this.inputBottomValue.trim() !== '') {
-      if (this.targetChannel) {
-        this.createNewThread();
-      } else if (this.targetUser) {
-        this.createNewMessageInChats();
-        // this.createNewMessage();
-      } else {
-        this.errorMessageChannelUser = true;
-        setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
-      }
-      this.sendMessagesArray.push(this.inputBottomValue);
-      this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
-    } else {
-      this.errorMessageEmpty = true;
-      setTimeout(() => {this.errorMessageEmpty = false}, 3000);
-    }
-    this.toggleInputTop();
-    this.inputControl.setValue('');  // Für FormControl
-    setTimeout(() => {
-      this.inputBottomValue = '';
-    }, 1000);
-  }*/
 
   async saveInputToThreads(thread: Thread) {
     try {
@@ -418,7 +345,79 @@ export class NewMessagesComponent implements OnInit {
     this.toggleInputTop();
     this.errorMessage = null; // Fehlermeldung zurücksetzen
   }
-
 }
 
+/*
+  createNewMessage() {
+    // userLoggedIn ermitteln
+    const senderUser = this.users.find((user) => user.docId);
+    this.newMessage = new Message({
+      id: '1',
+      creationDate: new Date().getTime(),
+      reactions: [],
+      text: this.inputBottomValue,
+      threadId: '',
+      userId: this.targetUser?.docId,
+      senderName: this.userLoggedIn || '',
+      senderAvatar: senderUser?.avatar,
+    });
+    this.saveInputToMessages(this.newMessage);
+  }
+*/
 
+
+/*
+  async getUserByIdAsync(userId: string): Promise<User | undefined> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const userSnapshot = await getDoc(userDocRef);
+    return userSnapshot.exists() ? (userSnapshot.data() as User) : undefined;
+  }
+
+  async createNewMessageInChats() {
+    const userIdSenderUser = this.userLoggedIn;
+    const userIdTargetUser = this.targetUser?.docId;
+    const chatId = await this.chatService.getOrCreateChat(userIdSenderUser, userIdTargetUser || '');
+    const senderUser = await this.getUserByIdAsync(this.userLoggedIn);
+    // console.log("Sender: ", senderUser);
+    // console.log("Empfänger: ", this.targetUser);
+    this.newMessage = new Message({
+      id: '1',
+      creationDate: new Date().getTime(),
+      reactions: [],
+      text: this.inputBottomValue,
+      threadId: '',
+      userId: userIdSenderUser,
+      senderName: senderUser?.name,
+      senderAvatar: 'img/avatar/' + senderUser?.avatar,
+    });
+    await this.chatService.sendMessage(chatId, this.newMessage);
+    console.log("ChatId: ", chatId);
+    console.log("Message: ", this.newMessage);
+    this.inputBottomValue = '';
+  }*/
+
+
+ /*
+  addInput() {
+    if (this.inputBottomValue.trim() !== '') {
+      if (this.targetChannel) {
+        this.createNewThread();
+      } else if (this.targetUser) {
+        this.createNewMessageInChats();
+        // this.createNewMessage();
+      } else {
+        this.errorMessageChannelUser = true;
+        setTimeout(() => {this.errorMessageChannelUser = false}, 3000);
+      }
+      this.sendMessagesArray.push(this.inputBottomValue);
+      this.showUsersBottom = false; // Verstecke die Liste nach dem Senden
+    } else {
+      this.errorMessageEmpty = true;
+      setTimeout(() => {this.errorMessageEmpty = false}, 3000);
+    }
+    this.toggleInputTop();
+    this.inputControl.setValue('');  // Für FormControl
+    setTimeout(() => {
+      this.inputBottomValue = '';
+    }, 1000);
+  }*/
