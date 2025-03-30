@@ -13,6 +13,19 @@ button, svg {
   cursor: pointer;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: v.$purple_2;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: v.$purple_1;
+  }
+}
+
 .member-wrapper {
   position: fixed;
   top: 0;
@@ -124,18 +137,10 @@ input[type="radio"] {
 }
 
 
-// /* Inside auto layout */
-// flex: none;
-// order: 0;
-// flex-grow: 0;
-
 .save-btn {
-  /* 10. Button primary */
   position: absolute;
   right: 40px;
   bottom: 50px;
-  
-  /* Auto layout */
   @include m.flexBox(row, center, center);
   padding: 12px 25px;
   gap: 10px;
@@ -183,6 +188,8 @@ input[type="radio"] {
 
 .user-list, .selected-users {
   list-style: none;
+  max-height: 220px;
+  overflow-y: scroll;
 }
 
 .user-item, .selected-item {
@@ -193,8 +200,23 @@ input[type="radio"] {
     height: auto;
     border-radius: 50%;
   }
-  padding-bottom: 10px;
-  cursor: pointer;
+  button {
+    background-color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: v.$purple_4;
+    cursor: pointer;
+    button {
+      background-color: v.$purple_4;
+    }
+  }
+  border-radius: 20px;
+  padding: 4px;
 }
 
 .remove-button {

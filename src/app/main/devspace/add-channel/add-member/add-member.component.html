@@ -78,10 +78,12 @@
         <div>
           <h3>Ausgewählte Benutzer:</h3>
           <ul class="selected-users">
-            <li *ngFor="let user of selectedUsers" class="selected-item">
+            <li *ngFor="let user of selectedUsers" 
+            (click)="removeUser(user)"
+            class="selected-item">
               <img src="img/avatar/{{ user.avatar }}" alt="Avatar" class="avatar">
               {{ user.name }} 
-              <button (click)="removeUser(user)" class="remove-button">X</button>
+              <button class="remove-button">X</button>
             </li>
           </ul>
         </div>
