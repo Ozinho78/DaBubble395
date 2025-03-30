@@ -15,12 +15,27 @@
       </div>
     </div>
 
+    <!--
+    <div class="mention-list-container" *ngIf="showUsers">
+      <div class="mention-list-scroll-wrapper">
+          <ul class="mention-list">
+              <li *ngFor="let user of filteredUsers" (click)="insertUser(user)">
+                  <img [src]="user.avatar" alt="Avatar" class="mention-avatar" />
+                  <span>{{ user.name }}</span>
+              </li>
+          </ul>
+      </div>
+    </div>
+    -->
+
+    
     <!-- User Autocomplete (nur wenn "@" eingegeben wurde) -->
     <div class="filtered-users-list" *ngIf="showUsers && filteredUsers.length > 0">
       <div *ngFor="let user of filteredUsers" (click)="insertUser(user)">
         &#64;{{ user.name }}
       </div>
     </div>
+    
 
     <!-- Channel Autocomplete (nur wenn "#" eingegeben wurde) -->
     <div class="filtered-channels-list" *ngIf="showChannels && filteredChannels.length > 0">
@@ -33,6 +48,14 @@
     <app-message-input *ngIf="true" [channelId]="targetChannel?.docId" [chatUserId]="targetUser?.docId"
       [isDirectMessage]="!!targetUser?.docId" [appNewMessage]="true">
     </app-message-input>
+
+    <!-- new-msg-content -->
+  </div>
+  <!-- new-msg-wrapper -->
+</div>
+
+
+
 
     <!-- 
     <div class="input-bottom-ctn">
@@ -161,11 +184,6 @@
     <!-- <ul>
       <li *ngFor="let channel of channels">{{ channel.name }} - {{ channel.docId }}</li>
     </ul> -->
-
-    <!-- new-msg-content -->
-  </div>
-  <!-- new-msg-wrapper -->
-</div>
 
 <!-- 
     <h2>Users</h2>
