@@ -298,8 +298,10 @@ export class ChannelComponent implements OnInit {
             this.channelSubscription = this.firestoreService.subscribeToDocument<Channel>(
                 'channels',
                 this.channelId,
-                (updatedChannel) => {
+                async (updatedChannel) => {
                     this.channel = updatedChannel || null;
+                    // 👇 Mitgliederliste aktualisieren
+                    await this.loadMemberDetails();
                 }
             );
         }
