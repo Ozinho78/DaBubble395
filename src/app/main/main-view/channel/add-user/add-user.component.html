@@ -47,11 +47,12 @@
         [value]="selectedUser?.name || ''"
         [ngClass]="{'user-selected': selectedUser}"
         readonly
+        (click)="toggleUserList()"
       />
       <!-- Zeigt den Namen des ausgewählten Benutzers an -->
     </div>
 
-    <div class="user-list">
+    <div *ngIf="showUserList" class="user-list">
       <!-- <ul *ngIf="filteredUsers.length > 0; else noResults" class="user-list"> -->
       <ul *ngIf="filteredUsers.length > 0" class="user-list">
         <li *ngFor="let user of filteredUsers" (click)="selectUser(user)" [class.selected]="selectedUser?.docId === user.docId">

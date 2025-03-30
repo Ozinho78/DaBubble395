@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class AddUserComponent {
   showSuccessModal: boolean = false;  // Variable, um das Modal zu steuern
   isOpen = false; // Steuert, ob das Modal sichtbar ist
+  showUserList: boolean = false; // Steuert, ob die Liste der Benutzer sichtbar ist
 
   @Input() channelIdInput!: string;
   @Output() closeModal = new EventEmitter<void>();
@@ -116,6 +117,7 @@ export class AddUserComponent {
   // Methode zum Schließen des Modals
   closeSuccessModal() {
     this.showSuccessModal = false;
+    this.showUserList = false;
   }
 
   
@@ -126,7 +128,12 @@ export class AddUserComponent {
   close(event?: Event) {
     if (!event || event.target === event.currentTarget) {
       this.isOpen = false;
+      this.showUserList = false;
     }
+  }
+
+  toggleUserList(){
+    this.showUserList = !this.showUserList;
   }
 
   // close() {
