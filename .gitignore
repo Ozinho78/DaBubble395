@@ -37,6 +37,7 @@ yarn-error.log
 testem.log
 /typings
 up.bat
+newb.bat
 
 # System files
 .DS_Store
