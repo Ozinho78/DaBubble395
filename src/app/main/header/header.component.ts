@@ -1,16 +1,17 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { combineLatest, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 import { UserService } from '../../../services/user.service';
 import { PresenceService } from '../../../services/presence.service';
+import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, ProfileDetailComponent],
+  imports: [CommonModule, ProfileDetailComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -24,12 +25,25 @@ export class HeaderComponent {
   closeImgSrc: string = '/img/header-img/close.png';
   onlineStatus$: Observable<boolean> = of(false);
 
+  firestore = inject(Firestore);
+  searchControl = new FormControl('');
+  searchResults: any[] = [];
+
+  currentUser = {
+    // docId: 'ktUA231gfQVPbWIyhBU8', // 🔁 Hier den echten eingeloggten User einfügen
+    docId: 'ktUA231gfQVPbWIyhBU8',
+  };
+
+
+
   constructor(
     private auth: Auth,
     private router: Router,
     private userService: UserService,
     private presenceService: PresenceService
-  ) {}
+  ) {
+    console.log('Aktueller User:', this.currentUser);
+  }
 
   ngOnInit(): void {
     const userId = localStorage.getItem('user-id');
@@ -40,7 +54,59 @@ export class HeaderComponent {
     } else {
       this.userName$ = of({ name: 'Unbekannt', avatar: 'default.png' });
     }
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(searchTerm => {
+      if (searchTerm && searchTerm.length >= 3) {
+        this.performSearch(searchTerm);
+      } else {
+        this.searchResults = [];
+      }
+    });
   }
+
+  async performSearch(term: string): Promise<void> {
+    const threadsRef = collection(this.firestore, 'threads');
+    const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
+    const threadSnaps = await getDocs(q);
+
+    const results: any[] = [];
+
+    for (const threadSnap of threadSnaps.docs) {
+      const threadData = threadSnap.data();
+      const threadId = threadSnap.id;
+
+      const threadText = (threadData['thread'] ?? '').toLowerCase();
+      if (threadText.includes(term.toLowerCase())) {
+        results.push({
+          title: threadData['thread'],
+          userId: { ...threadData, docId: threadId }
+        });
+      }
+    }
+
+  this.searchResults = results;
+
+  console.log('✅ Gefundene Threads:', results.length);
+  }
+
+  async searchMessagesInThread(threadId: string, term: string): Promise<any[]> {
+    const messagesRef = collection(this.firestore, `threads/${threadId}/messages`);
+    const q = query(
+      messagesRef,
+      where('text', '>=', term),
+      where('text', '<=', term + '\uf8ff')
+    );
+    const messageSnaps = await getDocs(q);
+
+    return messageSnaps.docs.map(doc => doc.data());
+  }
+
+
+
+
 
   toggleMenu(): void {
     this.menuOpen = !this.menuOpen;

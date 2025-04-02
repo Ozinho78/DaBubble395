@@ -2,9 +2,36 @@
   <div class="header-img">
     <img src="img/header-img/da-bubble-header-logo.png" alt="" />
   </div>
-  <div class="header-input">
+
+
+  <!-- <div class="header-input">
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
+  </div> -->
+  
+
+  <div class="header-input">
+    <input
+      type="text"
+      id="search-input"
+      [formControl]="searchControl"
+      placeholder="Devspace durchsuchen"
+    />
+
+    <!-- Ergebnisliste -->
+    <div class="search-results-dropdown" *ngIf="searchResults.length > 0">
+      <div *ngFor="let result of searchResults" class="search-result-item">
+        <div class="thread-title">📁 {{ result.title }}</div>
+        <div class="search-counter" *ngIf="searchResults.length > 0">
+          🔍 {{ searchResults.length }} Treffer gefunden
+        </div>
+        <!-- <ul *ngIf="result.messages.length > 0">
+          <li *ngFor="let msg of result.messages">🗨️ {{ msg.text }}</li>
+        </ul>
+        <div *ngIf="result.messages.length === 0" class="match-type">🔎 Treffer im Titel</div> -->
+      </div>
+    </div>
   </div>
+
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">
       <span>{{ user.name }}</span>
