@@ -15,16 +15,18 @@
       id="search-input"
       [formControl]="searchControl"
       placeholder="Devspace durchsuchen"
+      (focus)="searchActive = true"
     />
 
     <!-- Ergebnisliste -->
-    <div class="search-results-dropdown" *ngIf="searchResults.length > 0">
+    <div class="search-results-dropdown" *ngIf="searchResults.length > 0 && searchActive">
       <div *ngFor="let result of searchResults" class="search-result-item" (click)="openThreadModal(result)">
         <div class="thread-title">📁 {{ result.title }}</div>
       </div>
       <div class="search-counter" *ngIf="searchResults.length > 0">
         🔍 {{ searchResults.length }} Treffer gefunden
       </div>
+      <small>(Press ESC to leave)</small>
     </div>
   </div>
 
@@ -34,10 +36,13 @@
       <h3>{{ selectedThreadTitle }}</h3>
       <ul>
         <li *ngFor="let msg of selectedThreadMessages">
-          <strong>{{ msg.senderName }}&nbsp;:&nbsp;</strong> {{ msg.text }}
+          <img [src]="'img/avatar/' + msg.senderAvatar" alt="">
+          <strong>{{ msg.senderName }}:</strong>{{ msg.text }}
         </li>
       </ul>
-      <button (click)="modalOpen = false">Schließen</button>
+      <div class="button-ctn" (click)="modalOpen = false">
+        <button>Schließen</button>
+      </div><br>
     </div>
   </div>
 

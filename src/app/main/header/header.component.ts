@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
+import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
 import { debounceTime, distinctUntilChanged, Observable, of } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
@@ -40,7 +40,8 @@ export class HeaderComponent {
     docId: ''
   };
 
-
+  @ViewChild('searchContainer') searchContainer!: ElementRef;
+  searchActive = false;  
 
   constructor(
     private auth: Auth,
@@ -70,10 +71,26 @@ export class HeaderComponent {
     ).subscribe(searchTerm => {
       if (searchTerm && searchTerm.length >= 3) {
         this.performSearch(searchTerm);
+        this.searchActive = true;
       } else {
         this.searchResults = [];
+        this.searchActive = false;
       }
     });
+
+    // Klick außerhalb erkennen
+    document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  handleClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+  
+    if (this.searchContainer && !this.searchContainer.nativeElement.contains(target)) {
+      // 🧼 Suche schließen & löschen
+      this.searchActive = false;
+      this.searchResults = [];
+      this.searchControl.setValue('');
+    }
   }
 
   async performSearch(term: string): Promise<void> {
@@ -102,11 +119,35 @@ export class HeaderComponent {
     const q = query(messagesRef, where('threadId', '==', thread.userId.docId));
     const messageSnaps = await getDocs(q);
   
-    this.selectedThreadMessages = messageSnaps.docs.map(doc => doc.data());
+    const messagesWithUserData = [];
+  
+    for (const docSnap of messageSnaps.docs) {
+      const msgData = docSnap.data();
+      const userRef = doc(this.firestore, 'users', msgData['userId']);
+  
+      try {
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.exists() ? userSnap.data() : null;
+  
+        messagesWithUserData.push({
+          ...msgData,
+          senderName: userData?.['name'] || 'Unbekannt',
+          senderAvatar: userData?.['avatar'] || 'default.png'
+        });
+      } catch (error) {
+        console.warn('❌ Fehler beim Laden des Users:', error);
+        messagesWithUserData.push({
+          ...msgData,
+          senderName: 'Unbekannt',
+          senderAvatar: 'default.png'
+        });
+      }
+    }
+  
+    this.selectedThreadMessages = messagesWithUserData;
     this.selectedThreadTitle = thread.title;
     this.modalOpen = true;
   }
-
 
 
 
@@ -177,5 +218,16 @@ export class HeaderComponent {
 
   onMouseLeaveClose(): void {
     this.closeImgSrc = '/img/header-img/close.png';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.searchActive = false;
+    this.searchResults = [];
+    this.searchControl.setValue('');
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 }
