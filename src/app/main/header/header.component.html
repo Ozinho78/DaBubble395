@@ -19,18 +19,30 @@
 
     <!-- Ergebnisliste -->
     <div class="search-results-dropdown" *ngIf="searchResults.length > 0">
-      <div *ngFor="let result of searchResults" class="search-result-item">
+      <div *ngFor="let result of searchResults" class="search-result-item" (click)="openThreadModal(result)">
         <div class="thread-title">📁 {{ result.title }}</div>
-        <div class="search-counter" *ngIf="searchResults.length > 0">
-          🔍 {{ searchResults.length }} Treffer gefunden
-        </div>
-        <!-- <ul *ngIf="result.messages.length > 0">
-          <li *ngFor="let msg of result.messages">🗨️ {{ msg.text }}</li>
-        </ul>
-        <div *ngIf="result.messages.length === 0" class="match-type">🔎 Treffer im Titel</div> -->
+      </div>
+      <div class="search-counter" *ngIf="searchResults.length > 0">
+        🔍 {{ searchResults.length }} Treffer gefunden
       </div>
     </div>
   </div>
+
+
+  <div class="modal-overlay" *ngIf="modalOpen" (click)="modalOpen = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>{{ selectedThreadTitle }}</h3>
+      <ul>
+        <li *ngFor="let msg of selectedThreadMessages">
+          <strong>{{ msg.senderName }}:</strong> {{ msg.text }}
+        </li>
+      </ul>
+      <button (click)="modalOpen = false">Schließen</button>
+    </div>
+  </div>
+
+
+
 
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">

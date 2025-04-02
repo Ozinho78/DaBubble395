@@ -26,8 +26,13 @@ export class HeaderComponent {
   onlineStatus$: Observable<boolean> = of(false);
 
   firestore = inject(Firestore);
+  
   searchControl = new FormControl('');
   searchResults: any[] = [];
+  
+  selectedThreadMessages: any[] = [];
+  selectedThreadTitle: string = '';
+  modalOpen = false;
 
   currentUser = {
     // docId: 'ktUA231gfQVPbWIyhBU8', // 🔁 Hier den echten eingeloggten User einfügen
@@ -71,13 +76,10 @@ export class HeaderComponent {
     const threadsRef = collection(this.firestore, 'threads');
     const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
     const threadSnaps = await getDocs(q);
-
     const results: any[] = [];
-
     for (const threadSnap of threadSnaps.docs) {
       const threadData = threadSnap.data();
       const threadId = threadSnap.id;
-
       const threadText = (threadData['thread'] ?? '').toLowerCase();
       if (threadText.includes(term.toLowerCase())) {
         results.push({
@@ -86,24 +88,20 @@ export class HeaderComponent {
         });
       }
     }
-
   this.searchResults = results;
-
   console.log('✅ Gefundene Threads:', results.length);
   }
 
-  async searchMessagesInThread(threadId: string, term: string): Promise<any[]> {
-    const messagesRef = collection(this.firestore, `threads/${threadId}/messages`);
-    const q = query(
-      messagesRef,
-      where('text', '>=', term),
-      where('text', '<=', term + '\uf8ff')
-    );
+
+  async openThreadModal(thread: any): Promise<void> {
+    const messagesRef = collection(this.firestore, 'messages');
+    const q = query(messagesRef, where('threadId', '==', thread.userId.docId));
     const messageSnaps = await getDocs(q);
-
-    return messageSnaps.docs.map(doc => doc.data());
+  
+    this.selectedThreadMessages = messageSnaps.docs.map(doc => doc.data());
+    this.selectedThreadTitle = thread.title;
+    this.modalOpen = true;
   }
-
 
 
 
