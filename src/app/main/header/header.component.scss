@@ -60,21 +60,22 @@ header {
     
     .search-result-item {
       @include m.flexBox(column, center, flex-start);
+      @include m.styleFont("Nunito", 20px, 400, 1.5, black);
       padding-top: 6px;
+      padding-left: 10px;
       padding-bottom: 6px;
       border-bottom: 1px solid v.$purple_2;
-    
-      &:last-child {
-        border-bottom: none;
-      }
 
       &:hover {
         cursor: pointer;
         background-color: v.$purple_2;
       }
-
-      .thread-title {
-      }
+    }
+    .search-counter {
+      @include m.styleFont("Nunito", 20px, 400, 1.5, black);
+      padding-top: 6px;
+      padding-left: 10px;
+      padding-bottom: 6px;
     }
   }
 
@@ -228,11 +229,10 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
+  @include m.flexBox(row, center, center);
+  @include m.styleFont("Nunito");
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
 }
 
 .modal-content {
@@ -243,7 +243,12 @@ header {
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 30px;
+
+  ul {
+    list-style: none;
+  }
 }
 
   

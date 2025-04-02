@@ -34,7 +34,7 @@
       <h3>{{ selectedThreadTitle }}</h3>
       <ul>
         <li *ngFor="let msg of selectedThreadMessages">
-          <strong>{{ msg.senderName }}:</strong> {{ msg.text }}
+          <strong>{{ msg.senderName }}&nbsp;:&nbsp;</strong> {{ msg.text }}
         </li>
       </ul>
       <button (click)="modalOpen = false">Schließen</button>

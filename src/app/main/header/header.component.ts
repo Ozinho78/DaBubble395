@@ -1,8 +1,8 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
-import { combineLatest, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, of } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 import { UserService } from '../../../services/user.service';
@@ -36,7 +36,8 @@ export class HeaderComponent {
 
   currentUser = {
     // docId: 'ktUA231gfQVPbWIyhBU8', // 🔁 Hier den echten eingeloggten User einfügen
-    docId: 'ktUA231gfQVPbWIyhBU8',
+    // docId: 'ktUA231gfQVPbWIyhBU8',
+    docId: ''
   };
 
 
@@ -47,6 +48,9 @@ export class HeaderComponent {
     private userService: UserService,
     private presenceService: PresenceService
   ) {
+    setTimeout(() => {
+      this.currentUser.docId = localStorage.getItem('user-id') || '';
+    }, 1000);
     console.log('Aktueller User:', this.currentUser);
   }
 
@@ -102,6 +106,22 @@ export class HeaderComponent {
     this.selectedThreadTitle = thread.title;
     this.modalOpen = true;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
