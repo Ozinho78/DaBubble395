@@ -1,0 +1,76 @@
+@use "../../../../mixins.scss" as m;
+@use "../../../../variables.scss" as v;
+
+// @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+// @include m.flexBox(row, center, center);
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  @include m.flexBox(row, center, center);
+  @include m.styleFont("Nunito");
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.modal-content {
+  position: relative;
+  width: 600px;
+  max-height: 800px;
+  overflow-y: auto;
+  background: #FFFFFF;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 30px 30px 30px 30px;
+  padding: 60px;
+
+  h3 {
+    padding-left: 40px;
+  }
+
+  ul {
+    list-style: none;
+    padding-bottom: 16px;
+
+    li {
+      @include m.flexBox(row, flex-start, center, 10px);
+      padding-bottom: 6px;
+
+      img {
+        width: 30px;
+        border-radius: 50%;
+      }
+
+    }
+  }
+
+  .button-ctn {
+    // width: 100%;
+    position: absolute;
+    right: 40px;
+    @include m.flexBox(row, center, center, 5px);
+    padding: 8px 8px;
+    width: 160px;
+    height: 40px;
+    background: v.$purple_1;
+    border-radius: 20px;
+  
+    button {
+      border: unset;
+      @include m.styleFont("Nunito", 16px, 600, 1.0, #FFFFFF);
+      background: v.$purple_1;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+    }
+  
+  }
+}

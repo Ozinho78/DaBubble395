@@ -42,30 +42,14 @@
     </div>
   </div>
 
+  <app-thread-modal
+  *ngIf="modalOpen"
+  [title]="selectedThreadTitle"
+  [messages]="selectedThreadMessages"
+  (close)="modalOpen = false"
+  ></app-thread-modal>
 
-  <div class="modal-overlay" *ngIf="modalOpen" (click)="modalOpen = false">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>{{ selectedThreadTitle }}</h3>
-      <ul>
-        <li *ngFor="let msg of selectedThreadMessages">
-          <img [src]="'img/avatar/' + msg.senderAvatar" alt="">
-          <strong>{{ msg.senderName }}:</strong>{{ msg.text }}
-        </li>
-      </ul>
-
-      <div *ngIf="selectedThreadMessages.length === 0">
-        <em>Keine Nachrichten gefunden.</em>
-      </div>
-
-      <div class="button-ctn" (click)="modalOpen = false">
-        <button>Schließen</button>
-      </div><br>
-    </div>
-  </div>
-
-
-
-
+  
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">
       <span>{{ user.name }}</span>
