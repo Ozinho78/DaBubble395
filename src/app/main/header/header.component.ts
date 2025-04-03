@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
-import { collection, doc, Firestore, getDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { debounceTime, distinctUntilChanged, Observable, of } from 'rxjs';
 import { Auth, signOut } from '@angular/fire/auth';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
 import { SearchResult } from '../../../models/search-result.model';
 import { ThreadModalComponent } from './thread-modal/thread-modal.component';
+import { SearchModalService } from '../../../services/search-modal.service';
 
 
 @Component({
@@ -50,7 +51,8 @@ export class HeaderComponent {
     private router: Router,
     private userService: UserService,
     private presenceService: PresenceService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private modalService: SearchModalService
   ) {
     setTimeout(() => {
       this.currentUser.docId = localStorage.getItem('user-id') || '';
@@ -95,86 +97,33 @@ export class HeaderComponent {
       this.searchControl.setValue('');
     }
   }
-  
 
   async openThreadModal(result: any): Promise<void> {
     this.selectedThreadMessages = [];
-  
     if (result.type === 'thread' || result.type === 'message') {
-      const messagesRef = collection(this.firestore, 'messages');
-      const q = query(messagesRef, where('threadId', '==', result.threadId));
-      const messageSnaps = await getDocs(q);
-  
-      const messagesWithUserData = await Promise.all(
-        messageSnaps.docs.map(async docSnap => {
-          const msgData = docSnap.data();
-          const userRef = doc(this.firestore, 'users', msgData['userId']);
-  
-          try {
-            const userSnap = await getDoc(userRef);
-            const userData = userSnap.exists() ? userSnap.data() : null;
-  
-            return {
-              ...msgData,
-              senderName: userData?.['name'] || 'Unbekannt',
-              senderAvatar: userData?.['avatar'] || 'default.png'
-            };
-          } catch {
-            return {
-              ...msgData,
-              senderName: 'Unbekannt',
-              senderAvatar: 'default.png'
-            };
-          }
-        })
-      );
-  
       this.selectedThreadTitle = result.title;
-      this.selectedThreadMessages = messagesWithUserData;
-      this.modalOpen = true;
-    }
-  
-    else if (result.type === 'direct') {
-      const messagesRef = collection(this.firestore, `chats/${result.chatId}/messages`);
-      const messageSnaps = await getDocs(messagesRef);
-  
-      const messagesWithUserData = await Promise.all(
-        messageSnaps.docs.map(async docSnap => {
-          const msgData = docSnap.data();
-          const userRef = doc(this.firestore, 'users', msgData['userId']);
-  
-          try {
-            const userSnap = await getDoc(userRef);
-            const userData = userSnap.exists() ? userSnap.data() : null;
-  
-            return {
-              ...msgData,
-              senderName: userData?.['name'] || 'Unbekannt',
-              senderAvatar: userData?.['avatar'] || 'default.png'
-            };
-          } catch {
-            return {
-              ...msgData,
-              senderName: 'Unbekannt',
-              senderAvatar: 'default.png'
-            };
-          }
-        })
-      );
-  
+      this.selectedThreadMessages = await this.modalService.loadMessagesForThread(result.threadId);
+    } else if (result.type === 'direct') {
       this.selectedThreadTitle = `Direktnachricht mit ${result.otherUserName}`;
-      this.selectedThreadMessages = messagesWithUserData;
-      this.modalOpen = true;
+      this.selectedThreadMessages = await this.modalService.loadMessagesForChat(result.chatId);
+    } else if (result.type === 'user') {
+      this.selectedThreadTitle = result.name;
+      this.selectedThreadMessages = [
+        {
+          text: result.email,
+          senderName: result.name,
+          senderAvatar: result.avatar
+        }
+      ];
     }
+    this.modalOpen = true;
   }
 
   async performSearch(term: string) {
     if (!term || term.length < 3) return;
-  
     // Suche nur in den Threads
     // this.searchResults = await this.searchService.searchUserThreads(this.currentUser.docId, term);
     // this.searchActive = true;
-
     this.searchService.searchEverything(this.currentUser.docId, term)
     .then((results: SearchResult[]) => {
       this.searchResults = results;

@@ -179,7 +179,8 @@ export class SearchService {
     }
 
     const directMessages = await this.searchDirectMessages(userId, searchTerm);
-    return [...threadResults, ...messageResults, ...directMessages];
+    const users = await this.searchUsersByName(searchTerm);
+    return [...threadResults, ...messageResults, ...directMessages, ...users];
   }
 
 
@@ -227,6 +228,31 @@ export class SearchService {
   
     return results;
   }
+
+  async searchUsersByName(searchTerm: string): Promise<any[]> {
+    const usersRef = collection(this.firestore, 'users');
+    const usersSnap = await getDocs(usersRef);
+  
+    const results: any[] = [];
+  
+    for (const user of usersSnap.docs) {
+      const data = user.data();
+      const name = (data['name'] ?? '').toLowerCase();
+  
+      if (name.includes(searchTerm.toLowerCase())) {
+        results.push({
+          type: 'user',
+          userId: user.id,
+          name: data['name'],
+          email: data['email'],
+          avatar: data['avatar']
+        });
+      }
+    }
+  
+    return results;
+  }
+  
 
 
 }
