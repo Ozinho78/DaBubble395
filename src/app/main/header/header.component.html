@@ -32,6 +32,11 @@
         <div *ngIf="result.type === 'message'" class="message-preview">
           🗨️ <em>{{ result.text }}</em>
         </div>
+
+        <div *ngIf="result.type === 'direct'">
+          💬 <em>{{ result.text }}</em>
+          <span class="channel">&nbsp;(Direktnachricht mit User {{ result.otherUserName }})</span>
+        </div>
       </div>
       
       <!-- Trefferanzahl und Hinweis -->

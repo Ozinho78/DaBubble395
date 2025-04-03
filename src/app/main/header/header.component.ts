@@ -95,47 +95,78 @@ export class HeaderComponent {
       this.searchControl.setValue('');
     }
   }
+  
 
-  async openThreadModal(thread: any): Promise<void> {
+  async openThreadModal(result: any): Promise<void> {
     this.selectedThreadMessages = [];
-    const messagesRef = collection(this.firestore, 'messages');
   
-    // console.log('📥 Lade Nachrichten für Thread:', thread.threadId); // Debug
+    if (result.type === 'thread' || result.type === 'message') {
+      const messagesRef = collection(this.firestore, 'messages');
+      const q = query(messagesRef, where('threadId', '==', result.threadId));
+      const messageSnaps = await getDocs(q);
   
-    const q = query(messagesRef, where('threadId', '==', thread.threadId));
-    const messageSnaps = await getDocs(q);
+      const messagesWithUserData = await Promise.all(
+        messageSnaps.docs.map(async docSnap => {
+          const msgData = docSnap.data();
+          const userRef = doc(this.firestore, 'users', msgData['userId']);
   
-    const messagesWithUserData = [];
+          try {
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.exists() ? userSnap.data() : null;
   
-    for (const docSnap of messageSnaps.docs) {
-      const msgData = docSnap.data();
-      const userRef = doc(this.firestore, 'users', msgData['userId']);
+            return {
+              ...msgData,
+              senderName: userData?.['name'] || 'Unbekannt',
+              senderAvatar: userData?.['avatar'] || 'default.png'
+            };
+          } catch {
+            return {
+              ...msgData,
+              senderName: 'Unbekannt',
+              senderAvatar: 'default.png'
+            };
+          }
+        })
+      );
   
-      try {
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.exists() ? userSnap.data() : null;
-  
-        messagesWithUserData.push({
-          ...msgData,
-          senderName: userData?.['name'] || 'Unbekannt',
-          senderAvatar: userData?.['avatar'] || 'default.png'
-        });
-      } catch (error) {
-        console.warn('❌ Fehler beim Laden des Users:', error);
-        messagesWithUserData.push({
-          ...msgData,
-          senderName: 'Unbekannt',
-          senderAvatar: 'default.png'
-        });
-      }
+      this.selectedThreadTitle = result.title;
+      this.selectedThreadMessages = messagesWithUserData;
+      this.modalOpen = true;
     }
   
-    this.selectedThreadMessages = messagesWithUserData;
-    this.selectedThreadTitle = thread.title;
-    this.modalOpen = true;
+    else if (result.type === 'direct') {
+      const messagesRef = collection(this.firestore, `chats/${result.chatId}/messages`);
+      const messageSnaps = await getDocs(messagesRef);
+  
+      const messagesWithUserData = await Promise.all(
+        messageSnaps.docs.map(async docSnap => {
+          const msgData = docSnap.data();
+          const userRef = doc(this.firestore, 'users', msgData['userId']);
+  
+          try {
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.exists() ? userSnap.data() : null;
+  
+            return {
+              ...msgData,
+              senderName: userData?.['name'] || 'Unbekannt',
+              senderAvatar: userData?.['avatar'] || 'default.png'
+            };
+          } catch {
+            return {
+              ...msgData,
+              senderName: 'Unbekannt',
+              senderAvatar: 'default.png'
+            };
+          }
+        })
+      );
+  
+      this.selectedThreadTitle = `Direktnachricht mit ${result.otherUserName}`;
+      this.selectedThreadMessages = messagesWithUserData;
+      this.modalOpen = true;
+    }
   }
-
-
 
   async performSearch(term: string) {
     if (!term || term.length < 3) return;
@@ -216,28 +247,3 @@ export class HeaderComponent {
     document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 }
-
-
-
-/*
-// alte Suche nur für Threads von einem selbst erstellt
-async performSearch(term: string): Promise<void> {
-  const threadsRef = collection(this.firestore, 'threads');
-  const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
-  const threadSnaps = await getDocs(q);
-  const results: any[] = [];
-  for (const threadSnap of threadSnaps.docs) {
-    const threadData = threadSnap.data();
-    const threadId = threadSnap.id;
-    const threadText = (threadData['thread'] ?? '').toLowerCase();
-    if (threadText.includes(term.toLowerCase())) {
-      results.push({
-        title: threadData['thread'],
-        userId: { ...threadData, docId: threadId }
-      });
-    }
-  }
-this.searchResults = results;
-console.log('✅ Gefundene Threads:', results.length);
-}
-*/

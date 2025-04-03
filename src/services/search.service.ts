@@ -5,7 +5,9 @@ import {
   query,
   where,
   getDocs,
-  collectionData
+  collectionData,
+  getDoc,
+  doc
 } from '@angular/fire/firestore';
 import { firstValueFrom, Observable } from 'rxjs';
 import { SearchResult } from '../models/search-result.model';
@@ -175,9 +177,84 @@ export class SearchService {
         creationDate: data['creationDate']
       });
     }
+
+    const directMessages = await this.searchDirectMessages(userId, searchTerm);
+    return [...threadResults, ...messageResults, ...directMessages];
+  }
+
+
+  async searchDirectMessages(userId: string, searchTerm: string): Promise<any[]> {
+    const chatsRef = collection(this.firestore, 'chats');
+    const q = query(chatsRef, where('participants', 'array-contains', userId));
+    const chatsSnap = await getDocs(q);
   
-    return [...threadResults, ...messageResults];
+    const results: any[] = [];
+  
+    for (const chatDoc of chatsSnap.docs) {
+      const chatId = chatDoc.id;
+      const chatData = chatDoc.data();
+      const otherUserId = (chatData['participants'] as string[]).find(id => id !== userId);
+      // 🛑 Sicherheits-Check:
+      if (!otherUserId || otherUserId.trim() === '') {
+        console.warn(`❌ Kein otherUserId gefunden in chat "${chatId}" mit participants:`, chatData['participants']);
+        continue;
+      }
+
+      const userRef = doc(this.firestore, 'users', otherUserId!);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.exists() ? userSnap.data() : null;
+  
+      const messagesRef = collection(this.firestore, `chats/${chatId}/messages`);
+      const messagesSnap = await getDocs(messagesRef);
+  
+      for (const msgDoc of messagesSnap.docs) {
+        const data = msgDoc.data();
+        const text = (data['text'] ?? '').toLowerCase();
+  
+        if (text.includes(searchTerm.toLowerCase())) {
+          results.push({
+            type: 'direct',
+            text: data['text'],
+            chatId,
+            otherUserName: userData?.['name'] || 'Unbekannt',
+            otherUserAvatar: userData?.['avatar'] || 'default.png',
+            userId: data['userId'], // wer hat's geschickt?
+            creationDate: data['creationDate']
+          });
+        }
+      }
+    }
+  
+    return results;
   }
 
 
 }
+
+
+
+
+
+
+/*
+// alte Suche nur für Threads von einem selbst erstellt
+async performSearch(term: string): Promise<void> {
+  const threadsRef = collection(this.firestore, 'threads');
+  const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
+  const threadSnaps = await getDocs(q);
+  const results: any[] = [];
+  for (const threadSnap of threadSnaps.docs) {
+    const threadData = threadSnap.data();
+    const threadId = threadSnap.id;
+    const threadText = (threadData['thread'] ?? '').toLowerCase();
+    if (threadText.includes(term.toLowerCase())) {
+      results.push({
+        title: threadData['thread'],
+        userId: { ...threadData, docId: threadId }
+      });
+    }
+  }
+this.searchResults = results;
+console.log('✅ Gefundene Threads:', results.length);
+}
+*/
