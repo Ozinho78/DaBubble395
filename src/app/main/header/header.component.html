@@ -2,9 +2,70 @@
   <div class="header-img">
     <img src="img/header-img/da-bubble-header-logo.png" alt="" />
   </div>
-  <div class="header-input">
+
+
+  <!-- <div class="header-input">
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
+  </div> -->
+  
+
+  <div class="header-input">
+    <input
+      type="text"
+      id="search-input"
+      [formControl]="searchControl"
+      placeholder="Devspace durchsuchen"
+      (focus)="searchActive = true"
+    />
+
+    <!-- Ergebnisliste -->
+    <div class="search-results-dropdown" *ngIf="searchResults.length > 0 && searchActive">
+      <div *ngFor="let result of searchResults" class="search-result-item" (click)="openThreadModal(result)">
+        <div class="channel-name">🔗 {{ result.channelName }}</div>
+      
+        <!-- Wenn es ein Thread ist -->
+        <div *ngIf="result.type === 'thread'" class="thread-title">
+          📁 <strong>{{ result.title }}</strong>
+        </div>
+      
+        <!-- Wenn es eine Message ist -->
+        <div *ngIf="result.type === 'message'" class="message-preview">
+          🗨️ <em>{{ result.text }}</em>
+        </div>
+      </div>
+      
+      <!-- Trefferanzahl und Hinweis -->
+      <div class="search-counter" *ngIf="searchResults.length > 0">
+        🔍 {{ searchResults.length }} Treffer gefunden
+      </div>
+      <small>(Press ESC to leave)</small>
+    </div>
   </div>
+
+
+  <div class="modal-overlay" *ngIf="modalOpen" (click)="modalOpen = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>{{ selectedThreadTitle }}</h3>
+      <ul>
+        <li *ngFor="let msg of selectedThreadMessages">
+          <img [src]="'img/avatar/' + msg.senderAvatar" alt="">
+          <strong>{{ msg.senderName }}:</strong>{{ msg.text }}
+        </li>
+      </ul>
+
+      <div *ngIf="selectedThreadMessages.length === 0">
+        <em>Keine Nachrichten gefunden.</em>
+      </div>
+
+      <div class="button-ctn" (click)="modalOpen = false">
+        <button>Schließen</button>
+      </div><br>
+    </div>
+  </div>
+
+
+
+
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">
       <span>{{ user.name }}</span>
