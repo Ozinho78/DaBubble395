@@ -21,8 +21,20 @@
     <!-- Ergebnisliste -->
     <div class="search-results-dropdown" *ngIf="searchResults.length > 0 && searchActive">
       <div *ngFor="let result of searchResults" class="search-result-item" (click)="openThreadModal(result)">
-        <div class="thread-title">📁 {{ result.title }}</div>
+        <div class="channel-name">🔗 {{ result.channelName }}</div>
+      
+        <!-- Wenn es ein Thread ist -->
+        <div *ngIf="result.type === 'thread'" class="thread-title">
+          📁 <strong>{{ result.title }}</strong>
+        </div>
+      
+        <!-- Wenn es eine Message ist -->
+        <div *ngIf="result.type === 'message'" class="message-preview">
+          🗨️ <em>{{ result.text }}</em>
+        </div>
       </div>
+      
+      <!-- Trefferanzahl und Hinweis -->
       <div class="search-counter" *ngIf="searchResults.length > 0">
         🔍 {{ searchResults.length }} Treffer gefunden
       </div>
@@ -40,6 +52,11 @@
           <strong>{{ msg.senderName }}:</strong>{{ msg.text }}
         </li>
       </ul>
+
+      <div *ngIf="selectedThreadMessages.length === 0">
+        <em>Keine Nachrichten gefunden.</em>
+      </div>
+
       <div class="button-ctn" (click)="modalOpen = false">
         <button>Schließen</button>
       </div><br>

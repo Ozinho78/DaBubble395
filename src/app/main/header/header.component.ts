@@ -8,6 +8,9 @@ import { ProfileDetailComponent } from './profile-detail/profile-detail.componen
 import { UserService } from '../../../services/user.service';
 import { PresenceService } from '../../../services/presence.service';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
+import { SearchService } from '../../../services/search.service';
+import { SearchResult } from '../../../models/search-result.model';
+
 
 @Component({
   selector: 'app-header',
@@ -40,6 +43,8 @@ export class HeaderComponent {
     docId: ''
   };
 
+  
+
   @ViewChild('searchContainer') searchContainer!: ElementRef;
   searchActive = false;  
 
@@ -47,15 +52,17 @@ export class HeaderComponent {
     private auth: Auth,
     private router: Router,
     private userService: UserService,
-    private presenceService: PresenceService
+    private presenceService: PresenceService,
+    private searchService: SearchService
   ) {
     setTimeout(() => {
       this.currentUser.docId = localStorage.getItem('user-id') || '';
     }, 1000);
-    console.log('Aktueller User:', this.currentUser);
+    // console.log('Aktueller User:', this.currentUser);
   }
 
   ngOnInit(): void {
+    
     const userId = localStorage.getItem('user-id');
     if (userId) {
       this.userName$ = this.userService.getUserById(userId);
@@ -93,30 +100,14 @@ export class HeaderComponent {
     }
   }
 
-  async performSearch(term: string): Promise<void> {
-    const threadsRef = collection(this.firestore, 'threads');
-    const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
-    const threadSnaps = await getDocs(q);
-    const results: any[] = [];
-    for (const threadSnap of threadSnaps.docs) {
-      const threadData = threadSnap.data();
-      const threadId = threadSnap.id;
-      const threadText = (threadData['thread'] ?? '').toLowerCase();
-      if (threadText.includes(term.toLowerCase())) {
-        results.push({
-          title: threadData['thread'],
-          userId: { ...threadData, docId: threadId }
-        });
-      }
-    }
-  this.searchResults = results;
-  console.log('✅ Gefundene Threads:', results.length);
-  }
-
-
+  
   async openThreadModal(thread: any): Promise<void> {
+    this.selectedThreadMessages = [];
     const messagesRef = collection(this.firestore, 'messages');
-    const q = query(messagesRef, where('threadId', '==', thread.userId.docId));
+  
+    console.log('📥 Lade Nachrichten für Thread:', thread.threadId); // Debug
+  
+    const q = query(messagesRef, where('threadId', '==', thread.threadId));
     const messageSnaps = await getDocs(q);
   
     const messagesWithUserData = [];
@@ -151,20 +142,19 @@ export class HeaderComponent {
 
 
 
+  async performSearch(term: string) {
+    if (!term || term.length < 3) return;
+  
+    // Suche nur in den Threads
+    // this.searchResults = await this.searchService.searchUserThreads(this.currentUser.docId, term);
+    // this.searchActive = true;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    this.searchService.searchEverything(this.currentUser.docId, term)
+    .then((results: SearchResult[]) => {
+      this.searchResults = results;
+      this.searchActive = true;
+    });
+  }
 
 
   toggleMenu(): void {
@@ -231,3 +221,28 @@ export class HeaderComponent {
     document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 }
+
+
+
+/*
+// alte Suche nur für Threads von einem selbst erstellt
+async performSearch(term: string): Promise<void> {
+  const threadsRef = collection(this.firestore, 'threads');
+  const q = query(threadsRef, where('userId', '==', this.currentUser.docId));
+  const threadSnaps = await getDocs(q);
+  const results: any[] = [];
+  for (const threadSnap of threadSnaps.docs) {
+    const threadData = threadSnap.data();
+    const threadId = threadSnap.id;
+    const threadText = (threadData['thread'] ?? '').toLowerCase();
+    if (threadText.includes(term.toLowerCase())) {
+      results.push({
+        title: threadData['thread'],
+        userId: { ...threadData, docId: threadId }
+      });
+    }
+  }
+this.searchResults = results;
+console.log('✅ Gefundene Threads:', results.length);
+}
+*/

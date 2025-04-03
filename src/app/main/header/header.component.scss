@@ -56,10 +56,10 @@ header {
     position: absolute;
     background-color: v.$purple_bg;
     opacity: 0.9;
-    width: 300px;
+    width: 500px;
     
     .search-result-item {
-      @include m.flexBox(column, center, flex-start);
+      @include m.flexBox(row, flex-start, center, 8px);
       @include m.styleFont("Nunito", 20px, 400, 1.5, black);
       padding-top: 6px;
       padding-left: 10px;
