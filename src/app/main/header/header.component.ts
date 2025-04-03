@@ -10,11 +10,12 @@ import { PresenceService } from '../../../services/presence.service';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
 import { SearchResult } from '../../../models/search-result.model';
+import { ThreadModalComponent } from './thread-modal/thread-modal.component';
 
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, ProfileDetailComponent, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, ProfileDetailComponent, FormsModule, ReactiveFormsModule, ThreadModalComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -37,11 +38,7 @@ export class HeaderComponent {
   selectedThreadTitle: string = '';
   modalOpen = false;
 
-  currentUser = {
-    // docId: 'ktUA231gfQVPbWIyhBU8', // 🔁 Hier den echten eingeloggten User einfügen
-    // docId: 'ktUA231gfQVPbWIyhBU8',
-    docId: ''
-  };
+  currentUser = { docId: '' };
 
   
 
@@ -58,7 +55,6 @@ export class HeaderComponent {
     setTimeout(() => {
       this.currentUser.docId = localStorage.getItem('user-id') || '';
     }, 1000);
-    // console.log('Aktueller User:', this.currentUser);
   }
 
   ngOnInit(): void {
@@ -89,9 +85,9 @@ export class HeaderComponent {
     document.addEventListener('click', this.handleClickOutside.bind(this));
   }
 
+
   handleClickOutside(event: MouseEvent) {
     const target = event.target as HTMLElement;
-  
     if (this.searchContainer && !this.searchContainer.nativeElement.contains(target)) {
       // 🧼 Suche schließen & löschen
       this.searchActive = false;
@@ -100,12 +96,11 @@ export class HeaderComponent {
     }
   }
 
-  
   async openThreadModal(thread: any): Promise<void> {
     this.selectedThreadMessages = [];
     const messagesRef = collection(this.firestore, 'messages');
   
-    console.log('📥 Lade Nachrichten für Thread:', thread.threadId); // Debug
+    // console.log('📥 Lade Nachrichten für Thread:', thread.threadId); // Debug
   
     const q = query(messagesRef, where('threadId', '==', thread.threadId));
     const messageSnaps = await getDocs(q);
