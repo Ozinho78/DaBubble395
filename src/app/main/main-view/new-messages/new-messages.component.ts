@@ -297,27 +297,50 @@ export class NewMessagesComponent implements OnInit {
    * Falls ja, sperrt das Input-Feld.
    */
   checkEmailAndLockInput() {
-    const inputValue: string = this.inputControl.value?.trim() ?? '';
-
-    if (this.isValidEmail(inputValue)) {
-      this.enteredEmail = inputValue;  // Speichert die E-Mail
-      this.enableInputTop = false;     // Sperrt das Feld
-      this.errorMessage = null; // Keine Fehlermeldung
+    const input = this.inputControl.value?.trim();
+    this.errorMessage = ''; // ⛔️ Vorherige Fehlermeldung löschen
+  
+    if (!input) {
+      this.errorMessage = 'Bitte etwas eingeben.';
       return;
     }
-    
-    setTimeout(() => {
-      // Falls ein User oder Channel ausgewählt wurde, Input sperren
-      if (this.targetUser || this.targetChannel || this.isValidUserOrChannel(inputValue)) {
+  
+    // User Check mit "@"
+    if (input.startsWith('@')) {
+      const name = input.substring(1);
+      const user = this.users.find(u => u.name === name);
+  
+      if (user) {
+        this.targetUser = user;
         this.enableInputTop = false;
-        this.errorMessage = null;
+        this.inputControl.setValue('');
         return;
-      } else {
-        // Falls nichts davon zutrifft -> Fehlermeldung anzeigen
-        this.errorMessage = "Bitte eine gültige E-Mail, einen User (@user) oder einen Channel (#channel) eingeben!";
       }
-    }, 200);    
+    }
+  
+    // Channel Check mit "#"
+    else if (input.startsWith('#')) {
+      const name = input.substring(1);
+      const channel = this.channels.find(c => c.name === name);
+  
+      if (channel) {
+        this.targetChannel = channel;
+        this.enableInputTop = false;
+        this.inputControl.setValue('');
+        return;
+      }
+    }
+  
+    // Fallback: E-Mail prüfen
+    else if (this.isValidEmail(input)) {
+      this.enteredEmail = input;
+      this.enableInputTop = false;
+      this.inputControl.setValue('');
+      return;
+    } else {// Wenn keiner der Checks erfolgreich war:
+      this.errorMessage = 'Kein gültiger Nutzer, Channel oder E-Mail gefunden.';}
   }
+  
 
   /**
    * Prüft, ob ein String eine gültige E-Mail-Adresse ist.
@@ -346,6 +369,32 @@ export class NewMessagesComponent implements OnInit {
     this.errorMessage = null; // Fehlermeldung zurücksetzen
   }
 }
+
+
+    /*
+    const inputValue: string = this.inputControl.value?.trim() ?? '';
+
+    this.errorMessage = ''; // 🧽 Erstmal alles löschen
+
+    if (this.isValidEmail(inputValue)) {
+      this.enteredEmail = inputValue;  // Speichert die E-Mail
+      this.enableInputTop = false;     // Sperrt das Feld
+      this.errorMessage = null; // Keine Fehlermeldung
+      return;
+    }
+    
+    setTimeout(() => {
+      // Falls ein User oder Channel ausgewählt wurde, Input sperren
+      if (this.targetUser || this.targetChannel || this.isValidUserOrChannel(inputValue)) {
+        this.enableInputTop = false;
+        this.errorMessage = null;
+        return;
+      } else {
+        // Falls nichts davon zutrifft -> Fehlermeldung anzeigen
+        this.errorMessage = "Bitte eine gültige E-Mail, einen User (@user) oder einen Channel (#channel) eingeben!";
+      }
+    }, 200);    
+    */
 
 /*
   createNewMessage() {
