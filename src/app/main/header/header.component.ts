@@ -38,6 +38,7 @@ export class HeaderComponent {
   selectedThreadMessages: any[] = [];
   selectedThreadTitle: string = '';
   modalOpen = false;
+  isLoading = false;
 
   currentUser = { docId: '' };
 
@@ -124,11 +125,23 @@ export class HeaderComponent {
     // Suche nur in den Threads
     // this.searchResults = await this.searchService.searchUserThreads(this.currentUser.docId, term);
     // this.searchActive = true;
-    this.searchService.searchEverything(this.currentUser.docId, term)
-    .then((results: SearchResult[]) => {
-      this.searchResults = results;
+
+    // Suche mit Spinner
+    this.isLoading = true;
+    try {
+      this.searchResults = await this.searchService.searchEverything(this.currentUser.docId, term);
       this.searchActive = true;
-    });
+    } finally {
+      this.isLoading = false;
+    }
+
+    // Suche ohne Spinner
+    // this.searchService.searchEverything(this.currentUser.docId, term)
+    // .then((results: SearchResult[]) => {
+    //   this.searchResults = results;
+    //   this.searchActive = true;
+    // });
+
   }
 
 
