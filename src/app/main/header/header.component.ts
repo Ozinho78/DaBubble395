@@ -128,11 +128,13 @@ export class HeaderComponent {
 
     // Suche mit Spinner
     this.isLoading = true;
+    document.body.classList.add('loading');
     try {
       this.searchResults = await this.searchService.searchEverything(this.currentUser.docId, term);
       this.searchActive = true;
     } finally {
       this.isLoading = false;
+      document.body.classList.remove('loading');
     }
 
     // Suche ohne Spinner
