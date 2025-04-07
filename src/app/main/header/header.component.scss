@@ -227,25 +227,82 @@ header {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 9999;
   width: 100vw;
   max-width: 100%;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.6); // leichtes Overlay
-  z-index: 9999;
+  background: rgba(255, 255, 255, 0.7);
   @include m.flexBox(row, center, center);
+  @include m.styleFont("Nunito", 24px, 500, 1.0);
+  backdrop-filter: blur(4px);
+
+  // 🛡️ Blockiere alles
+  pointer-events: all;
+  cursor: wait;
+  user-select: none;
+}
+
+body.loading {
+  overflow: hidden; // kein Scrollen mehr
+}
+
+.spinner-box {
+  text-align: center;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.spinner-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 12px;
+  animation: float 2s ease-in-out infinite;
 }
 
 .spinner {
   width: 40px;
   height: 40px;
+  margin: 0 auto;
   border: 4px solid v.$purple_2;
   border-top-color: #333;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
+.spinner-text {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Animationen */
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+
+// @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+// @include m.flexBox(row, center, center);
