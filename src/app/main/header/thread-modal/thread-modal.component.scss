@@ -13,11 +13,12 @@
   @include m.flexBox(row, center, center);
   @include m.styleFont("Nunito");
   background: rgba(0, 0, 0, 0.5);
-  z-index: 50;
+  z-index: 1001;
 }
 
 .modal-content {
   position: relative;
+  z-index: inherit;
   width: 600px;
   max-height: 800px;
   overflow-y: auto;
@@ -49,6 +50,7 @@
   .button-ctn {
     // width: 100%;
     position: absolute;
+    z-index: inherit;
     right: 40px;
     @include m.flexBox(row, center, center, 5px);
     padding: 8px 8px;
