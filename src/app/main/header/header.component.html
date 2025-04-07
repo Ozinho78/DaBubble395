@@ -18,6 +18,12 @@
       (focus)="searchActive = true"
     />
 
+    <!-- Spinner -->
+    <div class="global-spinner-overlay" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+    
+
     <!-- Ergebnisliste -->
     <div class="search-results-dropdown" *ngIf="searchResults.length > 0 && searchActive">
       <div *ngFor="let result of searchResults" class="search-result-item" (click)="openThreadModal(result)">
