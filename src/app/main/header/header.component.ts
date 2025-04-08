@@ -72,8 +72,8 @@ export class HeaderComponent {
     }
 
     this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
+      debounceTime(2000),           // ⏳ warte 2 Sekunden ohne Eingabe
+      distinctUntilChanged()        // nur bei geändertem Wert
     ).subscribe(searchTerm => {
       if (searchTerm && searchTerm.length >= 3) {
         this.performSearch(searchTerm);
@@ -145,6 +145,32 @@ export class HeaderComponent {
     // });
 
   }
+
+
+  handleSearchResultClick(result: any) {
+    if ((result.type === 'thread' || result.type === 'message') && result.channelId && result.threadId) {
+      this.router.navigate(['/main'], {
+        queryParams: {
+          channel: result.channelId,
+          thread: result.threadId
+        }
+      });
+    } else if (result.type === 'direct' && result.chatId) {
+      this.router.navigate(['/main'], {
+        queryParams: {
+          chat: result.chatId
+        }
+      });
+    } else if (result.type === 'user') {
+      this.openThreadModal(result); // nur noch für Benutzerprofil
+    }
+
+    // Optional zum Resetten der Suchergebnisses
+    // this.searchResults = [];
+    // this.searchActive = false;
+    // this.searchControl.setValue('');
+  }  
+  
 
 
   toggleMenu(): void {
