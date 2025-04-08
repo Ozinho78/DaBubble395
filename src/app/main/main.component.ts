@@ -36,6 +36,8 @@ export class MainComponent implements OnInit {
             this.channelId = params.get('channel');
             this.threadId = params.get('thread');
             this.chatId = params.get('chat');
+    
+            this.checkScreenSize();
         });
     }
 
@@ -44,12 +46,13 @@ export class MainComponent implements OnInit {
         this.isMedium = width <= 1400;
         this.isSmall = width <= 992;
 
-        // Bei Wechsel auf small, nur main zeigen (außer Thread aktiv)
         if (this.isSmall) {
             if (this.threadId) {
                 this.activeView = 'thread';
-            } else {
+            } else if (this.channelId || this.chatId) {
                 this.activeView = 'main';
+            } else {
+                this.activeView = 'devspace';
             }
         }
     }
