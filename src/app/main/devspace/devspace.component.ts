@@ -112,10 +112,10 @@ export class DevspaceComponent implements OnInit {
 
   subscribeToUserChannels(firestore: Firestore, userId: string): Observable<Channel[]> {
     if (!userId) return new Observable<Channel[]>(); // Falls userId fehlt, leeres Observable zurückgeben
-  
+
     const channelsRef = collection(firestore, 'channels'); // Referenz zur Collection
     const userChannelsQuery = query(channelsRef, where('member', 'array-contains', userId)); // Firestore Query
-  
+
     return collectionData(userChannelsQuery, { idField: 'docId' }) as Observable<Channel[]>; // Observable zurückgeben
   }
 
@@ -185,6 +185,15 @@ export class DevspaceComponent implements OnInit {
     this.showComponent('channel');
   }
 
+  selectNewMessage() {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { newmessage: '1' },
+      replaceUrl: true,
+    });
+    this.showComponent('newMessages');
+  }
+
   selectUser(user: User) {
     this.userService.setDocIdFromDevSpace(user.docId!);
     setTimeout(() => {
@@ -196,9 +205,9 @@ export class DevspaceComponent implements OnInit {
     this.visibleService.setVisibleComponent(component);
 
     // 12.03.2025 - Alexander Riedel
-    if (component == 'newMessages') {
-      this.router.navigate(['/main'], { replaceUrl: true });
-    }
+    /*if (component == 'newMessages') {
+      this.router.navigate(['/main?new-messages'], { replaceUrl: true });
+    }*/
   }
 }
 
@@ -213,33 +222,33 @@ export class DevspaceComponent implements OnInit {
 
 // alte Methoden
 // loadUserChannels() {
-  //   if (!this.userLoggedIn) return;
+//   if (!this.userLoggedIn) return;
 
-  //   // Firestore-Referenz mit Query: Nur Channels laden, in denen der User Mitglied ist
-  //   const channelsRef = collection(this.firestore, 'channels');
-  //   const userChannelsQuery = query(channelsRef, where('members', 'array-contains', this.userLoggedIn));
+//   // Firestore-Referenz mit Query: Nur Channels laden, in denen der User Mitglied ist
+//   const channelsRef = collection(this.firestore, 'channels');
+//   const userChannelsQuery = query(channelsRef, where('members', 'array-contains', this.userLoggedIn));
 
-  //   // Observable setzen (automatische Updates bei Firestore-Änderungen)
-  //   this.userChannels$ = collectionData(userChannelsQuery, { idField: 'id' });
+//   // Observable setzen (automatische Updates bei Firestore-Änderungen)
+//   this.userChannels$ = collectionData(userChannelsQuery, { idField: 'id' });
 
-  //   // Falls du die Channels als normales Array brauchst:
-  //   this.userChannels$.pipe(takeUntil(this.unsubscribe$)).subscribe((channels) => {
-  //     console.log('User Channels:', channels);
-  //   });
-  // }
+//   // Falls du die Channels als normales Array brauchst:
+//   this.userChannels$.pipe(takeUntil(this.unsubscribe$)).subscribe((channels) => {
+//     console.log('User Channels:', channels);
+//   });
+// }
 
-    // filterUserChannels() {
-  //   if (!this.userLoggedIn) return;
-  //   this.userChannels = this.channels.filter((channel) =>
-  //     channel.member.includes(this.userLoggedIn)
-  //   );
-  //   // console.log(this.userChannels);
-  // }
+// filterUserChannels() {
+//   if (!this.userLoggedIn) return;
+//   this.userChannels = this.channels.filter((channel) =>
+//     channel.member.includes(this.userLoggedIn)
+//   );
+//   // console.log(this.userChannels);
+// }
 
-  // sortUsersByAvatar() {
-  //   this.users.sort((a, b) => {
-  //     const start = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
-  //     const end = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
-  //     return end - start; // Absteigende Sortierung
-  //   });
-  // }
+// sortUsersByAvatar() {
+//   this.users.sort((a, b) => {
+//     const start = parseInt(a.avatar.match(/\d+/)?.[0] || '0', 10);
+//     const end = parseInt(b.avatar.match(/\d+/)?.[0] || '0', 10);
+//     return end - start; // Absteigende Sortierung
+//   });
+// }

@@ -17,6 +17,7 @@ export class MainComponent implements OnInit {
     channelId: string | null = null;
     threadId: string | null = null;
     chatId: string | null = null;
+    newMessage: string | null = null;
 
     isMedium = false;
     isSmall = false;
@@ -36,6 +37,7 @@ export class MainComponent implements OnInit {
             this.channelId = params.get('channel');
             this.threadId = params.get('thread');
             this.chatId = params.get('chat');
+            this.newMessage = params.get('newmessage');
     
             this.checkScreenSize();
         });
@@ -49,7 +51,7 @@ export class MainComponent implements OnInit {
         if (this.isSmall) {
             if (this.threadId) {
                 this.activeView = 'thread';
-            } else if (this.channelId || this.chatId) {
+            } else if (this.channelId || this.chatId || this.newMessage) {
                 this.activeView = 'main';
             } else {
                 this.activeView = 'devspace';

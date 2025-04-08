@@ -210,4 +210,8 @@ export class HeaderComponent {
   ngOnDestroy() {
     document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
+
+  backToMain() {
+      this.router.navigate(['/main']);
+  }
 }
