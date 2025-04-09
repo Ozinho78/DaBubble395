@@ -95,11 +95,12 @@ export class HeaderComponent {
       const url = this.router.url;
       const hasChannel = url.includes('channel=');
       const hasChat = url.includes('chat=');
+      const newMessage = url.includes('newmessage=');
   
       if (url === '/main' || url === '/main/') {
         this.showHeaderImg = true;
         this.showWorkspace = false;
-      } else if (hasChannel || hasChat) {
+      } else if (hasChannel || hasChat || newMessage) {
         this.showHeaderImg = false;
         this.showWorkspace = true;
       } else {
@@ -280,6 +281,7 @@ export class HeaderComponent {
     const url = this.router.url;
     const hasChannel = url.includes('channel=');
     const hasChat = url.includes('chat=');
+    const newMessage = url.includes('newmessage=');
     const screenWidth = window.innerWidth;
   
     const isSmallScreen = screenWidth <= 992;
@@ -287,11 +289,10 @@ export class HeaderComponent {
     if ((url === '/main' || url === '/main/') && isSmallScreen) {
       this.showHeaderImg = true;
       this.showWorkspace = false;
-    } else if ((hasChannel || hasChat) && isSmallScreen) {
+    } else if ((hasChannel || hasChat || newMessage) && isSmallScreen) {
       this.showHeaderImg = false;
       this.showWorkspace = true;
     } else {
-      // Für größere Auflösungen kannst du selbst entscheiden
       this.showHeaderImg = true;
       this.showWorkspace = false;
     }
