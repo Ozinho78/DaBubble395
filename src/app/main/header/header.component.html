@@ -1,9 +1,10 @@
 <header>
-  <div class="header-img">
+  <div class="header-img" *ngIf="showHeaderImg">
     <img src="img/header-img/da-bubble-header-logo.png" alt="" />
   </div>
 
-  <div class="workspace" (click)="backToMain()">
+  <div class="workspace" (click)="backToMain()" *ngIf="showWorkspace">
+    <span>&#060;</span>
     <img src="img/workspacelogo.png" alt="" />
     <span>Devspace</span>
   </div>

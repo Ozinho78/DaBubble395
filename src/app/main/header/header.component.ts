@@ -41,8 +41,11 @@ export class HeaderComponent {
 
   currentUser = { docId: '' };
 
+  showWorkspace = false;
+  showHeaderImg = true;
   
   @HostListener('document:keydown.escape')
+  @HostListener('window:resize')onResize() {this.updateHeaderDisplay();}
   @ViewChild('searchDropdownRef') searchDropdownRef!: ElementRef;
   @ViewChild('searchContainer') searchContainer!: ElementRef;
   searchActive = false;  
@@ -87,6 +90,29 @@ export class HeaderComponent {
     // Klick außerhalb erkennen
     document.addEventListener('click', this.handleClickOutside.bind(this));
     document.addEventListener('touchstart', this.handleClickOutside.bind(this));
+
+    this.router.events.subscribe(() => {
+      const url = this.router.url;
+      const hasChannel = url.includes('channel=');
+      const hasChat = url.includes('chat=');
+  
+      if (url === '/main' || url === '/main/') {
+        this.showHeaderImg = true;
+        this.showWorkspace = false;
+      } else if (hasChannel || hasChat) {
+        this.showHeaderImg = false;
+        this.showWorkspace = true;
+      } else {
+        this.showHeaderImg = true;
+        this.showWorkspace = false;
+      }
+    });
+
+    this.router.events.subscribe(() => {
+      this.updateHeaderDisplay();
+    });
+  
+    this.updateHeaderDisplay();
   }
 
 
@@ -239,12 +265,35 @@ export class HeaderComponent {
   }
 
   backToMain() {
-      this.router.navigate(['/main']);
+    this.router.navigate(['/main']).then(() => {
+      this.updateHeaderDisplay();
+    });
   }
 
   clearSearch() {
     this.searchActive = false;
     this.searchResults = [];
     this.searchControl.setValue('');
+  }
+
+  updateHeaderDisplay() {
+    const url = this.router.url;
+    const hasChannel = url.includes('channel=');
+    const hasChat = url.includes('chat=');
+    const screenWidth = window.innerWidth;
+  
+    const isSmallScreen = screenWidth <= 992;
+  
+    if ((url === '/main' || url === '/main/') && isSmallScreen) {
+      this.showHeaderImg = true;
+      this.showWorkspace = false;
+    } else if ((hasChannel || hasChat) && isSmallScreen) {
+      this.showHeaderImg = false;
+      this.showWorkspace = true;
+    } else {
+      // Für größere Auflösungen kannst du selbst entscheiden
+      this.showHeaderImg = true;
+      this.showWorkspace = false;
+    }
   }
 }

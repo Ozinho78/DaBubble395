@@ -15,14 +15,21 @@ header {
 }
 
 .header-img {
+  //display: flex;
+
   img {
     @media (max-width: 768px) {
       height: 45px;
     }
   }
+
+  /*@media (max-width: 992px) {
+    display: none;
+  }*/
 }
 
 .workspace {
+  //display: none;
   @include m.flexBox(row, center, center, 15px);
   @include m.styleFont("Nunito", 24px, 700, 1.36, #000000);
   cursor: pointer;
@@ -31,6 +38,10 @@ header {
     width: 60px;
     height: 60px;
   }
+
+  /*@media (max-width: 992px) {
+    @include m.flexBox(row, center, center, 15px);
+  }*/
 }
 
 .header-input {
@@ -93,7 +104,7 @@ header {
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     display: none;
   }
 }
