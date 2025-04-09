@@ -124,6 +124,8 @@ svg {
   }
 }
 
+
+
 .search-header {
   display: flex;
   justify-content: space-between;
@@ -137,6 +139,19 @@ svg {
     cursor: pointer;
   }
 }
+
+.filtered {
+  background-color: #f3f3f3;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+
+
+
 
 
 
