@@ -28,16 +28,17 @@
         [value]="selectedUser?.name || ''" [ngClass]="{'user-selected': selectedUser}" readonly
         (click)="toggleUserList()" />
       <!-- Zeigt den Namen des ausgewählten Benutzers an -->
-    </div>
 
-    <div *ngIf="showUserList" class="user-list">
-      <ul *ngIf="filteredUsers.length > 0; else noResults" class="user-list">
-        <li *ngFor="let user of filteredUsers" (click)="selectUser(user)"
-          [class.selected]="selectedUser?.docId === user.docId">
-          <img [src]="'img/avatar/' + user.avatar" alt="Avatar">
-          <span>{{ user.name }}</span>
-        </li>
-      </ul>
+      <div *ngIf="showUserList" class="user-list">
+        <ul *ngIf="filteredUsers.length > 0; else noResults" class="user-list">
+          <li *ngFor="let user of filteredUsers" (click)="selectUser(user)"
+            [class.selected]="selectedUser?.docId === user.docId">
+            <img [src]="'img/avatar/' + user.avatar" alt="Avatar">
+            <span>{{ user.name }}</span>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
     <!-- Erfolg-Modal -->
