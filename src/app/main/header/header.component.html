@@ -8,15 +8,18 @@
     <span>Devspace</span>
   </div>
 
-
   <!-- <div class="header-input">
     <input type="text" id="search-input" placeholder="Devspace durchsuchen" />
   </div> -->
 
-
-  <div class="header-input">
-    <input type="text" id="search-input" [formControl]="searchControl" placeholder="Devspace durchsuchen"
-      (focus)="searchActive = true" />
+  <div class="header-input" #searchContainer>
+    <input
+      type="text"
+      id="search-input"
+      [formControl]="searchControl"
+      placeholder="Devspace durchsuchen"
+      (focus)="searchActive = true"
+    />
 
     <!-- Spinner -->
     <div class="global-spinner-overlay" *ngIf="isLoading">
@@ -27,10 +30,17 @@
       </div>
     </div>
 
-
     <!-- Ergebnisliste -->
-    <div class="search-results-dropdown" *ngIf="searchResults.length > 0 && searchActive">
-      <div *ngFor="let result of searchResults" class="search-result-item" (click)="handleSearchResultClick(result)">
+    <div
+      class="search-results-dropdown"
+      *ngIf="searchResults.length > 0 && searchActive"
+      #searchDropdownRef
+    >
+      <div
+        *ngFor="let result of searchResults"
+        class="search-result-item"
+        (click)="handleSearchResultClick(result)"
+      >
         <div class="channel-name">🔗 {{ result.channelName }}</div>
 
         <!-- Wenn es ein Thread ist -->
@@ -46,7 +56,9 @@
         <!-- Wenn es eine Direktnachricht ist -->
         <div *ngIf="result.type === 'direct'">
           💬 <em>{{ result.text }}</em>
-          <span class="channel">&nbsp;(Direktnachricht mit User {{ result.otherUserName }})</span>
+          <span class="channel"
+            >&nbsp;(Direktnachricht mit User {{ result.otherUserName }})</span
+          >
         </div>
 
         <!-- Wenn es ein User ist -->
@@ -64,9 +76,12 @@
     </div>
   </div>
 
-  <app-thread-modal *ngIf="modalOpen" [title]="selectedThreadTitle" [messages]="selectedThreadMessages"
-    (close)="modalOpen = false"></app-thread-modal>
-
+  <app-thread-modal
+    *ngIf="modalOpen"
+    [title]="selectedThreadTitle"
+    [messages]="selectedThreadMessages"
+    (close)="modalOpen = false"
+  ></app-thread-modal>
 
   <div class="header-profile" (click)="toggleMenu()">
     <ng-container *ngIf="userName$ | async as user">
@@ -74,13 +89,21 @@
       <div class="profile-pic-wrapper">
         <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
         <ng-container *ngIf="onlineStatus$ | async">
-          <img class="profile-pic-online" src="img/header-img/profile-pic-online.png" alt="Online Indicator" />
+          <img
+            class="profile-pic-online"
+            src="img/header-img/profile-pic-online.png"
+            alt="Online Indicator"
+          />
         </ng-container>
       </div>
     </ng-container>
     <div class="arrow-wrapper">
       <img class="arrow-default" src="img/header-img/arrow-down.png" alt="" />
-      <img class="arrow-hover" src="img/header-img/arrow-down-hover.png" alt="" />
+      <img
+        class="arrow-hover"
+        src="img/header-img/arrow-down-hover.png"
+        alt=""
+      />
     </div>
   </div>
 </header>
@@ -89,6 +112,9 @@
     <p (click)="toggleProfileEdit()" class="profile">Profil</p>
     <p (click)="logout()" class="log-out">Log out</p>
   </div>
-  <app-profile-detail *ngIf="profileEditOpen" [userName]="userName$ | async"
-    (close)="closeProfile()"></app-profile-detail>
+  <app-profile-detail
+    *ngIf="profileEditOpen"
+    [userName]="userName$ | async"
+    (close)="closeProfile()"
+  ></app-profile-detail>
 </div>

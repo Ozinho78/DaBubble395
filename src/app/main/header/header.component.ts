@@ -43,7 +43,8 @@ export class HeaderComponent {
   currentUser = { docId: '' };
 
   
-
+  @HostListener('document:keydown.escape')
+  @ViewChild('searchDropdownRef') searchDropdownRef!: ElementRef;
   @ViewChild('searchContainer') searchContainer!: ElementRef;
   searchActive = false;  
 
@@ -86,16 +87,19 @@ export class HeaderComponent {
 
     // Klick außerhalb erkennen
     document.addEventListener('click', this.handleClickOutside.bind(this));
+    document.addEventListener('touchstart', this.handleClickOutside.bind(this));
   }
 
 
-  handleClickOutside(event: MouseEvent) {
+  handleClickOutside(event: MouseEvent | TouchEvent) {
     const target = event.target as HTMLElement;
-    if (this.searchContainer && !this.searchContainer.nativeElement.contains(target)) {
-      // 🧼 Suche schließen & löschen
-      this.searchActive = false;
-      this.searchResults = [];
-      this.searchControl.setValue('');
+  
+    const clickedInsideContainer = this.searchContainer?.nativeElement.contains(target);
+    const clickedInsideDropdown = this.searchDropdownRef?.nativeElement.contains(target);
+  
+    if (!clickedInsideContainer && !clickedInsideDropdown) {
+      this.searchActive = false; // ⛔ nur Dropdown schließen
+      // Suchfeld bleibt erhalten
     }
   }
 
@@ -226,18 +230,23 @@ export class HeaderComponent {
     this.closeImgSrc = '/img/header-img/close.png';
   }
 
-  @HostListener('document:keydown.escape')
   onEscape() {
-    this.searchActive = false;
-    this.searchResults = [];
-    this.searchControl.setValue('');
+    this.clearSearch();
   }
 
   ngOnDestroy() {
     document.removeEventListener('click', this.handleClickOutside.bind(this));
+document.removeEventListener('touchstart', this.handleClickOutside.bind(this));
+
   }
 
   backToMain() {
       this.router.navigate(['/main']);
+  }
+
+  clearSearch() {
+    this.searchActive = false;
+    this.searchResults = [];
+    this.searchControl.setValue('');
   }
 }
