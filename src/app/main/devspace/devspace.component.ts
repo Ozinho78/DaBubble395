@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   inject,
   Injectable,
   OnInit,
@@ -25,13 +26,14 @@ import { ChatService } from '../../../services/direct-meassage.service';
 import { FirestoreService } from '../../../services/firestore.service';
 import { PresenceService } from '../../../services/presence.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 @Component({
   selector: 'app-devspace',
-  imports: [AddChannelComponent, CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule, AddChannelComponent],
   templateUrl: './devspace.component.html',
   styleUrl: './devspace.component.scss',
   animations: [
@@ -70,6 +72,14 @@ export class DevspaceComponent implements OnInit {
   channelId: string | null = null;
 
   @ViewChild(AddChannelComponent) channelDialog!: AddChannelComponent;
+
+  searchInput = '';
+  isSearchActive = false;
+  searchType: 'user' | 'channel' | null = null;
+  filteredUsers: any[] = [];
+  filteredChannels: any[] = [];
+
+  @ViewChild('searchInputRef') searchInputRef!: ElementRef;
 
   unsubUserNames;
   unsubChannelNames;
@@ -138,6 +148,37 @@ export class DevspaceComponent implements OnInit {
     });
     // this.loadUserChannels();
   }
+
+
+
+  onSearchInputChange(value: string) {
+    this.searchInput = value;
+  
+    if (value.startsWith('@')) {
+      this.searchType = 'user';
+      this.isSearchActive = true;
+      const query = value.substring(1).toLowerCase();
+      this.filteredUsers = this.users.filter(user => user.name.toLowerCase().includes(query));
+    } else if (value.startsWith('#')) {
+      this.searchType = 'channel';
+      this.isSearchActive = true;
+      const query = value.substring(1).toLowerCase();
+      this.filteredChannels = this.userChannels.filter(channel => channel.name.toLowerCase().includes(query));
+    } else {
+      this.isSearchActive = false;
+      this.searchType = null;
+    }
+  }
+  
+  clearSearch() {
+    this.searchInput = '';
+    this.isSearchActive = false;
+    this.searchType = null;
+    this.filteredUsers = [];
+    this.filteredChannels = [];
+  }
+
+
 
   toggleChannelVisibility() {
     this.isChannelVisible = !this.isChannelVisible;
