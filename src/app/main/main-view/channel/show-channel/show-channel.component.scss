@@ -10,7 +10,8 @@
   box-sizing: border-box;
 }
 
-button, svg {
+button,
+svg {
   border: unset;
   cursor: pointer;
 }
@@ -44,12 +45,31 @@ button, svg {
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
   border-radius: 30px 30px 30px 30px;
   padding: 60px;
+
+  @media (max-width: 992px) {
+    @include m.flexBox(column, center, normal);
+    width: 100%;
+    height: 100%;
+    border-radius: unset;
+  }
+
+  @media (max-width: 762px) {
+    padding: 32px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 24px;
+  }
+
+  @media (max-width: 460px) {
+    padding: 16px;
+  }
 }
 
 .header {
   @include m.styleFont("Nunito", 24px, 700, 1.0, #000000);
   @include m.flexBox(row, space-between, center);
-  
+
   .header-left {
     @include m.flexBox(row, center, center, 15px);
     padding: 2px 1px;
@@ -78,7 +98,7 @@ button, svg {
   box-sizing: border-box;
   @include m.flexBox(column, center, flex-start, 10px);
   padding: 20px;
-  
+
   .channel-name-header {
     width: 100%;
     @include m.flexBox(row, space-between, center);
@@ -104,7 +124,7 @@ button, svg {
     @include m.styleFont("Nunito", 18px, 400, 1.0, #000000);
 
   }
-  
+
   /* Ligth purple (Lines) */
   border: 1px solid v.$purple_4;
   border-radius: 20px;
@@ -117,7 +137,7 @@ button, svg {
   padding: 20px;
   @include m.flexBox(column, center, flex-start, 20px);
 
-  .channel-description-header{
+  .channel-description-header {
     width: 100%;
     @include m.flexBox(row, space-between, center);
     @include m.styleFont("Nunito", 18px, 700, 1.0, #000000);
@@ -188,7 +208,7 @@ button, svg {
   // top: 527px;
   width: 204px;
   height: 49px;
-  
+
   /* Purple 1 */
   background: v.$purple_1;
   border-radius: 25px;
@@ -201,6 +221,10 @@ button, svg {
   &:hover {
     cursor: pointer;
     transform: scale(1.05);
+  }
+
+  @media (max-width: 992px) {
+    position: unset;
   }
 
 }
