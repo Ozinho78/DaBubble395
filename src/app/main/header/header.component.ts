@@ -9,7 +9,6 @@ import { UserService } from '../../../services/user.service';
 import { PresenceService } from '../../../services/presence.service';
 import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
-import { SearchResult } from '../../../models/search-result.model';
 import { ThreadModalComponent } from './thread-modal/thread-modal.component';
 import { SearchModalService } from '../../../services/search-modal.service';
 
@@ -236,8 +235,7 @@ export class HeaderComponent {
 
   ngOnDestroy() {
     document.removeEventListener('click', this.handleClickOutside.bind(this));
-document.removeEventListener('touchstart', this.handleClickOutside.bind(this));
-
+    document.removeEventListener('touchstart', this.handleClickOutside.bind(this));
   }
 
   backToMain() {
