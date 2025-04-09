@@ -12,12 +12,6 @@
       <div class="channel-list-ctn">
         <div class="channel-header">
           <div class="channel-sub-header" (click)="toggleChannelVisibility()">
-            <!-- <img
-              (click)="toggleChannelVisibility()"
-              [class.channel-rotate]="!isChannelVisible"
-              src="img/arrow_drop_down.png"
-              alt="Drop Down Arrow"
-            /> -->
             <svg [class.channel-rotate]="!isChannelVisible" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
               <mask id="mask0_120339_8762" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
               <rect width="30" height="30" fill="#D9D9D9"/>
@@ -27,7 +21,6 @@
               </g>
             </svg>              
             <div>
-              <!-- <img src="img/workspaces.png" alt="Workspaces Icon" /> -->
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_120339_8731" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
                 <rect width="24" height="24" fill="#D9D9D9"/>
@@ -49,10 +42,6 @@
           }
         </div>
         <div class="add-channel-ctn" (click)="openChannelDialog()">
-          <!-- <img
-            src="img/add_circle.png"
-            alt="Add Circle Icon"
-          /> -->
           <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_120339_8755" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
             <rect y="0.5" width="24" height="24" fill="#D9D9D9"/>
@@ -74,11 +63,6 @@
 
       <div class="user-list-ctn">
         <div class="user-header" (click)="toggleUserVisibility()">
-          <!-- <img
-            [class.channel-rotate]="!isUserVisible"
-            src="img/arrow_drop_down.png"
-            alt="Drop Down Arrow"
-          /> -->
           <svg [class.channel-rotate]="!isUserVisible" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <mask id="mask0_120339_8762" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
             <rect width="30" height="30" fill="#D9D9D9"/>
@@ -88,7 +72,6 @@
             </g>
             </svg>            
           <div>
-            <!-- <img src="img/account_circle.png" alt="Account Circle Item" /> -->
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <mask id="mask0_120339_8766" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
               <rect width="24" height="24" fill="#D9D9D9"/>
@@ -123,9 +106,5 @@
       </div>
     </div>
 
-    <!-- <div class="legal-links">
-      <a routerLink="/imprint">Imprint</a><br />
-      <a routerLink="/policy">Datenschutz</a>
-    </div> -->
   </div>
 </div>
