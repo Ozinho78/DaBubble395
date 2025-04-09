@@ -42,18 +42,15 @@ svg {
 
 .devspace-wrapper {
   height: calc(100dvh - 139px);
-  /* Menu 1 - channels + workspaces */
-  /* Auto layout */
-  // overflow-y: scroll;
-  // position: absolute;
   width: 366px;
-  // height: 940px;
-  // left: 20px;
-  // top: 115px;
-  /* White */
   background: #ffffff;
   border-radius: 30px;
   transition: transform 0.5s ease-in-out;
+  
+  @media screen and (max-width: 992px) {
+    width: 100%;
+  }
+  
 }
 
 .devspace-content {
@@ -75,6 +72,55 @@ svg {
         height: 60px;
       }
     }
+
+    @media screen and (max-width: 992px) {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    width: 100%;
+  }
+}
+
+
+.search-input-ctn {
+  display: none;
+  @media screen and (max-width: 992px) {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 10px;
+    input {
+      @include m.flexBox(row, space-between, center, 143px);
+      box-sizing: border-box;
+      padding: 8px 24px;
+      // width: 398px;
+      width: 100%;
+      height: 48px;
+      background: #FFFFFF;
+      border: 1px solid v.$purple_4;
+      border-radius: 42px;
+      @include m.insideLayout(none, 0, 0);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 1px v.$purple_1;
+    }
+  
+    ::placeholder {
+      width: 100%;
+      height: 25px;
+      @include m.styleFont("Nunito", 18px, 400, 1.36, #686868);
+      @include m.insideLayout(none, 0, 1);
+    }
+
+    svg {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+    }
   }
 }
 
@@ -85,30 +131,18 @@ svg {
 .channel-and-user-list-ctn {
   width: 100%;
   height: 100%;
-  // display: block;
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
 .devspace-add-channel {
-  /* News */
-
-  /* Auto layout */
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  @include m.flexBox(row, normal, center);
   padding: 0px 0px 0px 35px;
   gap: 15px;
-
   width: 306px;
   height: 33px;
-
   border-radius: 30px;
-
-  /* Inside auto layout */
-  flex: none;
-  order: 2;
-  flex-grow: 0;
+  @include m.insideLayout(none, 2, 0);
 }
 
 .channel-list-ctn {
@@ -116,15 +150,19 @@ svg {
 
   .channel-header {
     width: 100%;
-    width: 306px;
+    // width: 306px;
+    padding-right: 16px;
     @include m.styleFont("Nunito", 20px, 700, 1.36, #000000);
     @include m.flexBox(row, space-between, center);
+
     img {
       cursor: pointer;
       transition: all 0.2s ease-in-out;
+    
       &:hover {
         transform: scale(1.2);
       }
+
     }
 
     .channel-sub-header {
@@ -143,24 +181,20 @@ svg {
           fill: v.$purple_1;
         }
         color: v.$purple_1;
-        // background-color: v.$purple_bg;
         cursor: pointer;
       }
     }
+
     padding-bottom: 20px;
   }
 
   .channel-list {
     width: 100%;
     padding-left: 20px;
-    // padding-bottom: 13px;
     @include m.styleFont("Nunito", 18px, 400, 1.36, #000000);
-    // @include m.flexBox(column, flex-start, flex-start, 13px);
     @include m.flexBox(column, flex-start, flex-start);
 
     .single-channel {
-      // width: 100%;
-      // padding: 6px 20px;
       padding: 13px 20px;
       transition: all 125ms ease-in-out;
 
@@ -169,7 +203,6 @@ svg {
         cursor: pointer;
         border-radius: 20px;
         transform: scale(1.05);
-        // padding: 4px 10px;
       }
 
     }
@@ -191,10 +224,13 @@ svg {
         fill: v.$purple_1;
       }
       color: v.$purple_1;
-      // background-color: v.$purple_bg;
       cursor: pointer;
     }
 
+  }
+
+  @media screen and (max-width: 992px) {
+    width: 100%;
   }
 }
 
@@ -226,7 +262,7 @@ svg {
       svg path {
         fill: v.$purple_1;
       }
-      // background-color: v.$purple_bg;
+
     }
   }
 
@@ -235,6 +271,7 @@ svg {
     @include m.flexBox(column, center, flex-start, 13px);
     padding-left: 25px;
   }
+
   padding-bottom: 30px;
 }
 
@@ -242,6 +279,8 @@ svg {
   position: relative;
   @include m.flexBox(row, flex-start, center, 6px);
   width: 100%;
+  transition: all 125ms ease-in-out;
+  
   .avatar-img-with-name {
     @include m.flexBox(row, center, center, 15px);
     img {
@@ -250,27 +289,22 @@ svg {
       border-radius: 50%;
     }
   }
-  // .avatar-you {
-  // }
-  transition: all 125ms ease-in-out;
+
   &:hover {
     background-color: v.$purple_bg;
     cursor: pointer;
     border-radius: 20px;
     transform: scale(1.05);
   }
+
   .online-status {
     position: absolute;
     left: 38px;
     bottom: 0px;
     width: 12px;
     height: 12px;
-    /* Text gray */
     background: #686868;
-    /* Inside auto layout */
-    flex: none;
-    order: 0;
-    flex-grow: 0;
+    @include m.insideLayout(none, 0, 0);
     border-radius: 50%;
   }
   .green {
@@ -286,9 +320,6 @@ svg {
 
 .hidden {
   transform: translateX(-150%);
-  // display: none;
-  // animation: slideOut 0.5s forwards;
-  // animation: slideOutSmooth 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   animation: slideOutDelay 0.0s cubic-bezier(0.65, 0, 0.35, 1) forwards;;
   animation-delay: 225ms;
 }

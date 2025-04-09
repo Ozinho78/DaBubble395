@@ -34,6 +34,12 @@
   color: $fontColor;
 }
 
+@mixin insideLayout($flex, $order, $flex-grow) {
+  flex: $flex;
+  order: $order;
+  flex-grow: $flex-grow;
+}
+
 @mixin dNone {
   display: none;
 }
