@@ -150,6 +150,11 @@ export class DevspaceComponent implements OnInit {
   }
 
 
+  trackByIndex(index: number, item: any): number {
+    return index;
+  }
+
+
 
   onSearchInputChange(value: string) {
     this.searchInput = value;
