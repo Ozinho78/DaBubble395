@@ -15,6 +15,7 @@ import { ShowChannelComponent } from "./show-channel/show-channel.component";
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
 import { AddUserComponent } from './add-user/add-user.component';
+import { MemberComponent } from './member/member.component';
 
 @Component({
     selector: 'app-channel',
@@ -25,7 +26,8 @@ import { AddUserComponent } from './add-user/add-user.component';
         ShowChannelComponent,
         AddUserComponent,
         ReactionDisplayComponent,
-        ReactionMenuComponent
+        ReactionMenuComponent,
+        MemberComponent
     ],
     templateUrl: './channel.component.html',
     styleUrls: [
@@ -40,6 +42,7 @@ export class ChannelComponent implements OnInit {
     @ViewChild(MessageInputComponent) messageInput!: MessageInputComponent;
     @ViewChild(ShowChannelComponent) modal!: ShowChannelComponent;
     @ViewChild(AddUserComponent) modalAddUser!: AddUserComponent;
+    @ViewChild(MemberComponent) modalMember!: MemberComponent;
 
     selectedChannelId: string = '';
     currentUser: any;
@@ -283,6 +286,11 @@ export class ChannelComponent implements OnInit {
     openModalAddUser(id: string) {
         this.selectedChannelId = id;
         this.modalAddUser.openModal();
+    }
+
+    openModalMember(id: string) {
+        this.selectedChannelId = id;
+        this.modalMember.openModal();
     }
 
     handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {

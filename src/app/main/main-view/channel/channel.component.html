@@ -12,7 +12,7 @@
         </div>
 
         <div class="member-container">
-            <div class="member">
+            <div class="member" (click)="openModalMember(channelId)">
                 <div class="member-pics">
                     <ng-container *ngFor="let member of channelMembers?.slice(0, 3); let i = index">
                         <img src="img/avatar/{{ member.avatar }}" alt="{{ member.name }}" class="member-avatar">
@@ -113,5 +113,5 @@
     [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
 
 <app-show-channel #modal [channelIdInput]="selectedChannelId"></app-show-channel>
+<app-member #modalMember [channelIdInput]="selectedChannelId"></app-member>
 <app-add-user #modalAddUser [channelIdInput]="selectedChannelId"></app-add-user>
-
