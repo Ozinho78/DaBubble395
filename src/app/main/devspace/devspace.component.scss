@@ -131,18 +131,18 @@ svg {
   padding: 0 24px;
   padding-bottom: 10px;
   @include m.flexBox(row, space-between, center);
-  @include m.styleFont("Nunito", 18px, 500, 1.36, #686868);
+  @include m.styleFont("Nunito", 24px, 500, 1.36, #686868);
   // margin: 10px 0;
   button {
     background: transparent;
     border: none;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
   }
 }
 
 .filtered {
-  background-color: #f3f3f3;
+  // background-color: #f3f3f3;
   cursor: pointer;
 
   &:hover {

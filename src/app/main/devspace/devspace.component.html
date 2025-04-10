@@ -30,7 +30,7 @@
     <div class="channel-and-user-list-ctn">
       <!-- 🔁 Channel-Bereich -->
       <div class="channel-list-ctn">
-        <div class="channel-header">
+        <div *ngIf="!isSearchActive" class="channel-header">
           <div class="channel-sub-header" (click)="toggleChannelVisibility()">
             <svg
               [class.channel-rotate]="!isChannelVisible"
@@ -112,7 +112,7 @@
           </ng-container>
         </div>
 
-        <div class="add-channel-ctn" (click)="openChannelDialog()">
+        <div *ngIf="!isSearchActive" class="add-channel-ctn" (click)="openChannelDialog()">
           <svg
             width="24"
             height="25"
@@ -151,7 +151,7 @@
 
       <!-- 🔁 User-Bereich -->
       <div class="user-list-ctn">
-        <div class="user-header" (click)="toggleUserVisibility()">
+        <div *ngIf="!isSearchActive" class="user-header" (click)="toggleUserVisibility()">
           <svg
             [class.channel-rotate]="!isUserVisible"
             width="30"
@@ -230,7 +230,7 @@
           <ng-container *ngIf="isSearchActive && searchType === 'user'">
             <div *ngFor="let user of filteredUsers; trackBy: trackByIndex"
                  class="avatar-user filtered"
-                 (click)="selectUser(user)"
+                 (click)="selectUserForDirectMessage(user)"
                  [@fadeOut]>
               <div class="avatar-img-with-name">
                 <img src="img/avatar/{{ user.avatar }}" alt="" />

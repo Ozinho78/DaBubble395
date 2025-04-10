@@ -125,6 +125,12 @@ button, svg {
       }
     }
   }
+
+  @media screen and (max-width: 992px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
 }
 
 
@@ -195,11 +201,17 @@ input[type="radio"] {
 .user-item, .selected-item {
   @include m.flexBox(row, flex-start, center, 15px);
   @include m.styleFont("Nunito", 14px, 400, 1.36, #000000);
+  
   img {
     width: 30px;
     height: auto;
     border-radius: 50%;
+
+    @media screen and (max-width: 400px) {
+      width: 24px;
+    }
   }
+
   button {
     background-color: white;
     border: none;
@@ -207,16 +219,25 @@ input[type="radio"] {
     border-radius: 10px;
     transition: background-color 0.3s ease;
   }
+  
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: v.$purple_4;
     cursor: pointer;
+  
     button {
       background-color: v.$purple_4;
     }
   }
+
   border-radius: 20px;
   padding: 4px;
+
+  @media screen and (max-width: 400px) {
+    gap: 8px;
+    font-size: 14px;    
+  }
 }
 
 .remove-button {
