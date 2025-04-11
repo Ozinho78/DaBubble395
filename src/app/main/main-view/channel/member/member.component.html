@@ -1,1 +1,17 @@
-<p>test</p>
+<div *ngIf="isOpen" class="overlay-backdrop" (click)="close($event)"></div>
+<div *ngIf="isOpen" class="member-overlay">
+    <div class="member-cont">
+        <div class="header">
+            <span>Mitglieder</span>
+            <span (click)="close($event)">X</span>
+        </div>
+        <div class="members">
+            <div class="member-list">
+                <span>Frederick Beck (Du)</span>
+                <span>Sofia Müller</span>
+                <span>Noah Braun</span>
+            </div>
+            <span>Mitglieder hinzufügen</span>
+        </div>
+    </div>
+</div>

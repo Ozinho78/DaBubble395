@@ -30,6 +30,8 @@
             </div>
         </div>
 
+        <app-member #modalMember [channelIdInput]="selectedChannelId"></app-member>
+
     </div>
 
     <div class="shadow"></div>
@@ -113,5 +115,4 @@
     [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
 
 <app-show-channel #modal [channelIdInput]="selectedChannelId"></app-show-channel>
-<app-member #modalMember [channelIdInput]="selectedChannelId"></app-member>
 <app-add-user #modalAddUser [channelIdInput]="selectedChannelId"></app-add-user>
