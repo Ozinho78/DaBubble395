@@ -1,0 +1,25 @@
+@use "../mixins.scss" as m;
+
+.landscape-blocker {
+  display: none;
+}
+
+@media screen and (orientation: landscape) and (pointer: coarse) {
+  .landscape-blocker {
+    display: flex;
+    position: fixed;
+    z-index: 9999;
+    background-color: #fff;
+    width: 100vw;
+    height: 100vh;
+    @include m.flexBox(column, center, center);
+
+    img {
+      width: 300px;
+    }
+  }
+
+  router-outlet {
+    display: none;
+  }
+}
