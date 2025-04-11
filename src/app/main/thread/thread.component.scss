@@ -36,6 +36,7 @@ h2 {
     max-height: 96px;
     margin: 0 40px;
     @include m.flexBox(row, space-between, center);
+    position: relative;
 
     .header-label {
         display: flex;
