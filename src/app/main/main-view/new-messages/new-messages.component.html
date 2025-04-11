@@ -19,7 +19,7 @@
         <button (click)="removeSelection()">❌</button>
 
         <!-- Fehlermeldung anzeigen, falls Eingabe ungültig ist -->
-        <span *ngIf="errorMessage && !targetUser && !targetChannel && !enteredEmail" class="error-text">
+        <span *ngIf="!targetUser && !targetChannel" class="error-text">
           {{ errorMessage }}
         </span>
         
