@@ -3,9 +3,9 @@
 
 .overlay-backdrop {
     position: fixed;
-    inset: 0; // top: 0; right: 0; bottom: 0; left: 0;
-    background-color: rgba(0, 0, 0, 0.4); // leicht transparentes Schwarz
-    z-index: 99; // liegt unter .member-overlay
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 99;
 }
 
 .member-overlay {
@@ -19,7 +19,6 @@
     background-color: #fff;
     box-shadow: 0px 6px 10px 0px #00000033;
     z-index: 100;
-    border: 1px solid #ADB0D9;
 }
 
 .member-cont {
