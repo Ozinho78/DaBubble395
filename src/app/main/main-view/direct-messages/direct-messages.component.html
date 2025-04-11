@@ -4,11 +4,21 @@
       <div class="header-label" (click)="showProfile(user.docId)">
         <div class="profile-pic-wrapper">
           <img class="profile-pic" [src]="user.avatar" alt="Profilepicture" />
-          <ng-container *ngIf="onlineStatus$ | async as online; else offlineBlock">
-            <img class="profile-pic-online" src="img/direct-messages-img/online.png" alt="Online Indicator" />
+          <ng-container
+            *ngIf="onlineStatus$ | async as online; else offlineBlock"
+          >
+            <img
+              class="profile-pic-online"
+              src="img/direct-messages-img/online.png"
+              alt="Online Indicator"
+            />
           </ng-container>
           <ng-template #offlineBlock>
-            <img class="profile-pic-offline" src="img/direct-messages-img/offline.png" alt="Offline Indicator" />
+            <img
+              class="profile-pic-offline"
+              src="img/direct-messages-img/offline.png"
+              alt="Offline Indicator"
+            />
           </ng-template>
         </div>
         <h2>{{ user.name }}</h2>
@@ -21,24 +31,50 @@
   <div id="chat-container" class="chat-container" #chatContainer>
     <ng-container *ngIf="messages.length > 0; else infoBlock">
       <div id="replies" class="replies">
-        <div class="reply-container" *ngFor="let msg of messages" [ngClass]="{
-          'own-message': msg?.userId === loggedInUserId,
-          'being-edited': editingTarget?.id === msg.id
-        }" (mouseenter)="hoveredMessageId = msg.id!" (mouseleave)="hoveredMessageId = null">
-
+        <div
+          class="reply-container"
+          *ngFor="let msg of messages"
+          [ngClass]="{
+            'own-message': msg?.userId === loggedInUserId,
+            'being-edited': editingTarget?.id === msg.id
+          }"
+          (mouseenter)="hoveredMessageId = msg.id!"
+          (mouseleave)="hoveredMessageId = null"
+        >
           <!-- reactions menu -->
-          <app-reaction-menu [docId]="msg.id!" [userId]="msg.userId" [currentUserId]="loggedInUserId" [text]="msg.text"
-            [type]="'chat'" [isHovered]="hoveredMessageId === msg.id! && editingTarget?.id !== msg.id!"
-            [isOwnMessage]="msg.userId === loggedInUserId" [isEditing]="editingTarget?.id === msg.id!"
-            [parentId]="chatId" (editRequest)="handleEditRequest($event)">
+          <app-reaction-menu
+            [docId]="msg.id!"
+            [userId]="msg.userId"
+            [currentUserId]="loggedInUserId"
+            [text]="msg.text"
+            [type]="'chat'"
+            [isHovered]="
+              hoveredMessageId === msg.id! && editingTarget?.id !== msg.id!
+            "
+            [isOwnMessage]="msg.userId === loggedInUserId"
+            [isEditing]="editingTarget?.id === msg.id!"
+            [parentId]="chatId"
+            (editRequest)="handleEditRequest($event)"
+          >
           </app-reaction-menu>
 
           <div class="reply" *ngIf="user$ | async as user">
-            <img class="avatar" [src]="msg?.senderAvatar" alt="Profilepicture" />
+            <img
+              class="avatar"
+              [src]="msg?.senderAvatar"
+              alt="Profilepicture"
+            />
             <div class="message">
               <div class="message-info">
-                <div (click)="msg?.userId ? showProfile(msg.userId) : null" class="message-info-name">
-                  {{ msg?.senderName || msg?.userId }}
+                <div
+                  (click)="msg?.userId ? showProfile(msg.userId) : null"
+                  class="message-info-name"
+                >
+                  <ng-container
+                    *ngIf="getUserObservable(msg.userId) | async as sender"
+                  >
+                    {{ sender.name }}
+                  </ng-container>
                 </div>
                 <div class="message-info-time">
                   {{ formatMessageDate(msg?.creationDate) }}
@@ -49,10 +85,13 @@
               </div>
 
               <!-- reactions -->
-              <app-reaction-display [threadId]="msg.id!" [currentUserId]="loggedInUserId" collectionName="chats"
-                [parentId]="chatId">
+              <app-reaction-display
+                [threadId]="msg.id!"
+                [currentUserId]="loggedInUserId"
+                collectionName="chats"
+                [parentId]="chatId"
+              >
               </app-reaction-display>
-
             </div>
           </div>
         </div>
@@ -79,12 +118,21 @@
   </ng-template>
 
   <!-- input -->
-  <app-message-input *ngIf="true" [editingMessageId]="editingTarget?.id || null" [isDirectMessage]="true"
-    (newDirectMessage)="onNewMessage($event)" [editingText]="editingTarget?.text || ''"
-    [editingType]="editingTarget?.type || null" (editSaved)="clearEditState()"
-    (editCancelled)="clearEditState()"></app-message-input>
-
+  <app-message-input
+    *ngIf="true"
+    [editingMessageId]="editingTarget?.id || null"
+    [isDirectMessage]="true"
+    (newDirectMessage)="onNewMessage($event)"
+    [editingText]="editingTarget?.text || ''"
+    [editingType]="editingTarget?.type || null"
+    (editSaved)="clearEditState()"
+    (editCancelled)="clearEditState()"
+  ></app-message-input>
 </div>
 
-<app-profile-view *ngIf="profileViewOpen && selectedProfile" [userName]="selectedProfile"
-  [onlineStatus$]="selectedProfilePresence$" (close)="closeProfile()"></app-profile-view>
+<app-profile-view
+  *ngIf="profileViewOpen && selectedProfile"
+  [userName]="selectedProfile"
+  [onlineStatus$]="selectedProfilePresence$"
+  (close)="closeProfile()"
+></app-profile-view>

@@ -56,3 +56,24 @@ app-main-view {
         margin: 0 5px;
     }
 }
+
+.rotate-container {
+    display: none;
+}
+
+@media screen and (orientation: landscape) and (pointer: coarse){
+  .content {
+    display: none;
+  }
+
+  .rotate-container {  
+    display: block;
+    width: 100%;
+    height: 100%;
+    @include m.flexBox(column, center, center);
+    
+    img {
+      width: 300px;
+    }
+  }
+}
