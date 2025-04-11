@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
@@ -10,27 +17,42 @@ import { ProfileViewComponent } from '../../shared/profile-view/profile-view.com
 import { User } from '../../../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { doc, getDoc } from 'firebase/firestore';
-import { ReactionDisplayComponent } from "../../reactions/reaction-display.component";
-import { ReactionMenuComponent } from "../../reactions/reaction-menu.component";
+import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
+import { ReactionMenuComponent } from '../../reactions/reaction-menu.component';
 
 @Component({
   selector: 'app-direct-messages',
   standalone: true,
-  imports: [CommonModule, MessageInputComponent, ProfileViewComponent, ReactionDisplayComponent, ReactionMenuComponent],
+  imports: [
+    CommonModule,
+    MessageInputComponent,
+    ProfileViewComponent,
+    ReactionDisplayComponent,
+    ReactionMenuComponent,
+  ],
   templateUrl: './direct-messages.component.html',
   styleUrls: [
     './direct-messages.component.scss',
     '../../thread/thread.component.scss',
-    '../../thread/message/message.component.scss'
-  ]
+    '../../thread/message/message.component.scss',
+  ],
 })
 export class DirectMessagesComponent implements OnInit {
-  @Output() editRequest = new EventEmitter<{ id: string, text: string, type: 'message' | 'thread' | 'chat' }>();
+  @Output() editRequest = new EventEmitter<{
+    id: string;
+    text: string;
+    type: 'message' | 'thread' | 'chat';
+  }>();
 
   @ViewChild('chatContainer') chatContainer!: ElementRef;
 
   onlineStatus$: Observable<boolean> = of(false);
   user$: Observable<User> = of(new User());
+  userObservables: Map<
+    string,
+    Observable<{ id: string; name: string; avatar: string; email: string }>
+  > = new Map();
+
   messages: Message[] = [];
   selectedProfile: {
     id: string;
@@ -44,14 +66,18 @@ export class DirectMessagesComponent implements OnInit {
   profileViewOpen: boolean = false;
 
   hoveredMessageId: string | null = null;
-  editingTarget: { id: string, text: string, type: 'message' | 'thread' | 'chat' } | null = null;
+  editingTarget: {
+    id: string;
+    text: string;
+    type: 'message' | 'thread' | 'chat';
+  } | null = null;
 
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
     private chatService: ChatService,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initLoggedInUser();
@@ -195,6 +221,16 @@ export class DirectMessagesComponent implements OnInit {
     return user;
   }
 
+  getUserObservable(
+    userId: string
+  ): Observable<{ id: string; name: string; avatar: string; email: string }> {
+    if (!this.userObservables.has(userId)) {
+      const user$ = this.userService.getUserById(userId);
+      this.userObservables.set(userId, user$);
+    }
+    return this.userObservables.get(userId)!;
+  }
+
   formatMessageDate(timestamp: any): string {
     const date = new Date(timestamp);
     const today = new Date();
@@ -221,7 +257,11 @@ export class DirectMessagesComponent implements OnInit {
     return userId ? this.presenceService.getUserPresence(userId) : of(false);
   }
 
-  handleEditRequest(event: { id: string, text: string, type: 'message' | 'thread' | 'chat' }) {
+  handleEditRequest(event: {
+    id: string;
+    text: string;
+    type: 'message' | 'thread' | 'chat';
+  }) {
     this.editingTarget = event;
   }
 
