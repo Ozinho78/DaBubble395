@@ -9,7 +9,7 @@
         type="text"
         [formControl]="inputControl"
         placeholder="An: #channel oder @jemand"
-        (blur)="checkEmailAndLockInput();blurTest()"
+        (blur)="checkEmailAndLockInput()"
       />
 
       <div *ngIf="!enableInputTop" class="user-channel-list-top">
@@ -22,10 +22,6 @@
         <span *ngIf="errorMessage && !targetUser && !targetChannel && !enteredEmail" class="error-text">
           {{ errorMessage }}
         </span>
-        <!-- <span *ngIf="errorMessage && !inputValid" class="error-text">
-          {{ errorMessage }}
-        </span> -->
-        
         
         
       </div>
