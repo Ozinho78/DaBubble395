@@ -35,6 +35,56 @@
     @include m.styleFont("Nunito", 24px, 700, 37.74px);
 }
 
+.close-btn-container {
+    @include m.flexBox(row, center, center);
+
+    .close-btn {
+        height: 13.5px;
+        width: 13.5px;
+        padding: 6.5px;
+        border-radius: 50%;
+        transition: all 0.100s ease-in;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.1);
+            background-color: v.$purple_bg;
+
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+}
+
+.add-member {
+    @include m.flexBox(row, normal, center, 15px);
+    transition: background 0.1s ease-in;
+    height: 46px;
+    padding: 3px 10px;
+    border-radius: 30px;
+    cursor: pointer;
+
+    &:hover {
+        background: v.$purple_bg;
+        color: v.$purple_3;
+
+        svg {
+            path {
+                fill: v.$purple_3;
+            }
+        }
+    }
+
+    .add-member-container {
+        @include m.flexBox(row, center, center);
+        height: 40px;
+        width: 40px;
+        background: v.$purple_bg;
+        border-radius: 50%;
+    }
+}
+
 .members {
     @include m.flexBox(column, normal, normal, 15px);
     @include m.styleFont("Nunito", 18px, 400);
