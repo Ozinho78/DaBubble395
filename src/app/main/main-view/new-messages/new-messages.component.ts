@@ -220,7 +220,7 @@ export class NewMessagesComponent implements OnInit {
       // für Teilmatches
       // const foundUser = this.users.find(user => user.name.toLowerCase().includes (value.replace('@', '').toLowerCase()));
 
-      console.log('Gefundener User:', this.targetUser);
+      // console.log('Gefundener User:', this.targetUser);
     });
   }
 
@@ -238,7 +238,7 @@ export class NewMessagesComponent implements OnInit {
       if (foundChannel != null) {
         this.toggleInputBottom();
       }
-      console.log('Gefundener Channel:', this.targetChannel);
+      // console.log('Gefundener Channel:', this.targetChannel);
     });
   }
 
