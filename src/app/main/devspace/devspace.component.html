@@ -143,6 +143,7 @@
       </div>
 
       <app-add-channel
+        [existingChannelsInDevSpace]="userChannels"
         [usersArrayFromDevSpace]="users"
         (onSave)="saveChannelToFirestore($event)">
       </app-add-channel>

@@ -11,6 +11,8 @@ import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
 import { ThreadModalComponent } from './thread-modal/thread-modal.component';
 import { SearchModalService } from '../../../services/search-modal.service';
+import { DirectMessagesComponent } from '../main-view/direct-messages/direct-messages.component';
+import { UserProfileService } from '../../../services/user-profile.service';
 
 
 @Component({
@@ -58,7 +60,8 @@ export class HeaderComponent {
     private userService: UserService,
     private presenceService: PresenceService,
     private searchService: SearchService,
-    private modalService: SearchModalService
+    private modalService: SearchModalService,
+    private userProfileService: UserProfileService
   ) {
     setTimeout(() => {
       this.currentUser.docId = localStorage.getItem('user-id') || '';
@@ -205,7 +208,16 @@ export class HeaderComponent {
         }
       });
     } else if (result.type === 'user') {
-      this.openThreadModal(result); // nur noch für Benutzerprofil
+      this.router.navigate(['/main'], {
+        queryParams: { chat: result.userId } // optional, um DirectMessages zu aktivieren
+      }).then(() => {
+        // Nach Navigation -> Profil anzeigen
+        setTimeout(() => {
+          this.userProfileService.showUserProfile(result.userId);
+        }, 500); // kleiner Delay, damit Component initialisiert wird
+      });
+      // this.userProfileService.showUserProfile(result.userId);    // funktioniert nur, wenn direct-messages aktiv ist
+      // this.openThreadModal(result); // nur noch für Benutzerprofil
     }
 
     // Optional zum Resetten der Suchergebnisses

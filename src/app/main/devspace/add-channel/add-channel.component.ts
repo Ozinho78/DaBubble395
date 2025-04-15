@@ -25,6 +25,10 @@ export class AddChannelComponent {
   
   // Lokale Variable zur Speicherung der Daten
   storedUsersFromDevSpace: User[] = [];
+  @Input() existingChannelsInDevSpace: Channel[] = [];
+  duplicateChannelError: boolean = false;
+  private errorTimeout: any;
+  
 
   updatedUsers: User[] = [];
 
@@ -35,7 +39,6 @@ export class AddChannelComponent {
   }
 
   handleUsersUpdate(updatedUsers: string[]) {
-    // console.log(updatedUsers);
     this.memberDocIds = updatedUsers;
   }
 
@@ -64,22 +67,29 @@ export class AddChannelComponent {
     let newChannel = new Channel();
     newChannel.name = this.nameInput;
     newChannel.description = this.descriptionInput;
-    // newChannel.creationDate = new Date();
     newChannel.creationDate = new Date().getTime().toString();
     newChannel.member = this.memberDocIds;
     newChannel.userId = this.userLoggedIn;
     this.onSave.emit(newChannel);
-    // console.log(newChannel);
+  }
+
+  onChannelNameChange() {
+    const trimmed = this.nameInput.trim().toLowerCase();
+    const exists = this.existingChannelsInDevSpace.some(
+      channel => channel.name.trim().toLowerCase() === trimmed
+    );
+  
+    this.duplicateChannelError = exists;
   }
 
   save() {
-    if (this.nameInput.trim()) {
-      // console.log(this.usersArrayFromDevSpace);
-      this.close();
-      this.openMemberInput = true;
+    if (this.duplicateChannelError || this.nameInput.trim().length < 3) {
+      return;
     }
+  
+    this.openMemberInput = true;
   }
-
+  
   cancelMemberInput(){
     this.memberModalClose.emit();
     this.openMemberInput = false;
@@ -93,3 +103,12 @@ export class AddChannelComponent {
     this.resetInputs();
   }
 }
+
+/* alte Methode ohne Validierung
+save {
+  if (this.nameInput.trim()) {
+    this.close();
+    this.openMemberInput = true;
+  }
+}
+*/

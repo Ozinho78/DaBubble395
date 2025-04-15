@@ -146,3 +146,11 @@ button, svg {
 }
 
 
+.error-text {
+  position: absolute;
+  top: 190px;
+  left: 200px;
+  transition: opacity 0.3s ease;
+  padding-left: 40px;
+  @include m.styleFont("Nunito", 18px, 700, 1.36, rgb(134, 26, 26));
+}

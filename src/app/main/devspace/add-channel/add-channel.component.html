@@ -31,6 +31,10 @@
     </div>
     <p class="channel-description">Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
 
+    <div *ngIf="duplicateChannelError" class="error-text">
+      Ein Channel mit diesem Namen existiert bereits im DevSpace.
+    </div>
+
     <div class="input-ctn">
       <label for="nameInput">Channel-Name</label><br><br>
       <input
@@ -38,6 +42,7 @@
         name="nameInput"
         type="text"
         [(ngModel)]="nameInput"
+        (ngModelChange)="onChannelNameChange()"
         placeholder="#  z.B. Kooperationsprojekte"
       /><br>
       <label class="description" for="descriptionInput">Beschreibung <span>(optional)</span></label><br><br>
@@ -51,7 +56,7 @@
     </div>
     
     <div (click)="save()" class="save-btn">
-      <button [disabled]="nameInput.length < 3">Erstellen</button>
+      <button [disabled]="nameInput.length < 3 || duplicateChannelError" [title]="duplicateChannelError ? 'Channel existiert bereits' : (nameInput.length < 3 ? 'Name zu kurz' : '')">Erstellen</button>
     </div>
   </div>
 </div>
