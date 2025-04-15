@@ -18,6 +18,17 @@
         </div>
     </div>
 
+    <!-- Channel-Liste -->
+    <div class="channel-list-container" *ngIf="showChannelList">
+        <div class="channel-list-scroll-wrapper">
+            <ul class="channel-list">
+                <li *ngFor="let channel of filteredChannels" (click)="mentionChannel(channel)">
+                    <span>#{{ channel.name }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <textarea #inputElement #inputElementForFocus type="text" [(ngModel)]="messageText" (input)="onTextChange($event)"
         [placeholder]="channelName ? 'Nachricht an #' + channelName : 'Antworten...'" (keydown)="onKeyDown($event)">
     </textarea>

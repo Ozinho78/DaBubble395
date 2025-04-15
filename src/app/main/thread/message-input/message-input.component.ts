@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit, SimpleChanges } from '@angular/core';
-import { Firestore, addDoc, collection, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, addDoc, collection, doc, getDoc, updateDoc, getDocs } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Message } from '../../../../models/message.class';
@@ -48,6 +48,10 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     allUsers$: Observable<any[]>; // Alle Nutzer
     currentUserId: string | null = null;
 
+    showChannelList: boolean = false;
+    filteredChannels: any[] = [];
+    allChannels: any[] = []; // wird bei Init geladen
+
     private globalClickListener?: () => void;
 
     constructor(
@@ -66,7 +70,15 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     ngOnInit() {
         this.route.queryParamMap.subscribe(params => {
             this.channelId = params.get('channel') || '';
-            //console.log('Aktuelle Channel ID:', this.channelId);
+        });
+
+        // 🔽 Channels laden
+        const channelsRef = collection(this.firestore, 'channels');
+        getDocs(channelsRef).then(snapshot => {
+            this.allChannels = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
         });
     }
 
@@ -89,7 +101,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         }
         if (changes['chatUserId'] || changes['channelId']) {
             setTimeout(() => this.focusInputTextArea(), 0);
-          }
+        }
     }
 
     ngOnDestroy() {
@@ -98,9 +110,9 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
 
     public focusInputTextArea() {
         if (this.inputElementRef) {
-          this.inputElementRef.nativeElement.focus();
+            this.inputElementRef.nativeElement.focus();
         }
-      }
+    }
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {
@@ -277,17 +289,24 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         this.showEmojiPicker = false; // Schließt den Picker nach Auswahl
     }
 
-    /** Überprüft, ob @ eingegeben wurde und filtert Nutzer */
+    /** Überprüft, ob @ oder # eingegeben wurde und filtert Nutzer */
     onTextChange(event: any) {
         const inputText = event.target.value;
-        const lastWord = inputText.split(' ').pop(); // Letztes Wort im Textfeld prüfen
+        const lastWord = inputText.split(' ').pop();
 
         if (lastWord?.startsWith('@')) {
             this.showMentionList = true;
-            this.showEmojiPicker = false; // Emojis schließen
+            this.showEmojiPicker = false;
+            this.showChannelList = false;
             this.filterUsers(lastWord.substring(1).toLowerCase());
+        } else if (lastWord?.startsWith('#')) {
+            this.showChannelList = true;
+            this.showMentionList = false;
+            this.showEmojiPicker = false;
+            this.filterChannels(lastWord.substring(1).toLowerCase());
         } else {
             this.showMentionList = false;
+            this.showChannelList = false;
         }
     }
 
@@ -298,6 +317,12 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
                 user.name.toLowerCase().includes(searchName)
             );
         });
+    }
+
+    filterChannels(search: string) {
+        this.filteredChannels = this.allChannels.filter(channel =>
+            channel.name.toLowerCase().includes(search)
+        );
     }
 
     /** Erwähnungsliste umschalten */
@@ -316,6 +341,13 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
         this.messageText = words.join(' ');
 
         this.showMentionList = false; // Erwähnungsliste schließen
+    }
+
+    mentionChannel(channel: any) {
+        const words = this.messageText.split(' ');
+        words[words.length - 1] = `#${channel.name} `;
+        this.messageText = words.join(' ');
+        this.showChannelList = false;
     }
 
     /** Scrollt den Chat nach unten */
