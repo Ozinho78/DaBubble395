@@ -17,10 +17,11 @@ import { ReactionsComponent } from "./reactions.component";
     styleUrls: ['./reaction-display.component.scss']
 })
 export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() docId!: string;
     @Input() threadId!: string;
     @Input() currentUserId!: string;
     @Input() collectionName: 'threads' | 'messages' | 'chats' = 'threads';
-    @Input() type: 'message' | 'thread' | 'chat' = 'thread';
+    @Input() type: 'message' | 'thread' | 'chat' = 'chat';
     @Input() parentId?: string;
 
     currentUserName: string = '';
@@ -184,18 +185,22 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.showReactionsOverlay = false;
     }
 
-    async onEmojiSelected(emojiType: string) {
+    onEmojiSelected(emojiType: string): void {
         const reaction = new Reaction({
             userId: this.currentUserId,
             type: emojiType,
             timestamp: Date.now()
         });
 
-        await this.reactionService.addReaction(this.collectionName, this.threadId, reaction);
+        const collectionName = this.type === 'chat' ? `chats/${this.parentId}/messages` :
+            this.type === 'message' ? 'messages' : 'threads';
 
-        this.showReactionsOverlay = false;
-
-        this.loadReactions();
+        this.reactionService
+            .addReaction(collectionName, this.docId, reaction)
+            .then(() => {
+                this.showReactionsOverlay = false;
+            })
+            .catch(err => console.error('Fehler beim Hinzufügen der Reaktion:', err));
     }
 
     adjustTooltipPosition(emoji: string) {

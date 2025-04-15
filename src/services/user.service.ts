@@ -1,22 +1,6 @@
-import {
-    inject,
-    Injectable,
-    Injector,
-    runInInjectionContext,
-} from '@angular/core';
-import {
-    Firestore,
-    getDocs,
-    collection,
-    collectionData,
-    doc,
-    addDoc,
-    docData,
-    query,
-    where,
-    getDoc,
-} from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
+import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where, getDoc } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { FirestoreService } from './firestore.service';
