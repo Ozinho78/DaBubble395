@@ -31,6 +31,10 @@
     </div>
     <p class="channel-description">Channels dienen deinem Team zur Kommunikation. Am besten sollten sie themenbezogen sein #marketing zum Beispiel.</p>
 
+    <div *ngIf="nameInput.length > 0 && nameInput.length < 3 && !duplicateChannelError" class="error-text">
+      Der Name muss mindestens 3 Zeichen lang sein.
+    </div>
+
     <div *ngIf="duplicateChannelError" class="error-text">
       Ein Channel mit diesem Namen existiert bereits im DevSpace.
     </div>
