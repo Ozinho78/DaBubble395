@@ -85,7 +85,7 @@ header {
     background-color: v.$purple_bg;
     opacity: 0.9;
     width: 500px;
-    z-index: 1000;
+    z-index: 100;
 
     .search-result-item {
       @include m.flexBox(row, flex-start, center, 8px);

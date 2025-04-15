@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { MessageInputComponent } from '../../thread/message-input/message-input.component';
 import { UserService } from '../../../../services/user.service';
 import { PresenceService } from '../../../../services/presence.service';
-import { Observable, of, firstValueFrom, map } from 'rxjs';
+import { Observable, of, firstValueFrom, map, Subscription } from 'rxjs';
 import { ChatService } from '../../../../services/direct-meassage.service';
 import { Message } from '../../../../models/message.class';
 import { ProfileViewComponent } from '../../shared/profile-view/profile-view.component';
@@ -19,6 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 import { doc, getDoc } from 'firebase/firestore';
 import { ReactionDisplayComponent } from '../../reactions/reaction-display.component';
 import { ReactionMenuComponent } from '../../reactions/reaction-menu.component';
+import { UserProfileService } from '../../../../services/user-profile.service';
 
 @Component({
   selector: 'app-direct-messages',
@@ -73,11 +74,14 @@ export class DirectMessagesComponent implements OnInit {
     type: 'message' | 'thread' | 'chat';
   } | null = null;
 
+  private subscription!: Subscription;
+
   constructor(
     private userService: UserService,
     public presenceService: PresenceService,
     private chatService: ChatService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userProfileService: UserProfileService
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +93,9 @@ export class DirectMessagesComponent implements OnInit {
           this.messageInputComponent?.focusInputTextArea();
         }, 0);
       }
+    });
+    this.subscription = this.userProfileService.userProfile$.subscribe(user => {
+      this.showUserProfile(user); // <-- private Methode intern aufgerufen
     });
   }
 
@@ -276,5 +283,18 @@ export class DirectMessagesComponent implements OnInit {
 
   clearEditState() {
     this.editingTarget = null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  showUserProfile(userId?: string): void {
+    // Öffnet das Userprofil, z. B. Modal oder View
+    console.log('Profil anzeigen für:', userId);
+    if (!userId) return;
+    this.userService
+      .getUserById(userId)
+      .subscribe((user) => this.openProfile(user, userId));
   }
 }
