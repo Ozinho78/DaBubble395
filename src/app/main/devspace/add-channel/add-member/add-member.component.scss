@@ -201,6 +201,9 @@ input[type="radio"] {
 .user-item, .selected-item {
   @include m.flexBox(row, flex-start, center, 15px);
   @include m.styleFont("Nunito", 14px, 400, 1.36, #000000);
+  transition: background-color 0.3s ease;
+  border-radius: 20px;
+  padding: 4px;
   
   img {
     width: 30px;
@@ -219,8 +222,6 @@ input[type="radio"] {
     border-radius: 10px;
     transition: background-color 0.3s ease;
   }
-  
-  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: v.$purple_4;
@@ -230,9 +231,6 @@ input[type="radio"] {
       background-color: v.$purple_4;
     }
   }
-
-  border-radius: 20px;
-  padding: 4px;
 
   @media screen and (max-width: 400px) {
     gap: 8px;

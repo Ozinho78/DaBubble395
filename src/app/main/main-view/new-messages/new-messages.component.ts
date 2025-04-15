@@ -57,6 +57,7 @@ export class NewMessagesComponent implements OnInit {
 
   newThread: Thread | null = null;
   newMessage: Message | null = null;
+  invalidInput: Boolean = true;
 
   sendMessagesArray: string[] = [];
   @ViewChild('inputTopRef') inputTopRef!: ElementRef<HTMLInputElement>;
@@ -136,7 +137,7 @@ export class NewMessagesComponent implements OnInit {
     this.userChannels = this.channels.filter(channel =>
       channel.member.includes(this.userLoggedIn)
     );
-    console.log(this.userChannels);
+    // console.log(this.userChannels);
   }
 
   // Filtert User, wenn "@" erkannt wird
@@ -201,7 +202,7 @@ export class NewMessagesComponent implements OnInit {
     }
 
     this.inputControl.valueChanges.subscribe((value) => {
-      console.log('Eingegebener Wert:', value);
+      // console.log('Eingegebener Wert:', value);
       this.filterUsers(value || '');
 
       // Null-Sicherheit hinzufügen (falls value null ist, wird ein leerer String verwendet)
@@ -219,7 +220,7 @@ export class NewMessagesComponent implements OnInit {
       // für Teilmatches
       // const foundUser = this.users.find(user => user.name.toLowerCase().includes (value.replace('@', '').toLowerCase()));
 
-      console.log('Gefundener User:', this.targetUser);
+      // console.log('Gefundener User:', this.targetUser);
     });
   }
 
@@ -237,7 +238,7 @@ export class NewMessagesComponent implements OnInit {
       if (foundChannel != null) {
         this.toggleInputBottom();
       }
-      console.log('Gefundener Channel:', this.targetChannel);
+      // console.log('Gefundener Channel:', this.targetChannel);
     });
   }
 
@@ -302,15 +303,95 @@ export class NewMessagesComponent implements OnInit {
     this.targetUser = null;
   }
 
-  blurTest(){
-    console.log("Blur ist aktiviert"); 
+
+  checkEmailAndLockInput() {
+    setTimeout(() => {
+      // ⛔ Eingabe schon bestätigt? -> Nicht weiter prüfen
+      if (this.targetUser || this.targetChannel || this.enteredEmail) {
+        return;
+      }
+  
+      const input = this.inputControl.value?.trim();
+      this.errorMessage = '';
+  
+      if (!input) {
+        this.errorMessage = 'Bitte etwas eingeben.';
+        this.showUsers = false;
+        this.showChannels = false;
+        this.toggleInputTop();
+        return;
+      }
+  
+      if (input.startsWith('@')) {
+        const name = input.substring(1);
+        const user = this.users.find(u => u.name === name);
+  
+        if (user) {
+          this.targetUser = user;
+          this.enableInputTop = false;
+          this.inputControl.setValue('');
+          return;
+        } else {
+          this.errorMessage = `Benutzer "@${name}" wurde nicht gefunden.`;
+        }
+      } else if (input.startsWith('#')) {
+        const name = input.substring(1);
+        const channel = this.channels.find(c => c.name === name);
+  
+        if (channel) {
+          this.targetChannel = channel;
+          this.enableInputTop = false;
+          this.inputControl.setValue('');
+          return;
+        } else {
+          this.errorMessage = `Channel "#${name}" wurde nicht gefunden.`;
+        }
+      } else {
+        this.errorMessage = 'Ungültige Eingabe. Bitte @Benutzer oder #Channel verwenden.';
+      }
+  
+      this.showUsers = false;
+      this.showChannels = false;
+      this.toggleInputTop();
+    }, 300); // oder 100, je nach Bedarf
+  }
+  
+  
+  
+
+  isValidEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
   }
 
-  /**
-   * Prüft, ob die Eingabe eine gültige E-Mail-Adresse ist.
-   * Falls ja, sperrt das Input-Feld.
-   */
-  checkEmailAndLockInput() {
+
+  isValidUserOrChannel(input: string): boolean {
+    const userMatch = input.match(/^@\w+$/);
+    const channelMatch = input.match(/^#\w+$/);
+    return userMatch !== null || channelMatch !== null;
+  }
+
+  removeSelection() {
+    this.targetUser = null;
+    this.targetChannel = null;
+    this.enteredEmail = null;
+    this.invalidInput = false;
+    this.inputControl.enable(); // Eingabe wieder aktivieren
+    this.inputControl.setValue(''); // Input-Feld leeren
+    this.toggleInputTop();
+    this.errorMessage = null; // Fehlermeldung zurücksetzen
+  }
+}
+
+
+
+
+
+
+
+
+/*
+checkEmailAndLockInput() {
   const input = this.inputControl.value?.trim();
   this.errorMessage = '';
   this.targetUser = null;
@@ -333,6 +414,7 @@ export class NewMessagesComponent implements OnInit {
       return;
     } else {
       this.errorMessage = `Benutzer "@${name}" wurde nicht gefunden.`;
+      console.log(this.errorMessage);
       return;
     }
   }
@@ -348,49 +430,38 @@ export class NewMessagesComponent implements OnInit {
       return;
     } else {
       this.errorMessage = `Channel "#${name}" wurde nicht gefunden.`;
+      console.log(this.errorMessage);
       return;
     }
   }
 
-  if (this.isValidEmail(input)) {
-    this.enteredEmail = input;
-    this.enableInputTop = false;
-    this.inputControl.setValue('');
-    return;
-  }
+  // if (this.isValidEmail(input)) {
+  //   this.enteredEmail = input;
+  //   this.enableInputTop = false;
+  //   this.inputControl.setValue('');
+  //   return;
+  // }
 
-  this.errorMessage = 'Ungültige Eingabe. Bitte @Benutzer, #Channel oder gültige E-Mail verwenden.';
+  this.showUsers = false;
+  this.showChannels = false;
+  this.toggleInputTop(); // das deaktiviert das Input-Feld
+
+  this.errorMessage = 'Ungültige Eingabe. Bitte @Benutzer oder #Channel verwenden.';
+  // this.errorMessage = 'Ungültige Eingabe. Bitte @Benutzer, #Channel oder gültige E-Mail verwenden.';
 }
 
-  
 
-  /**
-   * Prüft, ob ein String eine gültige E-Mail-Adresse ist.
-   */
-  isValidEmail(email: string): boolean {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-  }
 
-  /**
-  * Prüft, ob ein gültiger User (@user) oder ein Channel (#channel) eingegeben wurde.
-  */
-  isValidUserOrChannel(input: string): boolean {
-    const userMatch = input.match(/^@\w+$/); // Prüft auf @username
-    const channelMatch = input.match(/^#\w+$/); // Prüft auf #channel
-    return userMatch !== null || channelMatch !== null;
-  }
+*/
 
-  removeSelection() {
-    this.targetUser = null;
-    this.targetChannel = null;
-    this.enteredEmail = null;
-    this.inputControl.enable(); // Eingabe wieder aktivieren
-    this.inputControl.setValue(''); // Input-Feld leeren
-    this.toggleInputTop();
-    this.errorMessage = null; // Fehlermeldung zurücksetzen
-  }
-}
+
+
+
+
+
+
+
+
 
 
     /*

@@ -132,6 +132,11 @@
       box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
       padding: 50px 60px;
 
+      @media screen and (max-width: 375px) and (max-height: 667px) {
+        position: relative;
+        padding: 20px 20px;
+      }
+
       h2 {
         @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
         margin: 0;
@@ -232,6 +237,11 @@
         padding: 30px;
         margin: 40px 0;
         transition: 75ms;
+
+        @media screen and (max-width: 375px) and (max-height: 667px) {
+          margin: 10px 0;
+          padding: 10px;
+        }
 
         img {
           margin-right: 20px;
@@ -387,4 +397,7 @@
 
 
 @media screen and (max-width: 375px) and (max-height: 667px) {
+  .neu-bei-bubble {
+    display: none;
+  }
 }

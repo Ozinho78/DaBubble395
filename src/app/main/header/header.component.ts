@@ -50,6 +50,8 @@ export class HeaderComponent {
   @ViewChild('searchContainer') searchContainer!: ElementRef;
   searchActive = false;  
 
+  placeholderText: string = 'Devspace durchsuchen';
+
   constructor(
     private auth: Auth,
     private router: Router,
@@ -87,6 +89,9 @@ export class HeaderComponent {
       }
     });
 
+    this.updatePlaceholder();
+    window.addEventListener('resize', this.updatePlaceholder.bind(this));
+
     // Klick außerhalb erkennen
     document.addEventListener('click', this.handleClickOutside.bind(this));
     document.addEventListener('touchstart', this.handleClickOutside.bind(this));
@@ -114,6 +119,14 @@ export class HeaderComponent {
     });
   
     this.updateHeaderDisplay();
+  }
+
+  updatePlaceholder() {
+    if (window.innerWidth <= 1220) {
+      this.placeholderText = 'Search';
+    } else {
+      this.placeholderText = 'Devspace durchsuchen';
+    }
   }
 
 
