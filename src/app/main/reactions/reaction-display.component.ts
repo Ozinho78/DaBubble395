@@ -37,6 +37,9 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     private reactionsSub?: Subscription;
 
+    userNameMap: { [userId: string]: string } = {};
+    userSubscriptions: { [userId: string]: Subscription } = {};
+
     constructor(
         private reactionService: ReactionService,
         private userService: UserService
@@ -55,6 +58,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy() {
         this.reactionsSub?.unsubscribe();
+        Object.values(this.userSubscriptions).forEach(sub => sub.unsubscribe());
     }
 
     async loadUsers() {
@@ -71,12 +75,12 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     async loadReactions() {
-        this.reactionsSub?.unsubscribe(); // altes Abo schließen
+        this.reactionsSub?.unsubscribe();
 
         if (!this.threadId) return;
 
         this.reactionsSub = this.reactionService
-            .getReactions(this.collectionName, this.threadId, this.parentId) // 👈 parentId wird mitgegeben
+            .getReactions(this.collectionName, this.threadId, this.parentId)
             .subscribe(
                 reactions => {
                     this.reactions = reactions;
@@ -116,8 +120,8 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.groupedReactions = groups;
     }
 
-    getUserName(userId: string) {
-        const user = this.userArray.find(u => u.docId === userId);
+    getUserName(userId: string): string {
+        const user = this.userService.userArray.find(u => u.docId === userId);
         return user?.name || 'Unbekannt';
     }
 

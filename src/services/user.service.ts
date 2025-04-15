@@ -1,6 +1,6 @@
 import { inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where, getDoc } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { Firestore, getDocs, collection, collectionData, doc, addDoc, docData, query, where, getDoc, docSnapshots } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable, map, filter } from 'rxjs';
 import { AuthService } from './auth.service';
 import { User } from '../models/user.model';
 import { FirestoreService } from './firestore.service';
@@ -44,6 +44,21 @@ export class UserService {
         const userRef = doc(this.firestore, `users/${userId}`);
         return docData(userRef).pipe(
             map((user: any) => {
+                return {
+                    id: userId,
+                    name: user?.name || 'Unbekannt',
+                    avatar: user?.avatar ? `img/avatar/${user.avatar}` : 'img/avatar/default.png',
+                    email: user?.email || '',
+                };
+            })
+        );
+    }
+
+    getLiveUserById(userId: string): Observable<{ id: string; name: string; avatar: string; email: string }> {
+        const userRef = doc(this.firestore, `users/${userId}`);
+        return docSnapshots(userRef).pipe(
+            map(snapshot => {
+                const user = snapshot.data() as any;
                 return {
                     id: userId,
                     name: user?.name || 'Unbekannt',

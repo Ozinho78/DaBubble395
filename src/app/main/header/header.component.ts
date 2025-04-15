@@ -69,7 +69,7 @@ export class HeaderComponent {
     
     const userId = localStorage.getItem('user-id');
     if (userId) {
-      this.userName$ = this.userService.getUserById(userId);
+      this.userName$ = this.userService.getLiveUserById(userId);
       this.presenceService.setUserPresence(userId);
       this.onlineStatus$ = this.presenceService.getUserPresence(userId); // Hier onlineStatus$ setzen
     } else {
