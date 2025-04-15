@@ -90,6 +90,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
             if (!clickedInside) {
                 this.showEmojiPicker = false;
                 this.showMentionList = false;
+                this.showChannelList = false;
             }
         });
         this.focusInputTextArea();
@@ -275,7 +276,8 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     toggleEmojiPicker() {
         this.showEmojiPicker = !this.showEmojiPicker;
         if (this.showEmojiPicker) {
-            this.showMentionList = false; // Erwähnungsliste schließen, wenn Emojis geöffnet werden
+            this.showMentionList = false;
+            this.showChannelList = false;
         }
     }
 
@@ -329,7 +331,8 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
     toggleMentionList() {
         this.showMentionList = !this.showMentionList;
         if (this.showMentionList) {
-            this.showEmojiPicker = false; // Emojis schließen, wenn Erwähnung geöffnet wird
+            this.showEmojiPicker = false;
+            this.showChannelList = false;
             this.filterUsers('');
         }
     }
