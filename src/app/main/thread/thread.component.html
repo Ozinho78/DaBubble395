@@ -26,9 +26,11 @@
             </div>
 
             <!-- Anzahl der Nachrichten immer direkt darunter -->
-            <div class="replies-spacer">
-                <div>{{ totalMessagesCount$ | async }} Antworten</div>
-            </div>
+            <ng-container *ngIf="totalMessagesCount$ | async as totalMessages">
+                <div class="replies-spacer">
+                    <div>{{ totalMessagesCount$ | async }} Antworten</div>
+                </div>
+            </ng-container>
         </div>
 
         <div *ngIf="groupedMessages$ | async as groupedMessages">
