@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Renderer2, OnDestroy, AfterViewInit, OnInit, SimpleChanges } from '@angular/core';
 import { Firestore, addDoc, collection, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -37,6 +37,7 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
 
     @Output() newDirectMessage: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('inputElement') inputElement!: ElementRef<HTMLTextAreaElement>;
+    @ViewChild('inputElementForFocus') inputElementRef!: ElementRef<HTMLTextAreaElement>;
 
     //channelId!: string;
 
@@ -79,17 +80,27 @@ export class MessageInputComponent implements OnInit, AfterViewInit, OnDestroy, 
                 this.showMentionList = false;
             }
         });
+        this.focusInputTextArea();
     }
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges) {
         if (this.editingMessageId && this.editingText) {
             this.messageText = this.editingText;
         }
+        if (changes['chatUserId'] || changes['channelId']) {
+            setTimeout(() => this.focusInputTextArea(), 0);
+          }
     }
 
     ngOnDestroy() {
         if (this.globalClickListener) this.globalClickListener();
     }
+
+    public focusInputTextArea() {
+        if (this.inputElementRef) {
+          this.inputElementRef.nativeElement.focus();
+        }
+      }
 
     /** Nachricht oder Thread senden oder bearbeiten */
     sendMessage() {

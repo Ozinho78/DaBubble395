@@ -45,6 +45,7 @@ export class DirectMessagesComponent implements OnInit {
   }>();
 
   @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @ViewChild(MessageInputComponent) messageInputComponent!: MessageInputComponent;
 
   onlineStatus$: Observable<boolean> = of(false);
   user$: Observable<User> = of(new User());
@@ -82,7 +83,15 @@ export class DirectMessagesComponent implements OnInit {
   ngOnInit(): void {
     this.initLoggedInUser();
     this.handleChatParams();
+    this.route.queryParams.subscribe((params) => {
+      if (params['chat']) {
+        setTimeout(() => {
+          this.messageInputComponent?.focusInputTextArea();
+        }, 0);
+      }
+    });
   }
+
 
   private initLoggedInUser() {
     this.loggedInUserId = localStorage.getItem('user-id') || '';
