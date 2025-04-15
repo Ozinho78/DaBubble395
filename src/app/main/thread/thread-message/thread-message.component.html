@@ -29,8 +29,10 @@
             <div class="message-text">{{ thread.thread }}</div>
 
             <!-- reactions -->
-            <app-reaction-display [threadId]="thread.id" [currentUserId]="currentUserId!">
+            <app-reaction-display [docId]="thread.id" [threadId]="thread.id" [currentUserId]="currentUserId!"
+                [collectionName]="'threads'" [type]="'thread'">
             </app-reaction-display>
+
 
         </div>
     </div>

@@ -156,7 +156,7 @@ export class ReactionDisplayComponent implements OnInit, OnChanges, OnDestroy {
         this.closeTooltip();
 
         const collection = this.collectionName;
-        const docId = this.threadId;
+        const docId = this.docId;
         const userId = this.currentUserId;
         const parent = this.parentId;
 

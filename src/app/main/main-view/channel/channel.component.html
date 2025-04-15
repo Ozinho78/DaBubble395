@@ -79,7 +79,8 @@
                                 </div>
                             </div>
 
-                            <app-reaction-display [threadId]="thread.docId!" [currentUserId]="currentUserId!">
+                            <app-reaction-display [docId]="thread.docId" [threadId]="thread.docId"
+                                [currentUserId]="currentUserId!" [collectionName]="'threads'" [type]="'thread'">
                             </app-reaction-display>
 
                         </div>

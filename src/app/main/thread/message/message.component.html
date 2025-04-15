@@ -23,8 +23,8 @@
             <div class="message-text">{{ message.text }}</div>
 
             <!-- reactions -->
-            <app-reaction-display [threadId]="message.id!" [currentUserId]="currentUserId!"
-                [collectionName]="'messages'">
+            <app-reaction-display [docId]="message.id!" [threadId]="message.id!" [currentUserId]="currentUserId!"
+                [collectionName]="'messages'" [type]="'message'">
             </app-reaction-display>
 
         </div>
