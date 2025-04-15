@@ -65,6 +65,7 @@
         </div>
         <div class="edit-username-input">
           <input
+            (keydown.enter)="saveUsername()"
             type="text"
             [(ngModel)]="updatedName"
             placeholder="{{ user.name }}"
