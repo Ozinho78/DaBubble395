@@ -21,7 +21,7 @@
         <div class="user-wrapper">
           <div class="detail-name">
             <span>{{ user.name }}</span>
-            <div (click)="editUsername()" class="edit">Bearbeiten</div>
+            <div *ngIf="user.name !== 'Gast'" (click)="editUsername()" class="edit">Bearbeiten</div>
           </div>
           <div class="status">
             <ng-container *ngIf="onlineStatus$ | async; else offlineTemplate">
