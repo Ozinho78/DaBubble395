@@ -16,7 +16,7 @@ export class ProfileDetailComponent {
   @Input() userName!: { name: string; avatar: string; email?: string } | null;
   @Output() close = new EventEmitter<void>();
 
-  closeImgSrc: string = '/img/header-img/close.png';
+  closeImgSrc: string = 'img/header-img/close.png';
   isEditing: boolean = false;
   updatedName: string = '';
 
@@ -35,11 +35,11 @@ export class ProfileDetailComponent {
   }
 
   onMouseEnterClose(): void {
-    this.closeImgSrc = '/img/header-img/close-hover.png';
+    this.closeImgSrc = 'img/header-img/close-hover.png';
   }
 
   onMouseLeaveClose(): void {
-    this.closeImgSrc = '/img/header-img/close.png';
+    this.closeImgSrc = 'img/header-img/close.png';
   }
 
   onClose(): void {
