@@ -28,7 +28,7 @@ export class HeaderComponent {
     name: '',
     avatar: '',
   });
-  closeImgSrc: string = '/img/header-img/close.png';
+  closeImgSrc: string = 'img/header-img/close.png';
   onlineStatus$: Observable<boolean> = of(false);
 
   firestore = inject(Firestore);
@@ -274,11 +274,11 @@ export class HeaderComponent {
   }
 
   onMouseEnterClose(): void {
-    this.closeImgSrc = '/img/header-img/close-hover.png';
+    this.closeImgSrc = 'img/header-img/close-hover.png';
   }
 
   onMouseLeaveClose(): void {
-    this.closeImgSrc = '/img/header-img/close.png';
+    this.closeImgSrc = 'img/header-img/close.png';
   }
 
   onEscape() {
