@@ -46,7 +46,8 @@ export class AuthService {
   }
 
   hasUserData(): boolean {
-    return !!(this.userData.email && this.userData.password);
+    //return !!(this.userData.email && this.userData.password);
+    return !!(this.userData.email);
   }
 
   deleteDummyToken() {
@@ -140,6 +141,7 @@ export class AuthService {
 
       const emailExists = await this.checkIfEmailExists(user.email!);
       if (!emailExists) {
+        debugger;
         this.userData = {
           name: user.displayName || 'Unbekannt',
           email: user.email || '',
