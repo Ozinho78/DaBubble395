@@ -61,6 +61,20 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/main']);
   }
 
+  async loginWithGoogle() {
+    this.errorMessage = '';
+    try {
+      await this.authService.loginWithGoogle();
+      this.showSuccessMsg = true;
+      setTimeout(() => {
+        this.showSuccessMsg = false;
+        this.router.navigate(['/main']);
+      }, 1000);
+    } catch (error: any) {
+      this.handleLoginError(error);
+    }
+  }
+
   async login() {
     this.errorMessage = '';
     this.emailErrorMessage = '';

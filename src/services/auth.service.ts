@@ -6,6 +6,8 @@ import {
   updateProfile,
   user,
   sendPasswordResetEmail,
+  signInWithPopup,
+  GoogleAuthProvider
 } from '@angular/fire/auth';
 import { Firestore, collection, collectionData, doc, getDocs, query, where } from '@angular/fire/firestore';
 import { UserService } from './user.service';
@@ -108,7 +110,7 @@ export class AuthService {
       const userRef = collection(this.firestore, 'users');
       const q = query(userRef, where('email', '==', email));
       const querySnapshot = await getDocs(q);
-  
+
       return !querySnapshot.empty;
     } catch (error) {
       console.error('Fehler beim Überprüfen der E-Mail:', error);
@@ -121,6 +123,36 @@ export class AuthService {
       await sendPasswordResetEmail(this.auth, email);
     } catch (error) {
       console.error('Fehler beim Senden der Passwort-Reset-E-Mail:', error);
+      throw error;
+    }
+  }
+
+  async loginWithGoogle(): Promise<void> {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const userCredential = await signInWithPopup(this.auth, provider);
+      const user = userCredential.user;
+
+      await this.setAuthToken(user);
+      await this.setUserId(user.email!);
+
+      const emailExists = await this.checkIfEmailExists(user.email!);
+      if (!emailExists) {
+        this.userData = {
+          name: user.displayName || 'Unbekannt',
+          email: user.email || '',
+          avatarFilename: user.photoURL ? user.photoURL.split('/').pop() : 'default.png'
+        };
+        
+        await this.updateUserProfile(user, user.photoURL || '');
+        const userService = this.injector.get(UserService);
+        await userService.createUser();
+      }
+
+      console.log('Google Login erfolgreich:', user);
+    } catch (error) {
+      console.error('Fehler beim Google Login:', error);
       throw error;
     }
   }
