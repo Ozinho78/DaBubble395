@@ -23,7 +23,8 @@ export class AuthService {
   private firestore = inject(Firestore);
   private injector = inject(Injector);
 
-  constructor(private auth: Auth) {
+  constructor(private auth: Auth, private afs: Firestore // 🔹 NEU
+  ) {
     this.user$ = user(auth);
   }
 
@@ -142,7 +143,7 @@ export class AuthService {
         this.userData = {
           name: user.displayName || 'Unbekannt',
           email: user.email || '',
-          avatarFilename: user.photoURL ? user.photoURL.split('/').pop() : 'default.png'
+          avatarFilename: user.photoURL ? user.photoURL.split('/').pop() : 'img/avatar/avatar1.png'
         };
         
         await this.updateUserProfile(user, user.photoURL || '');
