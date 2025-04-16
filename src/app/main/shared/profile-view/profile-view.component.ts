@@ -31,11 +31,11 @@ export class ProfileViewComponent {
     private route: ActivatedRoute
   ) {}
   onMouseEnterClose(): void {
-    this.closeImgSrc = '/img/header-img/close-hover.png';
+    this.closeImgSrc = 'img/header-img/close-hover.png';
   }
 
   onMouseLeaveClose(): void {
-    this.closeImgSrc = '/img/header-img/close.png';
+    this.closeImgSrc = 'img/header-img/close.png';
   }
 
   onClose(): void {
