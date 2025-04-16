@@ -75,7 +75,16 @@
       .login-btn {
         @media (max-width: 630px) {
           height: 50px;
+          margin-top: 10px;
           margin-bottom: 20px;
+
+          .login-btn-register,
+          .login-btn-guest {
+            @media (max-width: 630px) {
+              padding: 8px 13px;
+              font-size: 12px;
+            }
+          }
         }
       }
     }
