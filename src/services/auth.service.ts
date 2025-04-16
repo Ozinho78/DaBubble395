@@ -137,11 +137,9 @@ export class AuthService {
       const user = userCredential.user;
 
       await this.setAuthToken(user);
-      await this.setUserId(user.email!);
 
       const emailExists = await this.checkIfEmailExists(user.email!);
       if (!emailExists) {
-        debugger;
         this.userData = {
           name: user.displayName || 'Unbekannt',
           email: user.email || '',
@@ -152,6 +150,8 @@ export class AuthService {
         const userService = this.injector.get(UserService);
         await userService.createUser();
       }
+
+      await this.setUserId(user.email!);
 
       console.log('Google Login erfolgreich:', user);
     } catch (error) {

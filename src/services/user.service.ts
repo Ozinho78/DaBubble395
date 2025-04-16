@@ -89,7 +89,7 @@ export class UserService {
         await addDoc(usersCollectionRef, {
             name,
             email,
-            avatar: avatar || 'default.png',
+            avatar: avatar || 'avatar1.png',
         });
 
         console.log('Benutzer erfolgreich in Firestore gespeichert!');
