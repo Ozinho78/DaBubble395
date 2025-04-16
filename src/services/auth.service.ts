@@ -23,7 +23,7 @@ export class AuthService {
   private firestore = inject(Firestore);
   private injector = inject(Injector);
 
-  constructor(private auth: Auth, private afs: Firestore // 🔹 NEU
+  constructor(private auth: Auth
   ) {
     this.user$ = user(auth);
   }
