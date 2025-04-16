@@ -23,7 +23,7 @@ export class ProfileViewComponent {
 
   @Output() close = new EventEmitter<void>();
 
-  closeImgSrc: string = '/img/header-img/close.png';
+  closeImgSrc: string = 'img/header-img/close.png';
 
   constructor(
     private chatService: ChatService,
