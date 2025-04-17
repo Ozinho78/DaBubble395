@@ -82,7 +82,7 @@ export class HeaderComponent {
     }
 
     this.searchControl.valueChanges.pipe(
-      debounceTime(2000),           // ⏳ warte 2 Sekunden ohne Eingabe
+      debounceTime(1000),           // ⏳ warte 2 Sekunden ohne Eingabe
       distinctUntilChanged()        // nur bei geändertem Wert
     ).subscribe(searchTerm => {
       if (searchTerm && searchTerm.length >= 3) {
