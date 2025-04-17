@@ -5,6 +5,7 @@
   @media (max-width: 630px) {
     padding: 0 20px;
   }
+
   .login {
     .login-header {
       @media (max-width: 630px) {
@@ -26,6 +27,7 @@
           }
         }
       }
+
       .register-route {
         @media (max-width: 630px) {
           display: none;
@@ -103,8 +105,9 @@
 
       @media (max-width: 630px) {
         @include m.flexBox(column, center, flex-end);
-        position: fixed;
-        bottom: 60px;
+        margin: 20px 0 10px 0;
+        position: relative;
+        bottom: unset;
         font-size: 16px;
       }
 
@@ -114,8 +117,10 @@
         color: v.$purple_2;
         box-sizing: border-box;
         padding: 6px 12px;
-        border-radius: 100px;
         transition: 125ms;
+        border: 1px solid #797EF3;
+        border-radius: 25px;
+        border-width: 1px;
 
         &:hover {
           font-weight: 600;
