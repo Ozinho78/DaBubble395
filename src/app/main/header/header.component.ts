@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, inject, ViewChild } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
@@ -13,11 +13,11 @@ import { ThreadModalComponent } from './thread-modal/thread-modal.component';
 import { SearchModalService } from '../../../services/search-modal.service';
 import { DirectMessagesComponent } from '../main-view/direct-messages/direct-messages.component';
 import { UserProfileService } from '../../../services/user-profile.service';
-
+import { ChatService } from '../../../services/direct-meassage.service';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, ProfileDetailComponent, FormsModule, ReactiveFormsModule, ThreadModalComponent],
+  imports: [CommonModule, ProfileDetailComponent, FormsModule, ReactiveFormsModule, ThreadModalComponent, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -61,7 +61,9 @@ export class HeaderComponent {
     private presenceService: PresenceService,
     private searchService: SearchService,
     private modalService: SearchModalService,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private chat: ChatService,
+    private route: ActivatedRoute,
   ) {
     setTimeout(() => {
       this.currentUser.docId = localStorage.getItem('user-id') || '';
@@ -193,7 +195,7 @@ export class HeaderComponent {
   }
 
 
-  handleSearchResultClick(result: any) {
+  async handleSearchResultClick(result: any) {
     if ((result.type === 'thread' || result.type === 'message') && result.channelId && result.threadId) {
       this.router.navigate(['/main'], {
         queryParams: {
@@ -208,16 +210,34 @@ export class HeaderComponent {
         }
       });
     } else if (result.type === 'user') {
-      this.router.navigate(['/main'], {
-        queryParams: { chat: result.userId } // optional, um DirectMessages zu aktivieren
+      const chatId = await this.chat.getOrCreateChat(
+        this.currentUser.docId,
+        result.userId
+      );
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { chat: chatId },
+        replaceUrl: true,
       }).then(() => {
-        // Nach Navigation -> Profil anzeigen
-        setTimeout(() => {
-          this.userProfileService.showUserProfile(result.userId);
-        }, 500); // kleiner Delay, damit Component initialisiert wird
-      });
+          setTimeout(() => {
+            this.userProfileService.showUserProfile(result.userId);
+          }, 500); // kleiner Delay, damit Component initialisiert wird
+        });
+
+      // Navigate erzeugt Chat durch unerwünschten Link
+      // this.router.navigate(['/main'], {
+      //   queryParams: { chat: result.userId } // optional, um DirectMessages zu aktivieren
+      // }).then(() => {
+      //   // Nach Navigation -> Profil anzeigen
+      //   setTimeout(() => {
+      //     this.userProfileService.showUserProfile(result.userId);
+      //   }, 500); // kleiner Delay, damit Component initialisiert wird
+      // });
+
       // this.userProfileService.showUserProfile(result.userId);    // funktioniert nur, wenn direct-messages aktiv ist
       // this.openThreadModal(result); // nur noch für Benutzerprofil
+
+
     }
 
     // Optional zum Resetten der Suchergebnisses

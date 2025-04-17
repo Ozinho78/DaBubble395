@@ -13,7 +13,7 @@ import { Channel } from '../../../models/channel.model';
 import { AddChannelComponent } from './add-channel/add-channel.component';
 import { CommonModule } from '@angular/common';
 import { VisibleService } from '../../../services/visible.service';
-import { Observable, of, Subject, takeUntil } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import {
   animate,
   state,
