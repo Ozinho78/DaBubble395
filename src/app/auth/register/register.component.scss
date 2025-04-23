@@ -3,6 +3,7 @@
 
 .reg-main {
   @include m.flexBox(column, center, center);
+  height: 100vh;
 
   @media (max-width: 460px) {
     height: unset;
