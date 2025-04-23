@@ -19,7 +19,7 @@
       .logo {
         @include m.flexBox(row, flex-start, center);
         margin-left: 50px;
-        opacity: 0;
+        /* opacity: 0; */
 
         .logo-logo {
           width: 70px;
