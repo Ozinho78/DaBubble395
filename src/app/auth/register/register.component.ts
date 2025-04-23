@@ -30,7 +30,7 @@ export class RegisterComponent {
     if (!this.isFormValid()) return;
 
     await this.createUser();
-    this.router.navigate(['/avatar-selection']);
+    this.router.navigate(['/auth/avatar-selection']);
   }
 
   resetErrors() {
@@ -74,6 +74,6 @@ export class RegisterComponent {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 }

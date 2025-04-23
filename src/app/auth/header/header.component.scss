@@ -1,0 +1,66 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+.header {
+    @include m.flexBox(row, space-between, center);
+    width: 100%;
+    margin-top: 50px;
+
+    @media (max-width: 460px) {
+      position: relative;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      top: unset;
+    }
+
+    .header-left {
+      @include m.flexBox(row, flex-start, center);
+
+      .logo {
+        @include m.flexBox(row, flex-start, center);
+        margin-left: 50px;
+        /* opacity: 0; */
+
+        .logo-logo {
+          width: 70px;
+          height: 70px;
+          margin-right: 10px;
+        }
+
+        .logo-name {
+          height: 24px;
+        }
+      }
+
+      h1 {
+        @include m.styleFont("Nunito", 24px, 700, 28.8px, v.$purple_1);
+      }
+
+      /*
+      @media screen and (max-width: 375px) and (max-height: 667px) {
+        display: none;
+      }*/
+    }
+
+    .register-route {
+      @include m.flexBox(column, center, flex-end);
+      @include m.styleFont("Nunito", 18px, 400, 21.6px, black);
+      margin-right: 50px;
+
+      a {
+        margin-top: 12px;
+        text-decoration: none;
+        color: v.$purple_2;
+        box-sizing: border-box;
+        padding: 6px 12px;
+        border-radius: 100px;
+        transition: 125ms;
+        cursor: pointer;
+
+        &:hover {
+          font-weight: 600;
+          box-shadow: 0 0 0 1px v.$purple_2;
+        }
+      }
+    }
+  }

@@ -7,34 +7,6 @@
   }
 
   .login {
-    .login-header {
-      @media (max-width: 630px) {
-        justify-content: center;
-        margin-left: 0;
-
-        .login-left {
-          .logo {
-            @media (max-width: 630px) {
-              margin-left: 0;
-
-              .logo-logo {
-                @media (max-width: 630px) {
-                  width: 50px;
-                  height: 50px;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .register-route {
-        @media (max-width: 630px) {
-          display: none;
-        }
-      }
-    }
-
     .login-dialog {
       @media (max-width: 630px) {
         width: 100%;
@@ -127,6 +99,34 @@
           box-shadow: 0 0 0 1px v.$purple_2;
         }
       }
+    }
+  }
+}
+
+.header {
+  @media (max-width: 630px) {
+    justify-content: center;
+    margin-left: 0;
+
+    .header-left {
+      .logo {
+        @media (max-width: 630px) {
+          margin-left: 0;
+
+          .logo-logo {
+            @media (max-width: 630px) {
+              width: 50px;
+              height: 50px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .register-route {
+    @media (max-width: 630px) {
+      display: none;
     }
   }
 }
