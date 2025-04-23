@@ -1,0 +1,9 @@
+@use "../../mixins.scss" as m;
+@use "../../variables.scss" as v;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    @include m.flexBox(row, center, center);
+}

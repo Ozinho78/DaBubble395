@@ -1,0 +1,35 @@
+@use "../../../mixins.scss" as m;
+@use "../../../variables.scss" as v;
+
+.legal-infos {
+    @include m.flexBox(row, center, center);
+    width: 100%;
+    position: fixed;
+    bottom: 20px;
+
+    @media (max-width: 460px) {
+      margin: 10px 0px;
+      width: unset;
+      position: relative;
+      bottom: unset;
+    }
+
+    a {
+      @include m.styleFont("Nunito", 18px, 400, 21.6px, v.$purple_2);
+      text-decoration: none;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      border-radius: 100px;
+      transition: 125ms;
+
+      &:hover {
+        font-weight: 700;
+        box-shadow: 0 0 0 1px v.$purple_2;
+      }
+    }
+
+    /*
+    @media screen and (max-width: 375px) and (max-height: 667px) {
+      bottom: 0px;
+    }*/
+  }
