@@ -273,7 +273,7 @@ export class HeaderComponent {
   }
 
   private navigateToLogin(): void {
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/login']);
   }
 
   private handleLogoutError(error: any): void {
