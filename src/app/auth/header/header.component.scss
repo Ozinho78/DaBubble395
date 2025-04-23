@@ -4,7 +4,7 @@
 .header {
     @include m.flexBox(row, space-between, center);
     width: 100%;
-    margin-top: 50px;
+    padding: 50px 0px 20px 70px;
 
     @media (max-width: 460px) {
       position: relative;
@@ -18,7 +18,6 @@
 
       .logo {
         @include m.flexBox(row, flex-start, center);
-        margin-left: 50px;
         /* opacity: 0; */
 
         .logo-logo {

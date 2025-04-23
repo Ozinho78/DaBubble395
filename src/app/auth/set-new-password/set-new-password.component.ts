@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Auth, confirmPasswordReset } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-set-new-password',
   templateUrl: './set-new-password.component.html',
-  imports: [FormsModule, CommonModule, RouterLink],
+  imports: [FormsModule, CommonModule, RouterModule],
   styleUrl: './set-new-password.component.scss'
 })
 export class SetNewPasswordComponent {
@@ -26,7 +26,7 @@ export class SetNewPasswordComponent {
   }
 
   navigateToRequest() {
-    this.router.navigate(['/request-password-reset']);
+    this.router.navigate(['/auth/request-password-reset']);
   }
 
   validatePasswords() {
@@ -47,7 +47,7 @@ export class SetNewPasswordComponent {
 
     try {
       await confirmPasswordReset(this.auth, this.actionCode, this.password);
-      this.router.navigate(['/login']);
+      this.router.navigate(['/auth/login']);
     } catch (error: any) {
       this.errorMessage = 'Fehler beim Zurücksetzen des Passworts: ' + (error.message || 'Unbekannter Fehler');
     }

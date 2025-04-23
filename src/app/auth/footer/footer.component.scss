@@ -4,8 +4,6 @@
 .legal-infos {
     @include m.flexBox(row, center, center);
     width: 100%;
-    position: fixed;
-    bottom: 20px;
 
     @media (max-width: 460px) {
       margin: 10px 0px;
