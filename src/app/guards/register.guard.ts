@@ -12,7 +12,7 @@ export class RegisterGuard implements CanActivate {
     if (this.authService.hasUserData()) {
       return true;
     } else {
-      this.router.navigate(['/register']);
+      this.router.navigate(['/auth/register']);
       return false;
     }
   }
