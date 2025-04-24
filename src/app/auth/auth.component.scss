@@ -19,7 +19,11 @@
   }
   
   .auth-content {
-    @include m.flexBox(column, center, center);
-  
+    @include m.flexBox(column, center, center);  
     flex: 1 0 auto;
+  }
+
+  h2 {
+    @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
+    margin: 0;
   }

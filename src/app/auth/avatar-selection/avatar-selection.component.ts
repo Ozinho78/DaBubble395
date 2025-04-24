@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-avatar-selection',
   imports: [CommonModule, RouterModule],
   templateUrl: './avatar-selection.component.html',
-  styleUrl: './avatar-selection.component.scss'
+  styleUrls: ['./avatar-selection.component.scss' , '../auth-resp.scss', '../auth.component.scss'],
 })
 export class AvatarSelectionComponent {
 

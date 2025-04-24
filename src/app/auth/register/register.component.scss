@@ -60,7 +60,7 @@
       padding: 25px 30px;
     }
 
-    @media (max-width: 460px) {
+    @media (max-width: 630px) {
       width: unset;
       height: unset;
       margin: 0;
@@ -83,15 +83,6 @@
 
       @media screen and (max-width: 400px) {
         left: -10px;
-      }
-    }
-
-    h2 {
-      @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
-      margin: 0;
-
-      @media screen and (max-width: 500px) {
-        font-size: 36px;
       }
     }
 

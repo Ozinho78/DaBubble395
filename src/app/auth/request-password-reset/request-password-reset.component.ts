@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-request-password-reset',
   imports: [FormsModule, CommonModule],
   templateUrl: './request-password-reset.component.html',
-  styleUrl: './request-password-reset.component.scss',
+  styleUrls: ['./request-password-reset.component.scss', '../auth-resp.scss', '../auth.component.scss'],
 })
 export class RequestPasswordResetComponent {
   email: string = '';

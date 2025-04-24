@@ -14,7 +14,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-login',
   imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', '../auth-resp.scss'],
+  styleUrls: ['./login.component.scss', '../auth-resp.scss', '../auth.component.scss'],
 })
 export class LoginComponent implements OnInit {
   @ViewChild('logo', { static: true }) logoElement!: ElementRef;

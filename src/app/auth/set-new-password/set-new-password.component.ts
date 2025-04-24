@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-set-new-password',
   templateUrl: './set-new-password.component.html',
   imports: [FormsModule, CommonModule, RouterModule],
-  styleUrl: './set-new-password.component.scss'
+  styleUrls: ['./set-new-password.component.scss', '../auth-resp.scss', '../auth.component.scss'],
 })
 export class SetNewPasswordComponent {
   password: string = '';
