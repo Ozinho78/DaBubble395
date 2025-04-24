@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const introPlayed = sessionStorage.getItem('introPlayed') === 'true';
+    /* const introPlayed = sessionStorage.getItem('introPlayed') === 'true';
 
     if (introPlayed) {
       this.renderer.setStyle(this.logoElement.nativeElement, 'display', 'none');
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         this.fadeInHeaderLogo();
         sessionStorage.setItem("introPlayed", "true");
       }, 2500);
-    }
+    } */
   }
   
   shrinkLogo(): void {

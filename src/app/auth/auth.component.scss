@@ -6,3 +6,20 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.auth-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+  
+    /* Optional, für Scrollbar bei Overflow im Content */
+    /* overflow: auto; */
+  }
+  
+  .auth-content {
+    @include m.flexBox(column, center, center);
+  
+    flex: 1 0 auto;
+  }

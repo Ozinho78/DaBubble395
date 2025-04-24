@@ -36,7 +36,7 @@ export class AvatarSelectionComponent {
   }
 
   navigateToReg() {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/auth/register']);
   }
 
   selectAvatar(avatar: any) {
@@ -56,6 +56,7 @@ export class AvatarSelectionComponent {
 
       try {
         await this.authService.registerUser(avatarFilename);
+        await this.authService.loginUser(this.userData.email, this.userData.password);
         this.showSuccessMsg = true;
         setTimeout(() => {
           this.showSuccessMsg = false;
