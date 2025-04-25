@@ -1,4 +1,5 @@
-<div class="auth-layout">
+<app-intro *ngIf="showIntro"></app-intro>
+<div *ngIf="!showIntro" class="auth-layout">
   <app-header></app-header>
   <main class="auth-content">
     <router-outlet></router-outlet>

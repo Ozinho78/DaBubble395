@@ -1,0 +1,15 @@
+<div class="intro-bg">
+  <div class="intro-center">
+    <img
+      src="img/logo.svg"
+      class="intro-logo"
+      alt="DABubble Logo"
+      [@slideLogo]="logoState"
+      (@slideLogo.done)="onLogoSlideDone($event)"
+    />
+    <span class="intro-title"
+    *ngIf="showLogoText"
+    [@slideText]="showLogoText ? 'visible' : 'hidden'">
+    DABubble</span>
+  </div>
+</div>
