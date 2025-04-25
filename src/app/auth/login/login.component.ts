@@ -33,26 +33,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    /* const introPlayed = sessionStorage.getItem('introPlayed') === 'true';
-
-    if (introPlayed) {
-      this.renderer.setStyle(this.logoElement.nativeElement, 'display', 'none');
-      this.renderer.setStyle(this.logoHeaderElement.nativeElement, 'opacity', '1'); 
-    } else {
-      setTimeout(() => {
-        this.shrinkLogo();
-        this.fadeInHeaderLogo();
-        sessionStorage.setItem("introPlayed", "true");
-      }, 2500);
-    } */
-  }
-  
-  shrinkLogo(): void {
-    this.renderer.addClass(this.logoElement.nativeElement, 'fade-out');
-  }
-
-  fadeInHeaderLogo(): void {
-    this.renderer.addClass(this.logoHeaderElement.nativeElement, 'fade-in');
+    
   }
 
   guestLogin() {
