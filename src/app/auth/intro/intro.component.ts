@@ -10,17 +10,17 @@ import { AnimationEvent } from '@angular/animations';
   styleUrls: ['./intro.component.scss', '../auth-resp.scss', '../auth.component.scss'],
   animations: [
     trigger('slideLogo', [
-      state('center', style({ transform: 'translateX(0)' })),
-      state('left', style({ transform: 'translateX(-120px)' })),
+      state('center', style({ transform: 'translateX(120px)' })),
+      state('left', style({ transform: 'translateX(0)' })),
       transition('center => left', [
         animate('700ms cubic-bezier(0.8,0,0.2,1)')
       ])
     ]),
     trigger('slideText', [
-      state('hidden', style({ opacity: 0, transform: 'translateX(80px)' })),
+      state('hidden', style({ opacity: 0, transform: 'translateX(-600px)' })),
       state('visible', style({ opacity: 1, transform: 'translateX(0)' })),
       transition('hidden => visible', [
-        animate('700ms 100ms cubic-bezier(0.8,0,0.2,1)')
+        animate('1700ms 200ms cubic-bezier(0.8,0,0.2,1)')
       ])
     ])
   ]

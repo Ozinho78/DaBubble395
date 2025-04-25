@@ -2,15 +2,13 @@
 @use "../../../variables.scss" as v;
 
 .intro-bg {
+    @include m.flexBox();
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     width: 100vw;
     height: 100vh;
     background: v.$purple_1;
     z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   
   .intro-center {
@@ -23,7 +21,16 @@
     width: 150px;
     height: auto;
   }
+
+  .logo-text-wrapper {
+    height: 110px;
+    width: 433px;
+    overflow: hidden;
+    position: relative;
+    margin-left: 30px;
+  }
   
-  span {
+  .logo-text {
     @include m.styleFont("Nunito", 90px, 700, 1.5, white);
+    white-space: nowrap;
   }

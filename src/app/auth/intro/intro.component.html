@@ -7,9 +7,10 @@
       [@slideLogo]="logoState"
       (@slideLogo.done)="onLogoSlideDone($event)"
     />
-    <span class="intro-title"
-    *ngIf="showLogoText"
-    [@slideText]="showLogoText ? 'visible' : 'hidden'">
-    DABubble</span>
+    <div class="logo-text-wrapper">
+      <div class="logo-text" [@slideText]="showLogoText ? 'visible' : 'hidden'">
+        DABubble
+      </div>
+    </div>
   </div>
 </div>
