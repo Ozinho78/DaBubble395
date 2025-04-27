@@ -1,5 +1,5 @@
-<div class="intro-bg">
-  <div class="intro-center">
+<div class="intro-bg" [@fadeBg]="bgFadeState">
+  <div class="intro-center" [@shrinkToCorner]="shrinkState">
     <img
       src="img/logo.svg"
       class="intro-logo"
@@ -8,7 +8,8 @@
       (@slideLogo.done)="onLogoSlideDone($event)"
     />
     <div class="logo-text-wrapper">
-      <div class="logo-text" [@slideText]="showLogoText ? 'visible' : 'hidden'">
+      <div class="logo-text" [@slideText]="showLogoText ? 'visible' : 'hidden'"
+      (@slideText.done)="onTextSlideDone($event)">
         DABubble
       </div>
     </div>

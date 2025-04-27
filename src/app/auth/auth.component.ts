@@ -18,4 +18,8 @@ export class AuthComponent {
   constructor() {
     
   }
+
+  onIntroFinished() {
+    this.showIntro = false;
+  }
 }

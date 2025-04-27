@@ -1,4 +1,4 @@
-<app-intro *ngIf="showIntro"></app-intro>
+<app-intro *ngIf="showIntro" (introFinished)="onIntroFinished()"></app-intro>
 <div *ngIf="!showIntro" class="auth-layout">
   <app-header></app-header>
   <main class="auth-content">
