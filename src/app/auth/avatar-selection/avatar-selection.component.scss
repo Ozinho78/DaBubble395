@@ -44,16 +44,6 @@
       }
     }
 
-    /* h2 {
-      @include m.styleFont("Nunito", 46px, 700, 55.2px, v.$purple_1);
-      margin-top: 0;
-
-      @media (max-width: 460px) {
-        @include m.styleFont("Nunito", 32px, 700, 40px, v.$purple_1);
-        text-align: center;
-      }
-    } */
-
     .selected-avatar {
       max-height: 168px;
       border-radius: 50%;

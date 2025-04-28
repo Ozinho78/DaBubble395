@@ -1,9 +1,6 @@
 import {
   Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  Renderer2,
+  OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -17,8 +14,6 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./login.component.scss', '../auth-resp.scss', '../auth.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('logo', { static: true }) logoElement!: ElementRef;
-  @ViewChild('logoHeader', { static: true }) logoHeaderElement!: ElementRef;
   email: string = '';
   password: string = '';
   emailErrorMessage: string = '';
@@ -28,8 +23,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
-    private renderer: Renderer2
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
